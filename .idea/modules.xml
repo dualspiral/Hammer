@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/HammerCore/HammerCore.iml" filepath="$PROJECT_DIR$/HammerCore/HammerCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/HammerGradle.iml" filepath="$PROJECT_DIR$/HammerGradle.iml" />
       <module fileurl="file://$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" filepath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HammerSponge/HammerSponge.iml" filepath="$PROJECT_DIR$/HammerSponge/HammerSponge.iml" />
     </modules>
   </component>
 </project>

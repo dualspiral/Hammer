@@ -6,3 +6,5 @@ include 'HammerSpigot'
 
 include 'HammerCore'
 
+include 'HammerSponge'
+
