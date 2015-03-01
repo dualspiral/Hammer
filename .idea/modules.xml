@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" filepath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HammerCore/HammerCore.iml" filepath="$PROJECT_DIR$/HammerCore/HammerCore.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HammerGradle.iml" filepath="$PROJECT_DIR$/HammerGradle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" filepath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" />
+    </modules>
+  </component>
+</project>

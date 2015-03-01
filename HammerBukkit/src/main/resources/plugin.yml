@@ -1,0 +1,84 @@
+name: Hammer
+version: 0.1
+main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
+commands:
+  ban:
+    description: Ban a player.
+    permission: hammer.ban.normal
+    usage: "/ban [-a] <user> <reason>"
+    aliases: [hban, hammerban]
+  gban:
+    description: Ban a player globally.
+    permission: hammer.ban.all
+    usage: "/gban <user> <reason>"
+    aliases: [hgban, hammerglobalban, globalban, allban, aban]
+  tempban:
+    description: Temp Ban a player.
+    permission: hammer.ban.temp
+    usage: "/tempban [-a] <user> <time>(d|h|m) [reason]"
+    aliases: [htban, hammertban]
+  permban:
+    description: Perm ban a player.
+    permission: hammer.ban.perm
+    usage: "/permban [-a] <user> <reason>"
+    aliases: [hpban, hammerpban]
+  unban:
+    description: Unban a player.
+    permission: hammer.unban.normal
+    usage: "/unban <player>"
+    aliases: [hunban, hammerunban]
+  checkban:
+    description: Check a player's standing.
+    permission: hammer.checkban
+    usage: "/checkban <player>"
+    aliases: [chkban, hcheckban, hammercheckban]
+#  banip:
+#    description: IP Ban a player.
+#    permission: hammer.banip
+#    usage: "/ipban [-t time] <user|IP>"
+#    aliases: [hipban, hammeripban]
+#  unbanip:
+#    description: IP Unban.
+#    permission: hammer.unbanip
+#    usage: "/ipunban <ip>"
+#    aliases: [hipunban, hammeripunban]
+permissions:
+  hammer.ban.normal:
+    default: op
+  hammer.ban.temp:
+    default: op
+  hammer.ban.perm:
+    default: op
+    children: 
+    - hammer.ban.normal
+  hammer.ban.all:
+    default: op
+    children: 
+    - hammer.ban.normal
+  hammer.ban.*:
+    default: op
+    children: 
+    - hammer.ban.normal
+    - hammer.ban.temp
+    - hammer.ban.perm
+    - hammer.ban.all
+  hammer.checkban:
+    default: op
+  hammer.unban.normal:
+    default: op
+  hammer.unban.perm:
+    default: op
+    children: 
+    - hammer.unban.normal
+  hammer.unban.all:
+    default: op
+    children: 
+    - hammer.ban.normal
+  hammer.unban.*:
+    default: op
+    children:
+    - hammer.unban.normal
+    - hammer.unban.all
+    - hammer.unban.perm
+  hammer.notify:
+    default: op

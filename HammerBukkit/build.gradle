@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.7
+version = '0.1'
+
+repositories {
+    maven {
+        url 'http://repo.md-5.net/content/repositories/repobo-snap/'
+    }
+}
+
+dependencies {
+    compile project(':HammerCore')
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
+
+shadowJar  {
+    dependencies {
+        include(project(':HammerCore'))
+    }
+}
+build.dependsOn(shadowJar)

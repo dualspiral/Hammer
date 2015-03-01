@@ -1,0 +1,8 @@
+rootProject.name = 'HammerGradle'
+
+include 'HammerBukkit'
+
+include 'HammerSpigot'
+
+include 'HammerCore'
+
