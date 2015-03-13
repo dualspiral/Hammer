@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2deb28c4-c2ef-42b6-89b9-a6195ad79781" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/HammerSponge/src/main/java/uk/co/drnaylor/minecraft/hammer/sponge/HammerSponge.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/HammerSponge/src/main/java/uk/co/drnaylor/minecraft/hammer/sponge/listeners/PlayerConnectListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" afterPath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" afterPath="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerCore/HammerCore.iml" afterPath="$PROJECT_DIR$/HammerCore/HammerCore.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java" afterPath="$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" afterPath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSponge/HammerSponge.iml" afterPath="$PROJECT_DIR$/HammerSponge/HammerSponge.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSponge/build.gradle" afterPath="$PROJECT_DIR$/HammerSponge/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/commands/CheckBanCommandCore.java" afterPath="$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/commands/CheckBanCommandCore.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="HammerGradle.iws" />
@@ -50,7 +40,7 @@
       <file leaf-file-name="HammerCore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1836">
+            <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="1836">
               <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
               <folding>
                 <element signature="e#888#889#0" expanded="true" />
@@ -70,11 +60,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HammerSpigot.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="HammerSpigot.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38037866" vertical-offset="34" max-vertical-offset="2278">
+            <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="2278">
               <caret line="43" column="71" selection-start-line="43" selection-start-column="71" selection-end-line="43" selection-end-column="71" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BukkitPlayerPermissionCheck.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerPermissionCheck.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
+              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BukkitPlayerMessageBuilder.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerMessageBuilder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2091">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CheckBanCommandCore.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/commands/CheckBanCommandCore.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.61445785" vertical-offset="969" max-vertical-offset="1598">
+              <caret line="93" column="24" selection-start-line="93" selection-start-column="24" selection-end-line="93" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -923,6 +943,7 @@
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
         <option value="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
         <option value="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/commands/CheckBanCommandCore.java" />
       </list>
     </option>
   </component>
@@ -1664,7 +1685,6 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32929516" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1673,12 +1693,13 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39867842" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39867842" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32929516" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -1712,6 +1733,33 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="1836">
+          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+          <folding>
+            <element signature="e#888#889#0" expanded="true" />
+            <element signature="e#916#917#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="2261">
+          <caret line="50" column="109" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="109" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2278">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="2261">
@@ -1906,7 +1954,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74823946" vertical-offset="1734" max-vertical-offset="2448">
           <caret line="143" column="104" selection-start-line="143" selection-start-column="104" selection-end-line="143" selection-end-column="104" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1948,14 +1995,37 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.70740104" vertical-offset="473" max-vertical-offset="1615">
           <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38037866" vertical-offset="34" max-vertical-offset="2278">
+        <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="2278">
           <caret line="43" column="71" selection-start-line="43" selection-start-column="71" selection-end-line="43" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerPermissionCheck.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerMessageBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2091">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/commands/CheckBanCommandCore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61445785" vertical-offset="969" max-vertical-offset="1598">
+          <caret line="93" column="24" selection-start-line="93" selection-start-column="24" selection-end-line="93" selection-end-column="24" />
           <folding />
         </state>
       </provider>

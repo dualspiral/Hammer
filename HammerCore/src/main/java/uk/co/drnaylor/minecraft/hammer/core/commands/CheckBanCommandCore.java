@@ -72,7 +72,7 @@ public class CheckBanCommandCore extends CommandCore {
 
             return true;
         } catch (Exception ex) {
-            throw new HammerException("An error occured", ex);
+            throw new HammerException("An error occurred", ex);
         }
     }
 
@@ -91,7 +91,7 @@ public class CheckBanCommandCore extends CommandCore {
         }
 
         if (ban.isPermBan()) {
-            sb.append("permanently ");
+            sb.append(" permanently ");
         } else if (ban.isTempBan()) {
             sb.append(" for ").append(core.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - (new Date()).getTime()));
         }
