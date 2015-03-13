@@ -7,7 +7,8 @@ version = '0.1'
 repositories {
     mavenCentral()
     maven {
-        url 'http://repo.spongepowered.org/maven/'
+        name 'Sponge maven repo'
+        url 'http://repo.spongepowered.org/maven'
     }
     maven {
         name 'sonatypeSnapshot'
@@ -18,7 +19,7 @@ repositories {
 dependencies {
     compile project(':HammerCore')
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile group: 'org.spongepowered', name: 'spongeapi', version: '1.1-SNAPSHOT'
+    compile "org.spongepowered:spongeapi:1.1-SNAPSHOT"
 }
 
 sourceSets {

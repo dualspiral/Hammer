@@ -18,6 +18,14 @@ public class HammerCore {
     }
 
     /**
+     * Returns the version of the core.
+     * @return The version of the core.
+     */
+    public String getHammerCoreVersion() {
+        return "0.1";
+    }
+
+    /**
      * Returns a provider that provides interfaces for interaction with server
      * specific APIs.
      *

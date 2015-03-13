@@ -14,7 +14,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="HammerCore" exported="" />
     <orderEntry type="library" exported="" name="Gradle: org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="HammerCore" exported="" />
   </component>
 </module>

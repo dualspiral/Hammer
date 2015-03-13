@@ -41,7 +41,7 @@ public class HammerSpigot extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
-        this.getLogger().log(Level.INFO, "Welcome to Hammer version {0}", this.getDescription().getVersion());
+        this.getLogger().log(Level.INFO, "Welcome to Hammer for Spigot version {0}", this.getDescription().getVersion());
         this.getLogger().log(Level.INFO, "Hammer will now perform some startup tasks. Stand by...");
         this.saveDefaultConfig();
         this.reloadConfig();
@@ -50,9 +50,10 @@ public class HammerSpigot extends JavaPlugin {
         // plugin heads straight for the disabled pile... once it's
         // exploded all over the console.
         try {
-            this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             createCore();
-            
+            this.getLogger().log(Level.INFO, "Loading Hammer Core version {0}", core.getHammerCoreVersion());
+
+            this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
                 // Special case. We want true/false, not an exception here.
                 if (!core.performStartupTasks(conn)) {

@@ -38,7 +38,7 @@ public class HammerBukkit extends JavaPlugin {
     @Override
     public void onEnable() {
         this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
-        this.getLogger().log(Level.INFO, "Welcome to Hammer version {0}", this.getDescription().getVersion());
+        this.getLogger().log(Level.INFO, "Welcome to Hammer for Bukkit version {0}", this.getDescription().getVersion());
         this.getLogger().log(Level.INFO, "Hammer will now perform some startup tasks. Stand by...");
         this.saveDefaultConfig();
         this.reloadConfig();
@@ -47,9 +47,10 @@ public class HammerBukkit extends JavaPlugin {
         // plugin heads straight for the disabled pile... once it's
         // exploded all over the console.
         try {
-            this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             createCore();
-            
+            this.getLogger().log(Level.INFO, "Loading Hammer Core version {0}", core.getHammerCoreVersion());
+
+            this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
                 // Special case. We want true/false, not an exception here.
                 if (!core.performStartupTasks(conn)) {
@@ -96,7 +97,7 @@ public class HammerBukkit extends JavaPlugin {
             this.getServer().getScheduler().runTaskTimerAsynchronously(this, runnable, 600l, 600l);
 
         } catch (Exception e) {
-            this.getLogger().severe("A fatal error has occured. Hammer will now disable itself.");
+            this.getLogger().severe("A fatal error has occurred. Hammer will now disable itself.");
             this.getLogger().severe("Here. Have a stack trace to tell you why!");
             e.printStackTrace();
             this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
@@ -104,7 +105,7 @@ public class HammerBukkit extends JavaPlugin {
             return;
         }
 
-        this.getLogger().log(Level.INFO, "Hammer has succesfully initialised and is managing your bans.");
+        this.getLogger().log(Level.INFO, "Hammer has successfully initialised and is managing your bans.");
         this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
     }
 

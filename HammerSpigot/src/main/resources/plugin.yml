@@ -1,5 +1,5 @@
 name: Hammer
-version: 0.1
+version: 0.1.1
 main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
 commands:
   ban:
@@ -45,6 +45,8 @@ commands:
 permissions:
   hammer.ban.normal:
     default: op
+    children:
+    - hammer.notify
   hammer.ban.temp:
     default: op
   hammer.ban.perm:
@@ -57,7 +59,8 @@ permissions:
     - hammer.ban.normal
   hammer.ban.*:
     default: op
-    children: 
+    children:
+    - hammer.notify
     - hammer.ban.normal
     - hammer.ban.temp
     - hammer.ban.perm
@@ -66,6 +69,8 @@ permissions:
     default: op
   hammer.unban.normal:
     default: op
+    children:
+    - hammer.notify
   hammer.unban.perm:
     default: op
     children: 
@@ -77,6 +82,7 @@ permissions:
   hammer.unban.*:
     default: op
     children:
+    - hammer.notify
     - hammer.unban.normal
     - hammer.unban.all
     - hammer.unban.perm
