@@ -6,15 +6,15 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 
 public class BukkitAlias implements CommandExecutor {
 
     private final String targetCommand;
     private final List<String> argumentsPrepend;
-    private final HammerBukkit plugin;
+    private final HammerBukkitPlugin plugin;
 
-    public BukkitAlias(HammerBukkit plugin, String targetCommand, List<String> argumentsPrepend) {
+    public BukkitAlias(HammerBukkitPlugin plugin, String targetCommand, List<String> argumentsPrepend) {
         this.targetCommand = targetCommand;
         this.argumentsPrepend = argumentsPrepend;
         this.plugin = plugin;

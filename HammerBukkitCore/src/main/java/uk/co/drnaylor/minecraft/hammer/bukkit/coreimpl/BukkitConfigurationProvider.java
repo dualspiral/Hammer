@@ -1,13 +1,13 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl;
 
-import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
 
 public class BukkitConfigurationProvider implements IConfigurationProvider {
 
-    private final HammerBukkit plugin;
+    private final HammerBukkitPlugin plugin;
 
-    public BukkitConfigurationProvider(HammerBukkit plugin) {
+    public BukkitConfigurationProvider(HammerBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 

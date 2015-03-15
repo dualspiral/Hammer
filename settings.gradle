@@ -8,3 +8,5 @@ include 'HammerCore'
 
 include 'HammerSponge'
 
+include 'HammerBukkitCore'
+

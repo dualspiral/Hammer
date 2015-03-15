@@ -3,12 +3,12 @@ package uk.co.drnaylor.minecraft.hammer.bukkit.listeners;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 
 public class PlayerJoinListener implements Listener {
-    private final HammerBukkit plugin;
+    private final HammerBukkitPlugin plugin;
 
-    public PlayerJoinListener(HammerBukkit plugin) {
+    public PlayerJoinListener(HammerBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 

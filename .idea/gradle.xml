@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/HammerBukkit" />
+            <option value="$PROJECT_DIR$/HammerBukkitCore" />
             <option value="$PROJECT_DIR$/HammerCore" />
             <option value="$PROJECT_DIR$/HammerSpigot" />
             <option value="$PROJECT_DIR$/HammerSponge" />

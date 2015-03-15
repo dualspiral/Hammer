@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 sourceCompatibility = 1.7
-version = '0.1'
+version = '0.1.1'
 
 repositories {
     maven {
@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     compile project(':HammerCore')
+    compile project(':HammerBukkitCore')
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
 }
@@ -30,6 +31,7 @@ sourceSets {
 shadowJar  {
     dependencies {
         include(project(':HammerCore'))
+        include(project(':HammerBukkitCore'))
     }
 }
 build.dependsOn(shadowJar)

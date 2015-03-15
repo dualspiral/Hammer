@@ -1,20 +1,17 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.runnables;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import org.bukkit.entity.Player;
-import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl.BukkitHammerPlayerTranslator;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 
 public class CreateHammerPlayerRunnable implements Runnable {
-    private final HammerBukkit plugin;
+    private final HammerBukkitPlugin plugin;
     private final Set<Player> player;
 
-    public CreateHammerPlayerRunnable(HammerBukkit plugin) {
+    public CreateHammerPlayerRunnable(HammerBukkitPlugin plugin) {
         this.player = new HashSet<>();
         this.plugin = plugin;
     }

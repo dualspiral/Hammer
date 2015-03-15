@@ -1,23 +1,24 @@
-package uk.co.drnaylor.minecraft.hammer.spigot.listeners;
+package uk.co.drnaylor.minecraft.hammer.bukkit.listeners;
 
 import java.util.Date;
 import java.util.UUID;
+
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import uk.co.drnaylor.minecraft.hammer.spigot.HammerSpigot;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 
 public class PlayerConnectListener implements Listener {
 
-    private final HammerSpigot plugin;
+    private final HammerBukkitPlugin plugin;
 
-    public PlayerConnectListener(HammerSpigot plugin) {
+    public PlayerConnectListener(HammerBukkitPlugin plugin) {
         this.plugin = plugin;
     }
 

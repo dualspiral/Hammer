@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" filepath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HammerBukkitCore/HammerBukkitCore.iml" filepath="$PROJECT_DIR$/HammerBukkitCore/HammerBukkitCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/HammerCore/HammerCore.iml" filepath="$PROJECT_DIR$/HammerCore/HammerCore.iml" />
       <module fileurl="file://$PROJECT_DIR$/HammerGradle.iml" filepath="$PROJECT_DIR$/HammerGradle.iml" />
       <module fileurl="file://$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" filepath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" />

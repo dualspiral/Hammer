@@ -1,6 +1,6 @@
 name: Hammer
 version: 0.1.1
-main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
+main: uk.co.drnaylor.minecraft.hammer.spigot.HammerSpigot
 commands:
   ban:
     description: Ban a player.
