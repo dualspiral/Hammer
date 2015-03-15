@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2deb28c4-c2ef-42b6-89b9-a6195ad79781" name="Default" comment="">
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\resources\plugin.yml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\resources\plugin.yml" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\HammerSpigot.java" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/build.gradle" afterPath="$PROJECT_DIR$/HammerBukkit/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/build.gradle" afterPath="$PROJECT_DIR$/HammerSpigot/build.gradle" />
     </list>
     <ignored path="HammerGradle.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -70,11 +66,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/HammerSpigot/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="31" max-vertical-offset="765">
-              <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.11971831" vertical-offset="0" max-vertical-offset="765">
+              <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -83,8 +79,8 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerBukkit/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="146" max-vertical-offset="714">
-              <caret line="16" column="79" selection-start-line="16" selection-start-column="79" selection-end-line="16" selection-end-column="79" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="714">
+              <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -112,11 +108,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HammerCore.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="HammerCore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.49741825" vertical-offset="0" max-vertical-offset="1802">
-              <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1802">
+              <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="plugin.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1598">
+              <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -1228,15 +1234,15 @@
         <option value="$PROJECT_DIR$/settings.gradle" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/bukkit/commands/HammerCommand.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
-        <option value="$PROJECT_DIR$/HammerBukkit/build.gradle" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/build.gradle" />
-        <option value="$PROJECT_DIR$/HammerSpigot/build.gradle" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml" />
         <option value="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
         <option value="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/HammerBukkit/build.gradle" />
+        <option value="$PROJECT_DIR$/HammerSpigot/build.gradle" />
       </list>
     </option>
   </component>
@@ -2306,26 +2312,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerBukkit/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="714">
-          <caret line="16" column="79" selection-start-line="16" selection-start-column="79" selection-end-line="16" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/HammerBukkitCore/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
           <caret line="15" column="79" selection-start-line="15" selection-start-column="79" selection-end-line="15" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="31" max-vertical-offset="765">
-          <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -2344,14 +2334,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="214" max-vertical-offset="2346">
           <caret line="67" column="78" selection-start-line="67" selection-start-column="78" selection-end-line="67" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029259896" vertical-offset="0" max-vertical-offset="1598">
-          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
           <folding />
         </state>
       </provider>
@@ -2376,8 +2358,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49741825" vertical-offset="0" max-vertical-offset="1802">
-          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1802">
+          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1598">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkit/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="714">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11971831" vertical-offset="0" max-vertical-offset="765">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
           <folding />
         </state>
       </provider>
