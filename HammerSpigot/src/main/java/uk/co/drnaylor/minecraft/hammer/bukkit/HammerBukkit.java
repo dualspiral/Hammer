@@ -1,12 +1,11 @@
-package uk.co.drnaylor.minecraft.hammer.spigot;
+package uk.co.drnaylor.minecraft.hammer.bukkit;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.entity.Player;
-import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 
 import java.util.Collection;
 
-public class HammerSpigot extends HammerBukkitPlugin {
+public class HammerBukkit extends HammerBukkitPlugin {
 
     @Override
     protected Player[] getOnlinePlayers() {

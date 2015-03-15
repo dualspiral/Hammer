@@ -2,6 +2,7 @@ package uk.co.drnaylor.minecraft.hammer.bukkit;
 
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitAlias;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitCommand;
+import uk.co.drnaylor.minecraft.hammer.bukkit.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl.*;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
 import uk.co.drnaylor.minecraft.hammer.bukkit.runnables.CreateHammerPlayerRunnable;
@@ -62,6 +63,9 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 this.getCommand("permban").setExecutor(new BukkitCommand(new PermBanCommandCore(core)));
                 this.getCommand("unban").setExecutor(new BukkitCommand(new UnbanCommandCore(core)));
                 this.getCommand("checkban").setExecutor(new BukkitCommand(new CheckBanCommandCore(core)));
+
+                // Hammer
+                this.getCommand("hammer").setExecutor(new HammerCommand(this));
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");

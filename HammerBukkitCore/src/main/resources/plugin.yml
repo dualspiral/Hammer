@@ -1,5 +1,5 @@
 name: Hammer
-version: 0.1.1
+version: 0.1.2
 main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
 commands:
   ban:
@@ -32,6 +32,9 @@ commands:
     permission: hammer.checkban
     usage: "/checkban <player>"
     aliases: [chkban, hcheckban, hammercheckban]
+  hammer:
+    description: Get information about Hammer.
+    permission: hammer.about
 #  banip:
 #    description: IP Ban a player.
 #    permission: hammer.banip
@@ -81,4 +84,6 @@ permissions:
     - hammer.unban.all
     - hammer.unban.perm
   hammer.notify:
+    default: op
+  hammer.about:
     default: op

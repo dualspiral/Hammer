@@ -2,54 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2deb28c4-c2ef-42b6-89b9-a6195ad79781" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_guava_guava_17_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__ninja_leaping_configurate_configurate_core_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__ninja_leaping_configurate_configurate_hocon_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_bukkit_bukkit_1_8_R0_1_SNAPSHOT.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/HammerBukkitCore/HammerBukkitCore.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\commands\BukkitAlias.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\commands\BukkitCommand.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitConfigurationProvider.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitHammerPlayerTranslator.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitPlayerActions.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitPlayerMessageBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitPlayerPermissionCheck.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitPlayerToUUIDTranslator.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\coreimpl\BukkitServerMessageBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\listeners\PlayerConnectListener.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\listeners\PlayerJoinListener.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\runnables\CreateHammerPlayerRunnable.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\resources\config.yml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__net_md_5_bungeecord_chat_1_8_SNAPSHOT.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__net_md_5_bungeecord_chat_1_8_SNAPSHOT.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__org_spongepowered_spongeapi_1_1_SNAPSHOT.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_spongepowered_spongeapi_1_1_SNAPSHOT.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" afterPath="$PROJECT_DIR$/HammerBukkit/HammerBukkit.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" afterPath="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" afterPath="$PROJECT_DIR$/HammerSpigot/HammerSpigot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSponge/HammerSponge.iml" afterPath="$PROJECT_DIR$/HammerSponge/HammerSponge.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/build.gradle" afterPath="$PROJECT_DIR$/HammerBukkit/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/build.gradle" afterPath="$PROJECT_DIR$/HammerSpigot/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml" afterPath="$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
+      <change type="DELETED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\resources\plugin.yml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\HammerBukkit.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\commands\BukkitAlias.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/BukkitAlias.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\commands\BukkitCommand.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/BukkitCommand.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitConfigurationProvider.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitConfigurationProvider.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitHammerPlayerTranslator.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitHammerPlayerTranslator.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitPlayerActions.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerActions.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitPlayerMessageBuilder.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerMessageBuilder.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitPlayerPermissionCheck.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerPermissionCheck.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitPlayerToUUIDTranslator.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitPlayerToUUIDTranslator.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\coreimpl\BukkitServerMessageBuilder.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/coreimpl/BukkitServerMessageBuilder.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\listeners\PlayerConnectListener.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/listeners/PlayerConnectListener.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\listeners\PlayerJoinListener.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/listeners/PlayerJoinListener.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\java\uk\co\drnaylor\minecraft\hammer\bukkit\runnables\CreateHammerPlayerRunnable.java" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/runnables/CreateHammerPlayerRunnable.java" />
-      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\resources\config.yml" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/resources/config.yml" />
+      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerBukkit\src\main\resources\plugin.yml" afterPath="$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml" />
+      <change type="MOVED" beforePath="D:\Minecraft Plugins\HammerGradle\HammerSpigot\src\main\java\uk\co\drnaylor\minecraft\hammer\spigot\HammerSpigot.java" afterPath="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
     </list>
     <ignored path="HammerGradle.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -100,11 +58,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HammerSpigot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+      <file leaf-file-name="HammerBukkit.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
-              <caret line="0" column="46" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="357">
+              <caret line="0" column="30" selection-start-line="0" selection-start-column="30" selection-end-line="0" selection-end-column="30" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -145,8 +103,8 @@
       <file leaf-file-name="HammerCommand.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -154,31 +112,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plugin.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml">
+      <file leaf-file-name="HammerCore.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
-              <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/HammerSponge/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="201" max-vertical-offset="782">
-              <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="plugin.yml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.05851979" vertical-offset="0" max-vertical-offset="1513">
-              <caret line="2" column="45" selection-start-line="2" selection-start-column="45" selection-end-line="2" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.49741825" vertical-offset="0" max-vertical-offset="1802">
+              <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -187,8 +125,8 @@
       <file leaf-file-name="HammerBukkitPlugin.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="809" max-vertical-offset="2380">
-              <caret line="80" column="25" selection-start-line="80" selection-start-column="25" selection-end-line="80" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1530" max-vertical-offset="2346">
+              <caret line="67" column="78" selection-start-line="67" selection-start-column="78" selection-end-line="67" selection-end-column="78" />
               <folding />
             </state>
           </provider>
@@ -1287,15 +1225,18 @@
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/runnables/CreateHammerPlayerRunnable.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/listeners/PlayerJoinListener.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
-        <option value="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
         <option value="$PROJECT_DIR$/settings.gradle" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/bukkit/commands/HammerCommand.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/build.gradle" />
         <option value="$PROJECT_DIR$/HammerBukkitCore/build.gradle" />
         <option value="$PROJECT_DIR$/HammerSpigot/build.gradle" />
-        <option value="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java" />
+        <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java" />
         <option value="$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml" />
+        <option value="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java" />
+        <option value="$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml" />
       </list>
     </option>
   </component>
@@ -1414,7 +1355,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bukkit" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1428,7 +1373,61 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HammerSpigot" />
+              <option name="myItemId" value="HammerCore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerCore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerCore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerCore" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1444,7 +1443,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="spigot" />
+              <option name="myItemId" value="core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1499,6 +1498,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1542,39 +1545,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="HammerBukkit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerGradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerGradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerBukkit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerGradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerGradle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="HammerBukkit" />
+              <option name="myItemId" value="HammerBukkitCore" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1586,7 +1557,47 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bukkit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerBukkit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerGradle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="HammerBukkit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1647,6 +1658,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
+    <property name="last_directory_selection" value="$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -1952,7 +1964,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2278">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1962,7 +1974,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="2261">
           <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
@@ -2008,7 +2020,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="2261">
           <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
@@ -2047,7 +2059,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="2261">
           <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
@@ -2079,7 +2091,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="459" max-vertical-offset="2261">
           <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
@@ -2150,17 +2162,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74823946" vertical-offset="1734" max-vertical-offset="2448">
           <caret line="143" column="104" selection-start-line="143" selection-start-column="104" selection-end-line="143" selection-end-column="104" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1836">
-          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
-          <folding>
-            <element signature="e#888#889#0" expanded="true" />
-            <element signature="e#916#917#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2278,29 +2279,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="809" max-vertical-offset="2380">
-          <caret line="80" column="25" selection-start-line="80" selection-start-column="25" selection-end-line="80" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.29259896" vertical-offset="0" max-vertical-offset="581">
           <caret line="10" column="26" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="26" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2320,14 +2303,6 @@
             <element signature="e#195#196#0" expanded="true" />
             <element signature="e#253#254#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSponge/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="782">
-          <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2355,28 +2330,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/spigot/HammerSpigot.java">
+    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkit.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
-          <caret line="0" column="46" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="46" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="357">
+          <caret line="0" column="30" selection-start-line="0" selection-start-column="30" selection-end-line="0" selection-end-column="30" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerSpigot/src/main/resources/plugin.yml">
+    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/HammerBukkitPlugin.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1615">
-          <caret line="2" column="57" selection-start-line="2" selection-start-column="57" selection-end-line="2" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="214" max-vertical-offset="2346">
+          <caret line="67" column="78" selection-start-line="67" selection-start-column="78" selection-end-line="67" selection-end-column="78" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/HammerBukkit/src/main/resources/plugin.yml">
+    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/resources/plugin.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.05851979" vertical-offset="0" max-vertical-offset="1513">
-          <caret line="2" column="45" selection-start-line="2" selection-start-column="45" selection-end-line="2" selection-end-column="45" />
+        <state vertical-scroll-proportion="0.029259896" vertical-offset="0" max-vertical-offset="1598">
+          <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerSponge/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44406196" vertical-offset="201" max-vertical-offset="782">
+          <caret line="27" column="26" selection-start-line="27" selection-start-column="26" selection-end-line="27" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerBukkitCore/src/main/java/uk/co/drnaylor/minecraft/hammer/bukkit/commands/HammerCommand.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/HammerCore/src/main/java/uk/co/drnaylor/minecraft/hammer/core/HammerCore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49741825" vertical-offset="0" max-vertical-offset="1802">
+          <caret line="21" column="39" selection-start-line="21" selection-start-column="39" selection-end-line="21" selection-end-column="39" />
           <folding />
         </state>
       </provider>
