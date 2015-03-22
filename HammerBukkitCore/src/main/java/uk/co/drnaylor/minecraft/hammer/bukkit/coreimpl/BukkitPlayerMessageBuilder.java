@@ -1,5 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,55 +11,72 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
 
 public class BukkitPlayerMessageBuilder implements IPlayerMessageBuilder {
 
-    @Override
-    public void sendNoPermsMessage(UUID uuid) {
-        Player pl = Bukkit.getPlayer(uuid);
-        if (pl != null) {
-            pl.sendMessage(ChatColor.RED + "[Hammer] You do not have permission to perform that type of ban.");
+    private final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+
+    private StringBuilder getMessage(String messageKey) {
+        StringBuilder sb = new StringBuilder().append(ChatColor.RED).append(HammerConstants.textTag).append(" ");
+        if (messageKey != null) {
+            sb.append(messageBundle.getString(messageKey));
         }
+
+        return sb;
     }
 
-    @Override
-    public void sendNoPlayerMessage(UUID uuid) {
+    private void sendMessage(UUID uuid, String messageKey) {
+        String msg = getMessage(messageKey).toString();
         if (uuid.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] That player cannot be found.");
+            Bukkit.getConsoleSender().sendMessage(msg);
         } else {
             Player pl = Bukkit.getPlayer(uuid);
             if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] That player cannot be found.");
+                pl.sendMessage(msg);
             }
         }
     }
 
     @Override
+    public void sendNoPermsMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.noperms");
+    }
+
+    @Override
+    public void sendNoPlayerMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.noplayer");
+    }
+
+    @Override
     public void sendUsageMessage(UUID player, String message) {
+        String m = getMessage("hammer.player.commandUsage").append(" ").append(ChatColor.YELLOW).append(message).toString();
         if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] Command Usage: " + ChatColor.YELLOW + message);
+            Bukkit.getConsoleSender().sendMessage(m);
         } else {
             Player pl = Bukkit.getPlayer(player);
             if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] Command Usage: " + ChatColor.YELLOW + message);
+                pl.sendMessage(m);
             }
         }
     }
 
     @Override
     public void sendErrorMessage(UUID player, String message) {
+        String m = getMessage(null).append(" ").append(message).toString();
         if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] " + message);
+            Bukkit.getConsoleSender().sendMessage(m);
         } else {
             Player pl = Bukkit.getPlayer(player);
             if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] " + message);
+                pl.sendMessage(m);
             }
         }
     }
 
     @Override
     public void sendStandardMessage(UUID player, String message, boolean withTag) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb;
         if (withTag) {
-            sb.append(ChatColor.RED).append("[Hammer] ");
+            sb = getMessage(null).append(" ");
+        } else {
+            sb = new StringBuilder();
         }
 
         sb.append(ChatColor.GREEN).append(message);
@@ -72,51 +91,23 @@ public class BukkitPlayerMessageBuilder implements IPlayerMessageBuilder {
     }
 
     @Override
-    public void sendAlreadyBannedMessage(UUID player) {
-        if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] This player has already been banned to this level.");
-        } else {
-            Player pl = Bukkit.getPlayer(player);
-            if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] This player has already been banned to this level.");
-            }
-        }
+    public void sendAlreadyBannedMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.alreadyBanned");
     }
 
     @Override
-    public void sendAlreadyBannedFailMessage(UUID player) {
-        if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] This player has already been banned, and Hammer does not know how to resolve this. Please unban before re-banning.");
-        } else {
-            Player pl = Bukkit.getPlayer(player);
-            if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] This player has already been banned, and Hammer does not know how to resolve this. Please unban before re-banning.");
-            }
-        }
+    public void sendAlreadyBannedFailMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.ambiguousBan");
     }
 
     @Override
-    public void sendToPermMessage(UUID player) {
-        if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] This player has already been banned with a permanent ban elsewhere. Your global ban has been upgraded to include this.");
-        } else {
-            Player pl = Bukkit.getPlayer(player);
-            if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] This player has already been banned with a permanent ban elsewhere. Your global ban has been upgraded to include this.");
-            }
-        }
+    public void sendToPermMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.upgradeToPerm");
     }
 
     @Override
-    public void sendToAllMessage(UUID player) {
-        if (player.equals(HammerConstants.consoleUUID)) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[Hammer] This player has already been banned with a global ban. Your permanent ban has been upgraded to include this.");
-        } else {
-            Player pl = Bukkit.getPlayer(player);
-            if (pl != null) {
-                pl.sendMessage(ChatColor.RED + "[Hammer] This player has already been banned with a global ban. Your permanent ban has been upgraded to include this.");
-            }
-        }
+    public void sendToAllMessage(UUID uuid) {
+        sendMessage(uuid, "hammer.player.upgradeToAll");
     }
     
 }

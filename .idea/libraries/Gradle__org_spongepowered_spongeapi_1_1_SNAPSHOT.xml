@@ -2,10 +2,12 @@
   <library name="Gradle: org.spongepowered:spongeapi:1.1-SNAPSHOT">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/1.1-SNAPSHOT/905dfb3842bddfe9262356a807195fa6dd8f0edf/spongeapi-1.1-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/1.1-SNAPSHOT/94c88c8c91cdf7ecb3a2c1dc65bc553c51926133/spongeapi-1.1-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/1.1-SNAPSHOT/c1a9687834c2ac4d2d74ee17a5a8de168a08f67f/spongeapi-1.1-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/1.1-SNAPSHOT/2eb88c0156cb286c112e96a76f098536644a5f7e/spongeapi-1.1-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
