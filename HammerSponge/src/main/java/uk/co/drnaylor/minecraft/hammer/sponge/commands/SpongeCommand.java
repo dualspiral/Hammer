@@ -1,10 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableCollection;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.message.Messages;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
@@ -36,7 +36,8 @@ public class SpongeCommand implements CommandCallable {
                 commandCore.executeCommandAsConsole(Arrays.asList(arguments.split(" ")));
             }
         } catch (HammerException ex) {
-            source.sendMessage(Messages.builder("[Hammer] An error occurred while executing the command.").color(TextColors.RED).build());
+            source.sendMessage(Texts.of("[Hammer] An error occurred while executing the command.").
+                    builder().color(TextColors.RED).build());
             ex.printStackTrace();
         }
 
@@ -55,17 +56,17 @@ public class SpongeCommand implements CommandCallable {
     }
 
     @Override
-    public Optional<String> getShortDescription() {
+    public String getShortDescription(CommandSource commandSource) {
         return null;
     }
 
     @Override
-    public Optional<String> getHelp() {
-        return Optional.absent();
+    public Text getHelp(CommandSource commandSource) {
+        return null;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage(CommandSource commandSource) {
         return null;
     }
 

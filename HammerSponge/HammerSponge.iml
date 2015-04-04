@@ -27,7 +27,7 @@
     <orderEntry type="library" exported="" name="Gradle: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:17.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-hocon:1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:1.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-hocon:1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:1.0.1" level="project" />
   </component>
 </module>

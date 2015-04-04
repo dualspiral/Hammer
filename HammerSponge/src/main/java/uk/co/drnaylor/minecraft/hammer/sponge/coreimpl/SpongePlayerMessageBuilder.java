@@ -6,15 +6,15 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextBuilder;
+import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.HoverAction;
 import org.spongepowered.api.text.action.ShiftClickAction;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
-import org.spongepowered.api.text.message.Message;
-import org.spongepowered.api.text.message.MessageBuilder;
-import org.spongepowered.api.text.message.Messages;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
 
@@ -41,16 +41,13 @@ public class SpongePlayerMessageBuilder implements IPlayerMessageBuilder {
      */
     private Server getServer() {
         if (server == null) {
-            Optional<Server> serverOptional = game.getServer();
-            if (serverOptional.isPresent()) {
-                server = serverOptional.get();
-            }
+            server = game.getServer();
         }
 
         return server;
     }
 
-    private void sendMessageToPlayer(UUID uuid, Message... messages) {
+    private void sendMessageToPlayer(UUID uuid, Text... messages) {
         Optional<Player> player = getServer().getPlayer(uuid);
         if (player.isPresent()) {
             player.get().sendMessage(messages);
@@ -70,7 +67,7 @@ public class SpongePlayerMessageBuilder implements IPlayerMessageBuilder {
     @Override
     public void sendNoPermsMessage(UUID uuid) {
         // Create the message.
-        Message m = Messages.builder("[Hammer] You do not have permission to perform that action.")
+        Text m = Texts.of("[Hammer] You do not have permission to perform that action.").builder()
                 .color(TextColors.RED).build();
 
         // Send it

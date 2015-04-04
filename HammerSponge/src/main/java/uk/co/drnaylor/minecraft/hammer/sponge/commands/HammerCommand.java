@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
 import com.google.common.base.Optional;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandSource;
@@ -19,17 +20,17 @@ public class HammerCommand implements CommandCallable {
     }
 
     @Override
-    public Optional<String> getShortDescription() {
+    public String getShortDescription(CommandSource commandSource) {
         return null;
     }
 
     @Override
-    public Optional<String> getHelp() {
+    public Text getHelp(CommandSource commandSource) {
         return null;
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage(CommandSource commandSource) {
         return null;
     }
 
