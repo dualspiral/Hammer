@@ -11,4 +11,5 @@ public class HammerConstants {
 
     public static final UUID consoleUUID;
     public static final String textTag = "[Hammer]";
+    public final static String consoleName = "*Console*";
 }
