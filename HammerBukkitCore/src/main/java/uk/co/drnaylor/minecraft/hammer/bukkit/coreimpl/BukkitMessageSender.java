@@ -20,10 +20,10 @@ public class BukkitMessageSender implements IMessageSender {
     /**
      * Sends a message to all players.
      *
-     * @param messages The {@link Collection} of {@link HammerText}s to send.
+     * @param messages The {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToAllPlayer(Collection<HammerText> messages) {
+    public void sendMessageToAllPlayers(HammerText messages) {
         Bukkit.broadcastMessage(constructMessage(messages));
     }
 
@@ -31,10 +31,10 @@ public class BukkitMessageSender implements IMessageSender {
      * Sends a message to a player.
      *
      * @param uuid     The {@link UUID} of the player to send a message to.
-     * @param messages The {@link Collection} of {@link HammerText}s to send.
+     * @param messages The {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToPlayer(UUID uuid, Collection<HammerText> messages) {
+    public void sendMessageToPlayer(UUID uuid, HammerText messages) {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player != null && player.isOnline()) {
             player.sendMessage(constructMessage(messages));
@@ -48,7 +48,7 @@ public class BukkitMessageSender implements IMessageSender {
      * @param messages       The messages to send.
      */
     @Override
-    public void sendMessageToPlayersWithPermission(String permissionNode, Collection<HammerText> messages) {
+    public void sendMessageToPlayersWithPermission(String permissionNode, HammerText messages) {
         Bukkit.broadcast(constructMessage(messages), permissionNode);
     }
 
@@ -58,7 +58,7 @@ public class BukkitMessageSender implements IMessageSender {
      * @param message The {@link Collection} of {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToConsole(Collection<HammerText> message) {
+    public void sendMessageToConsole(HammerText message) {
         Bukkit.getConsoleSender().sendMessage(constructMessage(message));
     }
 
@@ -68,10 +68,10 @@ public class BukkitMessageSender implements IMessageSender {
      * @param message The {@link HammerText} messages.
      * @return The completed message.
      */
-    private String constructMessage(Collection<HammerText> message) {
+    private String constructMessage(HammerText message) {
         StringBuilder sb = new StringBuilder();
 
-        for (HammerText t : message) {
+        for (HammerText.Element t : message.getElements()) {
             if (sb.length() > 0) {
                 sb.append(ChatColor.RESET);
             }

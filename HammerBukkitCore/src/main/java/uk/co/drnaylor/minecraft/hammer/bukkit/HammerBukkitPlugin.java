@@ -144,8 +144,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
     protected final HammerPluginActionProvider createActionProvider() {
         return new HammerPluginActionProvider(
                 new BukkitPlayerActions(),
-                new BukkitPlayerMessageBuilder(),
-                new BukkitServerMessageBuilder(),
+                new BukkitMessageSender(),
                 new BukkitPlayerToUUIDTranslator(),
                 new BukkitPlayerPermissionCheck(),
                 new BukkitConfigurationProvider(this));

@@ -1,9 +1,12 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
@@ -12,6 +15,9 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerPermissionCheck;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 public abstract class BaseBanCommandCore extends CommandCore {
 
@@ -49,11 +55,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
     public final boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
         IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
         IPlayerPermissionCheck check = core.getActionProvider().getPermissionCheck();
-        IPlayerMessageBuilder playerMsg = core.getActionProvider().getPlayerMessageBuilder();
         Iterator<String> argumentIterator = arguments.iterator();
 
         if (arguments.size() < minArguments()) {
-            playerMsg.sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID, getUsage());
             return true;
         }
 
@@ -72,7 +77,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
             if (!isGlobal && this.isGlobalBan(currentArg)) {
                 isGlobal = true;
                 if (!check.hasPermissionToBanOnAllServers(playerUUID)) {
-                    playerMsg.sendNoPermsMessage(playerUUID);
+                    sendNoPermsMessage(playerUUID);
                     return true;
                 }
 
@@ -85,7 +90,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         // Next up, the player
         UUID uuidToBan = core.getActionProvider().getPlayerTranslator().playerNameToUUID(currentArg);
         if (uuidToBan == null) {
-            core.getActionProvider().getPlayerMessageBuilder().sendNoPlayerMessage(playerUUID);
+            sendNoPlayerMessage(playerUUID, currentArg);
             return true;
         }
 
@@ -93,18 +98,18 @@ public abstract class BaseBanCommandCore extends CommandCore {
         conn.startTransaction();
         BanInfo status = checkOtherBans(uuidToBan, conn, isGlobal);
         if (status.status == BanStatus.NO_ACTION) {
-            core.getActionProvider().getPlayerMessageBuilder().sendAlreadyBannedMessage(playerUUID);
+            sendTemplatedMessage(playerUUID, "hammer.player.alreadyBanned", true, true);
 
             return true;
         } else if (status.status == BanStatus.TO_PERM) {
             // Auto upgrade! If you get a global ban, and a permanent ban is already in force, the 
             // permanent ban takes effect everywhere.
-            core.getActionProvider().getPlayerMessageBuilder().sendToPermMessage(playerUUID);
+            sendTemplatedMessage(playerUUID, "hammer.player.upgradeToPerm", false, false);
             builder.setPerm(true);
         } else if (status.status == BanStatus.TO_GLOBAL) {
             // Auto upgrade! If you get a perm ban, and a global ban is already in force, the 
             // permanent ban takes effect everywhere.
-            core.getActionProvider().getPlayerMessageBuilder().sendToAllMessage(playerUUID);
+            sendTemplatedMessage(playerUUID, "hammer.player.upgradeToAll", false, false);
             conn.getBanHandler().unbanFromAllServers(uuidToBan);
             builder.setAll(true);
         }
@@ -113,7 +118,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         if (!performSpecificActions(builder, argumentIterator)) {
             // Usage.
-            playerMsg.sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID, getUsage());
             conn.rollbackTransaction();
             return true;
         }
@@ -121,7 +126,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         String reason = createReason(argumentIterator, status.reasons);
         if (reason == null) {
             // Usage.
-            playerMsg.sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID, getUsage());
             conn.rollbackTransaction();
             return true;
         }
@@ -137,11 +142,17 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         core.getActionProvider().getPlayerActions().banPlayer(ban.getBannedUUID(), ban.getStaffUUID(), reason);
 
+        HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());
+
         // Do we tell the server, or just the notified?
         if (!isQuiet && core.getActionProvider().getConfigurationProvider().notifyServerOfBans()) {
-            core.getActionProvider().getServerMessageBuilder().sendBanMessageToAll(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());
+            for (HammerText t : msg) {
+                core.getActionProvider().getMessageSender().sendMessageToAllPlayers(t);
+            }
         } else {
-            core.getActionProvider().getServerMessageBuilder().sendBanMessageToNotified(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());
+            for (HammerText t : msg) {
+                core.getActionProvider().getMessageSender().sendMessageToPlayersWithPermission("hammer.notify", t);
+            }
         }
 
         return true;
@@ -199,6 +210,59 @@ public abstract class BaseBanCommandCore extends CommandCore {
         return quietPattern.matcher(argument0).matches();
     }
 
+    /**
+     * Gets the constructed set of {@link HammerTextBuilder}
+     *
+     * @param banned
+     * @param bannedBy
+     * @param reason
+     * @param isTemp
+     * @param isAll
+     * @param isPerm
+     * @return
+     */
+    protected HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm) {
+        String playerName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(banned);
+
+        HammerText[] messages = new HammerText[2];
+        String name;
+        if (bannedBy.equals(HammerConstants.consoleUUID)) {
+            name = String.format("*%s*", messageBundle.getString("hammer.console"));
+        } else {
+            name = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(bannedBy);
+        }
+
+        String modifier = "";
+        if (isTemp) {
+            modifier = " " + messageBundle.getString("hammer.temporarily");
+        } else if (isPerm) {
+            modifier = " " + messageBundle.getString("hammer.permanently");
+        }
+
+        String fromAll = "";
+        if (isAll) {
+            fromAll = " " + messageBundle.getString("hammer.fromallservers");
+        }
+
+        HammerTextBuilder htb = new HammerTextBuilder();
+        htb.addText(HammerConstants.textTag, HammerTextColours.RED, null)
+                .addText(playerName, HammerTextColours.WHITE, null)
+                .addText(" " + MessageFormat.format(messageBundle.getString("hammer.server.banMessage"), modifier, fromAll), HammerTextColours.RED)
+                .addText(" " + name, HammerTextColours.WHITE);
+
+        messages[0] = htb.build();
+
+        htb.clear();
+
+        StringBuilder sb = new StringBuilder(HammerConstants.textTag).append(" ")
+                .append(messageBundle.getString("hammer.reason")).append(" ")
+                .append(reason);
+        htb.addText(sb.toString(), HammerTextColours.RED);
+
+        messages[1] = htb.build();
+        return messages;
+    }
+
     protected enum BanStatus
     {
         CONTINUE(""),
@@ -207,7 +271,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         TO_GLOBAL("The ban was upgraded to a global ban, due to one being in force on this or another server.");
         
         private final String msg;
-        private BanStatus(String msg) {
+        BanStatus(String msg) {
             this.msg = msg;
         }
 

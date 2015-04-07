@@ -30,7 +30,7 @@ public class SpongeMessageSender implements IMessageSender {
      * @param messages The {@link Collection} of {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToAllPlayer(Collection<HammerText> messages) {
+    public void sendMessageToAllPlayers(HammerText messages) {
         game.getServer().broadcastMessage(constructMessage(messages));
     }
 
@@ -41,7 +41,7 @@ public class SpongeMessageSender implements IMessageSender {
      * @param messages The {@link Collection} of {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToPlayer(UUID uuid, Collection<HammerText> messages) {
+    public void sendMessageToPlayer(UUID uuid, HammerText messages) {
         Optional<Player> opt = game.getServer().getPlayer(uuid);
         if (opt.isPresent()) {
             Player pl = opt.get();
@@ -58,7 +58,7 @@ public class SpongeMessageSender implements IMessageSender {
      * @param messages       The messages to send.
      */
     @Override
-    public void sendMessageToPlayersWithPermission(String permissionNode, Collection<HammerText> messages) {
+    public void sendMessageToPlayersWithPermission(String permissionNode, HammerText messages) {
         Collection<Player> players = game.getServer().getOnlinePlayers();
         Text messageToSend = constructMessage(messages);
 
@@ -80,7 +80,7 @@ public class SpongeMessageSender implements IMessageSender {
      * @param message The {@link Collection} of {@link HammerText}s to send.
      */
     @Override
-    public void sendMessageToConsole(Collection<HammerText> message) {
+    public void sendMessageToConsole(HammerText message) {
         game.getServer().getConsole().sendMessage(constructMessage(message));
     }
 
@@ -90,12 +90,10 @@ public class SpongeMessageSender implements IMessageSender {
      * @param text The input {@link HammerText} objects
      * @return The constructed {@link Text} object.
      */
-    private Text constructMessage(Collection<HammerText> text) {
-        StringBuilder sb = new StringBuilder();
-
+    private Text constructMessage(HammerText text) {
         TextBuilder tb = Texts.builder();
 
-        for (HammerText t : text) {
+        for (HammerText.Element t : text.getElements()) {
             TextColor tc = HammerTextToTextColorCoverter.getCodeFromHammerText(t.colour);
             TextStyle s = TextStyles.of();
             for (HammerTextFormats f : t.formats) {

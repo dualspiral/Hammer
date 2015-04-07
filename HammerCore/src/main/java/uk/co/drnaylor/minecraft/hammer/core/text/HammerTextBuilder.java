@@ -1,11 +1,18 @@
 package uk.co.drnaylor.minecraft.hammer.core.text;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class HammerTextBuilder {
 
-    private ArrayList<HammerText> textList = new ArrayList<>();
+    private ArrayList<HammerText.Element> textList = new ArrayList<>();
+
+    public HammerTextBuilder addText(String text) {
+        return addText(text, null, null);
+    }
+
+    public HammerTextBuilder addText(String text, HammerTextColours colour) {
+        return addText(text, colour, null);
+    }
 
     /**
      * Adds a string of text to the builder.
@@ -24,23 +31,24 @@ public class HammerTextBuilder {
             formats = new HammerTextFormats[] { HammerTextFormats.NONE };
         }
 
-        textList.add(new HammerText(text, colour, formats));
+        textList.add(new HammerText.Element(text, colour, formats));
         return this;
-    }
-
-    /**
-     * Gets the current {@list Collection} of {@link HammerText} objects.
-     *
-     * @return Gets the current text.
-     */
-    public Collection<HammerText> getText() {
-        return new ArrayList<>(textList);
     }
 
     /**
      * Clears the builder.
      */
-    public void clear() {
+    public HammerTextBuilder clear() {
         textList.clear();
+        return this;
+    }
+
+    /**
+     * Builds the {@link HammerText} object.
+     *
+     * @return The {@link HammerText} object.
+     */
+    public HammerText build() {
+        return new HammerText(textList);
     }
 }

@@ -2,7 +2,6 @@ package uk.co.drnaylor.minecraft.hammer.core.interfaces;
 
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
-import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -13,17 +12,17 @@ public interface IMessageSender {
     /**
      * Sends a message to all players.
      *
-     * @param messages The {@link Collection} of {@link HammerText}s to send.
+     * @param messages The {@link HammerText}s to send.
      */
-    void sendMessageToAllPlayer(Collection<HammerText> messages);
+    void sendMessageToAllPlayers(HammerText messages);
 
     /**
      * Sends a message to a player.
      *
      * @param uuid The {@link UUID} of the player to send a message to.
-     * @param messages The {@link Collection} of {@link HammerText}s to send.
+     * @param messages The {@link HammerText}s to send.
      */
-    void sendMessageToPlayer(UUID uuid, Collection<HammerText> messages);
+    void sendMessageToPlayer(UUID uuid, HammerText messages);
 
     /**
      * Sends a message to the players that are online with a specific permission node.
@@ -31,12 +30,12 @@ public interface IMessageSender {
      * @param permissionNode The permission node to use.
      * @param messages The messages to send.
      */
-    void sendMessageToPlayersWithPermission(String permissionNode, Collection<HammerText> messages);
+    void sendMessageToPlayersWithPermission(String permissionNode, HammerText messages);
 
     /**
      * Sends a message to the console.
      *
-     * @param message The {@link Collection} of {@link HammerText}s to send.
+     * @param message The {@link HammerText}s to send.
      */
-    void sendMessageToConsole(Collection<HammerText> message);
+    void sendMessageToConsole(HammerText message);
 }

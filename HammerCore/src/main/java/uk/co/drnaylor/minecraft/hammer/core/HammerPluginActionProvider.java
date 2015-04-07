@@ -8,19 +8,16 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.*;
  */
 public class HammerPluginActionProvider {
     private final IPlayerActions actions;
-    private final IPlayerMessageBuilder playerMessageBuilder;
-    private final IServerMessageBuilder serverMessageBuilder;
     private final IPlayerToUUIDTranslator playerTranslator;
     private final IPlayerPermissionCheck permissionCheck;
     private final IConfigurationProvider configProvider;
+    private final IMessageSender messageSender;
 
     public HammerPluginActionProvider(
-            IPlayerActions actions, IPlayerMessageBuilder playerMessageBuilder, 
-            IServerMessageBuilder serverMessageBuilder, IPlayerToUUIDTranslator playerTranslator,
+            IPlayerActions actions, IMessageSender messageSender, IPlayerToUUIDTranslator playerTranslator,
             IPlayerPermissionCheck permissionCheck, IConfigurationProvider configProvider) {
         this.actions = actions;
-        this.playerMessageBuilder = playerMessageBuilder;
-        this.serverMessageBuilder = serverMessageBuilder;
+        this.messageSender = messageSender;
         this.playerTranslator = playerTranslator;
         this.permissionCheck = permissionCheck;
         this.configProvider = configProvider;
@@ -30,13 +27,7 @@ public class HammerPluginActionProvider {
         return actions;
     }
 
-    public IPlayerMessageBuilder getPlayerMessageBuilder() {
-        return playerMessageBuilder;
-    }
-
-    public IServerMessageBuilder getServerMessageBuilder() {
-        return serverMessageBuilder;
-    }
+    public IMessageSender getMessageSender() { return messageSender; }
 
     public IPlayerToUUIDTranslator getPlayerTranslator() {
         return playerTranslator;
