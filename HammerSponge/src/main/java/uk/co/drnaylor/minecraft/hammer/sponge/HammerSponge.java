@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Sponge plugin entrypoint
  */
-@Plugin(id = "hammersponge", name = "Hammer for Sponge", version = "1.0")
+@Plugin(id = "hammersponge", name = "Hammer for Sponge", version = "0.2")
 public class HammerSponge {
 
     @Inject

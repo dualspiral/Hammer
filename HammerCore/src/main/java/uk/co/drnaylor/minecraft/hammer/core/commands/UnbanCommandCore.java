@@ -140,6 +140,7 @@ public class UnbanCommandCore extends CommandCore {
 
             // If you get here, then we have a ban to undo!
             conn.getBanHandler().unbanFromServer(bannee, serverId);
+            core.getActionProvider().getPlayerActions().unbanPlayer(bannee);
             if (allFlag) {
                 conn.getBanHandler().unbanFromAllServers(bannee);
             }
