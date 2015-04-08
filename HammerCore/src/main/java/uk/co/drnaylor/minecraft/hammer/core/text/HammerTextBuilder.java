@@ -7,11 +7,11 @@ public class HammerTextBuilder {
     private ArrayList<HammerText.Element> textList = new ArrayList<>();
 
     public HammerTextBuilder addText(String text) {
-        return addText(text, null, null);
+        return addText(text, null);
     }
 
     public HammerTextBuilder addText(String text, HammerTextColours colour) {
-        return addText(text, colour, null);
+        return addText(text, colour);
     }
 
     /**

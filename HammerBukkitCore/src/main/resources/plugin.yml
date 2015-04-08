@@ -32,6 +32,16 @@ commands:
     permission: hammer.checkban
     usage: "/checkban <player>"
     aliases: [chkban, hcheckban, hammercheckban]
+  kick:
+    description: Kicks a player
+    permission: hammer.kick
+    usage: "/kick [-q] <player> [reason]"
+    aliases: [hkick, hammerkick]
+  kickall:
+      description: Kicks all players
+      permission: hammer.kickall
+      usage: "/kickall [reason]"
+      aliases: [hkickall, hammerkickall]
   hammer:
     description: Get information about Hammer.
     permission: hammer.about
@@ -86,4 +96,8 @@ permissions:
   hammer.notify:
     default: op
   hammer.about:
+    default: op
+  hammer.kick:
+    default: op
+  hammer.kickall
     default: op

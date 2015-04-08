@@ -11,6 +11,11 @@ public class SpongePlayerActions implements IPlayerActions {
     }
 
     @Override
+    public void kickAllPlayers(UUID kicker, String reason) {
+
+    }
+
+    @Override
     public void banPlayer(UUID player, UUID banner, String reason) {
 
     }

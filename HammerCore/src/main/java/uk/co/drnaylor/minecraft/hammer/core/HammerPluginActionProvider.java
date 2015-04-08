@@ -8,13 +8,13 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.*;
  */
 public class HammerPluginActionProvider {
     private final IPlayerActions actions;
-    private final IPlayerToUUIDTranslator playerTranslator;
+    private final IPlayerTranslator playerTranslator;
     private final IPlayerPermissionCheck permissionCheck;
     private final IConfigurationProvider configProvider;
     private final IMessageSender messageSender;
 
     public HammerPluginActionProvider(
-            IPlayerActions actions, IMessageSender messageSender, IPlayerToUUIDTranslator playerTranslator,
+            IPlayerActions actions, IMessageSender messageSender, IPlayerTranslator playerTranslator,
             IPlayerPermissionCheck permissionCheck, IConfigurationProvider configProvider) {
         this.actions = actions;
         this.messageSender = messageSender;
@@ -29,7 +29,7 @@ public class HammerPluginActionProvider {
 
     public IMessageSender getMessageSender() { return messageSender; }
 
-    public IPlayerToUUIDTranslator getPlayerTranslator() {
+    public IPlayerTranslator getPlayerTranslator() {
         return playerTranslator;
     }
 

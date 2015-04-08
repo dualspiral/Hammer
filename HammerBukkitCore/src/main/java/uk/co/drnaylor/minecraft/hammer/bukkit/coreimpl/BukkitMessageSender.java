@@ -3,6 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextToCodeConverter;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IMessageSender;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -24,7 +25,7 @@ public class BukkitMessageSender implements IMessageSender {
      */
     @Override
     public void sendMessageToAllPlayers(HammerText messages) {
-        Bukkit.broadcastMessage(constructMessage(messages));
+        Bukkit.broadcastMessage(HammerTextConverter.constructMessage(messages));
     }
 
     /**
@@ -37,7 +38,7 @@ public class BukkitMessageSender implements IMessageSender {
     public void sendMessageToPlayer(UUID uuid, HammerText messages) {
         Player player = Bukkit.getServer().getPlayer(uuid);
         if (player != null && player.isOnline()) {
-            player.sendMessage(constructMessage(messages));
+            player.sendMessage(HammerTextConverter.constructMessage(messages));
         }
     }
 
@@ -49,7 +50,7 @@ public class BukkitMessageSender implements IMessageSender {
      */
     @Override
     public void sendMessageToPlayersWithPermission(String permissionNode, HammerText messages) {
-        Bukkit.broadcast(constructMessage(messages), permissionNode);
+        Bukkit.broadcast(HammerTextConverter.constructMessage(messages), permissionNode);
     }
 
     /**
@@ -59,42 +60,7 @@ public class BukkitMessageSender implements IMessageSender {
      */
     @Override
     public void sendMessageToConsole(HammerText message) {
-        Bukkit.getConsoleSender().sendMessage(constructMessage(message));
+        Bukkit.getConsoleSender().sendMessage(HammerTextConverter.constructMessage(message));
     }
 
-    /**
-     * Constructs a message from the collection of {@link HammerText} messages.
-     *
-     * @param message The {@link HammerText} messages.
-     * @return The completed message.
-     */
-    private String constructMessage(HammerText message) {
-        StringBuilder sb = new StringBuilder();
-
-        for (HammerText.Element t : message.getElements()) {
-            if (sb.length() > 0) {
-                sb.append(ChatColor.RESET);
-            }
-
-            convertColour(t.colour, sb);
-            convertFormats(t.formats, sb);
-
-            sb.append(t.message);
-        }
-
-        return sb.toString();
-    }
-
-    private void convertColour(HammerTextColours colour, StringBuilder sb) {
-        ChatColor c = HammerTextToCodeConverter.getCodeFromHammerText(colour);
-        if (c != null) {
-            sb.append(c);
-        }
-    }
-
-    private void convertFormats(HammerTextFormats[] formats, StringBuilder sb) {
-        for (HammerTextFormats f : formats) {
-            sb.append(HammerTextToCodeConverter.getCodeFromHammerText(f));
-        }
-    }
 }

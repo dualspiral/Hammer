@@ -3,23 +3,41 @@ package uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerActions;
 
 public class BukkitPlayerActions implements IPlayerActions {
 
     /**
-     * Bans a player.
+     * Kicks a player.
+     *
      * @param player The UUID of the player to kick.
      * @param kicker The UUID of the player doing the kick.
      * @param reason The reason the player is being given the boot.
+     *
+     * @deprecated Use the {@link uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer}
+     * implementation instead.
      */
     @Override
+    @Deprecated
     public void kickPlayer(UUID player, UUID kicker, String reason) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Kicked by: ").append(getName(kicker)).append("\n");
-        sb.append("Reason: ").append(reason);
-        Bukkit.getPlayer(player).kickPlayer(sb.toString());
+        Bukkit.getPlayer(player).kickPlayer(reason);
+    }
+
+    /**
+     * Kicks all players but the kicker.
+     *
+     * @param kicker The UUID of the player doing the kick.
+     * @param reason The reason the players are being given the boot.
+     */
+    @Override
+    public void kickAllPlayers(UUID kicker, String reason) {
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            if (!pl.getUniqueId().equals(kicker)) {
+                pl.kickPlayer(reason);
+            }
+        }
     }
 
     /**

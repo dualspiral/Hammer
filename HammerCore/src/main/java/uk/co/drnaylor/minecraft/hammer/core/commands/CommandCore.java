@@ -75,7 +75,7 @@ public abstract class CommandCore {
     }
 
     protected final void sendTemplatedMessage(UUID uuid, String messageKey, boolean isError, boolean useStub, String... replacements) {
-        sendMessage(uuid, MessageFormat.format(messageBundle.getString(messageKey), replacements), isError, useStub);
+        sendMessage(uuid, MessageFormat.format(messageBundle.getString(messageKey), getFromStringArray(replacements)), isError, useStub);
     }
 
     protected final void sendMessage(UUID uuid, String message, boolean isError, boolean useStub) {
@@ -87,7 +87,11 @@ public abstract class CommandCore {
         }
 
         hb.addText(" " + message, isError ? HammerTextColours.RED : HammerTextColours.GREEN);
-        core.getActionProvider().getMessageSender().sendMessageToPlayer(uuid, hb.build());
+        if (uuid.equals(HammerConstants.consoleUUID)) {
+            core.getActionProvider().getMessageSender().sendMessageToConsole(hb.build());
+        } else {
+            core.getActionProvider().getMessageSender().sendMessageToPlayer(uuid, hb.build());
+        }
     }
 
     protected final void sendUsageMessage(UUID uuid, String usage) {
@@ -112,5 +116,14 @@ public abstract class CommandCore {
 
     private HammerTextBuilder createNormalMessageStub() {
         return new HammerTextBuilder().addText(HammerConstants.textTag, HammerTextColours.GREEN);
+    }
+
+    private Object[] getFromStringArray(String[] s) {
+        Object[] obj = new Object[s.length];
+        for (int i = 0; i < s.length; i++) {
+            obj[i] = s[i];
+        }
+
+        return obj;
     }
 }

@@ -1,7 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.sponge;
 
 import com.google.inject.Inject;
-import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
@@ -9,14 +8,12 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.event.state.InitializationEvent;
 import org.spongepowered.api.event.state.ServerStartedEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.ServiceReference;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.util.event.Subscribe;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider;
 import uk.co.drnaylor.minecraft.hammer.sponge.coreimpl.*;
-import uk.co.drnaylor.minecraft.hammer.sponge.services.HammerBanService;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,7 +105,7 @@ public class HammerSponge {
         return new HammerPluginActionProvider(
                 new SpongePlayerActions(),
                 new SpongeMessageSender(),
-                new SpongePlayerToUUIDTranslator(),
+                new SpongePlayerTranslator(),
                 new SpongePlayerPermissionCheck(),
                 new SpongeConfigurationProvider());
     }

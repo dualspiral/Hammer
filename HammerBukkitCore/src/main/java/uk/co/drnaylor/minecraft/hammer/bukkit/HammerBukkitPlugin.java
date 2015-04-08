@@ -64,6 +64,10 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 this.getCommand("unban").setExecutor(new BukkitCommand(new UnbanCommandCore(core)));
                 this.getCommand("checkban").setExecutor(new BukkitCommand(new CheckBanCommandCore(core)));
 
+                // Kick commands
+                this.getCommand("kick").setExecutor(new BukkitCommand(new KickCommandCore(core)));
+                this.getCommand("kickall").setExecutor(new BukkitCommand(new KickAllCommandCore(core)));
+
                 // Hammer
                 this.getCommand("hammer").setExecutor(new HammerCommand(this));
 
@@ -145,7 +149,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         return new HammerPluginActionProvider(
                 new BukkitPlayerActions(),
                 new BukkitMessageSender(),
-                new BukkitPlayerToUUIDTranslator(),
+                new BukkitPlayerTranslator(),
                 new BukkitPlayerPermissionCheck(),
                 new BukkitConfigurationProvider(this));
     }
