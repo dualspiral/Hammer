@@ -8,6 +8,7 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.InitializationEvent;
 import org.spongepowered.api.event.state.ServerStartedEvent;
+import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.util.command.spec.CommandSpec;
@@ -18,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.coreimpl.*;
+import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextToTextColorCoverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,14 +74,14 @@ public class HammerSponge {
     }
 
     /**
-     * Runs when the server has started.
+     * Runs when the server is starting.
      *
      * @param event The event
      */
     @Subscribe
-    public void onServerStart(ServerStartedEvent event) {
-        // Create the core.
-
+    public void onServerStarting(ServerStartingEvent event) {
+        // Once the server is starting, reset the text colour map.
+        HammerTextToTextColorCoverter.init();
     }
 
     /**
