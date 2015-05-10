@@ -12,6 +12,9 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 public class TempBanCommandCore extends BaseBanCommandCore {
 
@@ -19,6 +22,8 @@ public class TempBanCommandCore extends BaseBanCommandCore {
 
     public TempBanCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.ban.temp");
     }
 
     @Override
@@ -58,8 +63,8 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected String getUsage() {
-        return "/tempban [-a -q] name (time)(d|h|m) reason";
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/tempban [-a -q] name (time)(d|h|m) reason", HammerTextColours.YELLOW).build();
     }
 
     private Date add(Date date, int unit, int span)

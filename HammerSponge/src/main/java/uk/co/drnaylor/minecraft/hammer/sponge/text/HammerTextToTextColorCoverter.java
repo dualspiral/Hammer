@@ -17,6 +17,13 @@ public class HammerTextToTextColorCoverter {
     private static final Map<HammerTextFormats, TextStyle> htf = new HashMap<>();
 
     static  {
+        init();
+    }
+
+    public static void init() {
+        htc.clear();
+        htf.clear();
+
         htc.put(HammerTextColours.DARK_BLUE, TextColors.DARK_BLUE);
         htc.put(HammerTextColours.DARK_AQUA, TextColors.DARK_AQUA);
         htc.put(HammerTextColours.DARK_GRAY, TextColors.DARK_GRAY);

@@ -9,13 +9,13 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.*;
 public class HammerPluginActionProvider {
     private final IPlayerActions actions;
     private final IPlayerTranslator playerTranslator;
-    private final IPlayerPermissionCheck permissionCheck;
+    private final PlayerPermissionCheckBase permissionCheck;
     private final IConfigurationProvider configProvider;
     private final IMessageSender messageSender;
 
     public HammerPluginActionProvider(
             IPlayerActions actions, IMessageSender messageSender, IPlayerTranslator playerTranslator,
-            IPlayerPermissionCheck permissionCheck, IConfigurationProvider configProvider) {
+            PlayerPermissionCheckBase permissionCheck, IConfigurationProvider configProvider) {
         this.actions = actions;
         this.messageSender = messageSender;
         this.playerTranslator = playerTranslator;
@@ -33,7 +33,7 @@ public class HammerPluginActionProvider {
         return playerTranslator;
     }
 
-    public IPlayerPermissionCheck getPermissionCheck() {
+    public PlayerPermissionCheckBase getPermissionCheck() {
         return permissionCheck;
     }
 

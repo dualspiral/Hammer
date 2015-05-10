@@ -4,6 +4,8 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +14,8 @@ public class KickAllCommandCore extends CommandCore {
 
     public KickAllCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.kickall");
     }
 
     @Override
@@ -45,5 +49,10 @@ public class KickAllCommandCore extends CommandCore {
         core.getActionProvider().getPlayerActions().kickAllPlayers(playerUUID, reason);
         sendTemplatedMessage(playerUUID, "hammer.kickall", false, true);
         return true;
+    }
+
+    @Override
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/kickall [reason]", HammerTextColours.YELLOW).build();
     }
 }

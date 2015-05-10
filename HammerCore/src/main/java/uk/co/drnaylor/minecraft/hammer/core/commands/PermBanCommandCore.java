@@ -9,11 +9,16 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 public class PermBanCommandCore extends BaseBanCommandCore {
 
     public PermBanCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.ban.perm");
     }
 
     @Override
@@ -28,8 +33,8 @@ public class PermBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected String getUsage() {
-        return "/permban [-a -q] name reason";
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/permban [-a -q] name reason", HammerTextColours.YELLOW).build();
     }
 
     @Override

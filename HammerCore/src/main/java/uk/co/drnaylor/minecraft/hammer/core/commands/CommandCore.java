@@ -9,6 +9,7 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
@@ -17,6 +18,8 @@ public abstract class CommandCore {
     protected static final Format dateFormatter;
 
     protected static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+
+    protected Collection<String> permissionNodes;
 
     protected final HammerCore core;
 
@@ -40,6 +43,17 @@ public abstract class CommandCore {
      */
     protected abstract boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException;
 
+    /**
+     * Gets the usage of this command
+     *
+     * @return The {@link HammerText}
+     */
+    public abstract HammerText getUsageMessage();
+
+    public final Collection<String> getRequiredPermissions() {
+        return permissionNodes;
+    }
+
     private boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole) throws HammerException {
         if (requiresDatabase()) {
             try (DatabaseConnection conn = core.getDatabaseConnection()) {
@@ -61,6 +75,14 @@ public abstract class CommandCore {
      * @return Whether the command succeeded.
      */
     public final boolean executeCommandAsPlayer(UUID playerUUID, List<String> arguments) throws HammerException {
+        // If the player does not have permission, stop them here.
+        for (String p : this.getRequiredPermissions()) {
+            if (core.getActionProvider().getPermissionCheck().hasPermission(playerUUID, p)) {
+                sendNoPermsMessage(playerUUID);
+                return true;
+            }
+        }
+
         // The player is the console if we've sent down the console UUID.
         return executeCommand(playerUUID, arguments, playerUUID.equals(HammerConstants.consoleUUID));
     }
@@ -86,7 +108,7 @@ public abstract class CommandCore {
             hb = new HammerTextBuilder();
         }
 
-        hb.addText(" " + message, isError ? HammerTextColours.RED : HammerTextColours.GREEN);
+        hb.add(" " + message, isError ? HammerTextColours.RED : HammerTextColours.GREEN);
         if (uuid.equals(HammerConstants.consoleUUID)) {
             core.getActionProvider().getMessageSender().sendMessageToConsole(hb.build());
         } else {
@@ -94,10 +116,15 @@ public abstract class CommandCore {
         }
     }
 
-    protected final void sendUsageMessage(UUID uuid, String usage) {
+    /**
+     * Sends the usage message to the player.
+     *
+     * @param uuid The {@link UUID} of the player
+     */
+    public final void sendUsageMessage(UUID uuid) {
         String f = String.format(" %s ", messageBundle.getString("hammer.player.commandUsage"));
-        HammerTextBuilder hb = createErrorMessageStub().addText(f, HammerTextColours.RED)
-                .addText(usage, HammerTextColours.YELLOW);
+        HammerTextBuilder hb = createErrorMessageStub().add(f, HammerTextColours.RED)
+                .add(this.getUsageMessage());
 
         core.getActionProvider().getMessageSender().sendMessageToPlayer(uuid, hb.build());
     }
@@ -111,11 +138,11 @@ public abstract class CommandCore {
     }
 
     private HammerTextBuilder createErrorMessageStub() {
-        return new HammerTextBuilder().addText(HammerConstants.textTag, HammerTextColours.RED);
+        return new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.RED);
     }
 
     private HammerTextBuilder createNormalMessageStub() {
-        return new HammerTextBuilder().addText(HammerConstants.textTag, HammerTextColours.GREEN);
+        return new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.GREEN);
     }
 
     private Object[] getFromStringArray(String[] s) {

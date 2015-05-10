@@ -13,8 +13,7 @@ import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuil
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerPermissionCheck;
+import uk.co.drnaylor.minecraft.hammer.core.interfaces.PlayerPermissionCheckBase;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
@@ -54,11 +53,11 @@ public abstract class BaseBanCommandCore extends CommandCore {
     @Override
     public final boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
         IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
-        IPlayerPermissionCheck check = core.getActionProvider().getPermissionCheck();
+        PlayerPermissionCheckBase check = core.getActionProvider().getPermissionCheck();
         Iterator<String> argumentIterator = arguments.iterator();
 
         if (arguments.size() < minArguments()) {
-            sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID);
             return true;
         }
 
@@ -118,7 +117,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         if (!performSpecificActions(builder, argumentIterator)) {
             // Usage.
-            sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID);
             conn.rollbackTransaction();
             return true;
         }
@@ -126,7 +125,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         String reason = createReason(argumentIterator, status.reasons);
         if (reason == null) {
             // Usage.
-            sendUsageMessage(playerUUID, getUsage());
+            sendUsageMessage(playerUUID);
             conn.rollbackTransaction();
             return true;
         }
@@ -170,14 +169,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
      */
     protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator);
 
-    /**
-     * Gets and returns the command usage.
-     * 
-     * @return The command usage.
-     */
-    protected abstract String getUsage();
-
-    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException; 
+    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException;
 
     protected String createReason(Iterator<String> argumentIterator, List<String> otherReasons) {
         if (!argumentIterator.hasNext()) {
@@ -245,10 +237,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         HammerTextBuilder htb = new HammerTextBuilder();
-        htb.addText(HammerConstants.textTag, HammerTextColours.RED)
-                .addText(playerName, HammerTextColours.WHITE)
-                .addText(" " + MessageFormat.format(messageBundle.getString("hammer.ban.banMessage"), modifier, fromAll), HammerTextColours.RED)
-                .addText(" " + name, HammerTextColours.WHITE);
+        htb.add(HammerConstants.textTag, HammerTextColours.RED)
+                .add(playerName, HammerTextColours.WHITE)
+                .add(" " + MessageFormat.format(messageBundle.getString("hammer.ban.banMessage"), modifier, fromAll), HammerTextColours.RED)
+                .add(" " + name, HammerTextColours.WHITE);
 
         messages[0] = htb.build();
 
@@ -257,7 +249,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         StringBuilder sb = new StringBuilder(HammerConstants.textTag).append(" ")
                 .append(messageBundle.getString("hammer.reason")).append(" ")
                 .append(reason);
-        htb.addText(sb.toString(), HammerTextColours.RED);
+        htb.add(sb.toString(), HammerTextColours.RED);
 
         messages[1] = htb.build();
         return messages;

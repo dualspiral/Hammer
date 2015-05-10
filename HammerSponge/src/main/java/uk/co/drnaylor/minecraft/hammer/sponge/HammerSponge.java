@@ -5,38 +5,36 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.InitializationEvent;
 import org.spongepowered.api.event.state.ServerStartedEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
-import org.spongepowered.api.util.event.Subscribe;
+import org.spongepowered.api.util.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider;
+import uk.co.drnaylor.minecraft.hammer.core.commands.*;
+import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
+import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.coreimpl.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * Sponge plugin entrypoint
  */
-@Plugin(id = "hammersponge", name = "Hammer for Sponge", version = "0.2")
+@Plugin(id = "hammersponge", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    @Inject
-    private Game game;
+    public static final String VERSION = "0.2";
 
-    @Inject
-    private Logger logger;
-
-    @Inject
-    @DefaultConfig(sharedRoot = true)
-    private File defaultConfig;
-
-    @Inject
-    @DefaultConfig(sharedRoot = true)
-    private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
+    @Inject private Game game;
+    @Inject private Logger logger;
+    @Inject @DefaultConfig(sharedRoot = false) private File defaultConfig;
+    @Inject @DefaultConfig(sharedRoot = false) private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
 
     private HammerCore core;
 
@@ -51,6 +49,23 @@ public class HammerSponge {
             createCore();
 
             // Register the service.
+
+            // Register the commands
+            logger.info("Registering Hammer commands...");
+
+            CommandSpec spec = CommandSpec.builder().setExecutor(new HammerCommand(this)).build();
+            game.getCommandDispatcher().register(this, spec, "hammer");
+
+            // Ban command
+            game.getCommandDispatcher().register(this, new SpongeCommand(new BanCommandCore(core)), "ban", "hban", "hammerban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+
+            // Kick commands
+            game.getCommandDispatcher().register(this, new SpongeCommand(new KickCommandCore(core)), "kick", "hkick", "hammerkick");
+            game.getCommandDispatcher().register(this, new SpongeCommand(new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
         } catch (Exception ex) {
             // Do some stuff
         }
@@ -106,7 +121,7 @@ public class HammerSponge {
                 new SpongePlayerActions(),
                 new SpongeMessageSender(),
                 new SpongePlayerTranslator(),
-                new SpongePlayerPermissionCheck(),
+                new SpongePlayerPermissionCheck(game),
                 new SpongeConfigurationProvider());
     }
 }

@@ -2,7 +2,16 @@ package uk.co.drnaylor.minecraft.hammer.core.interfaces;
 
 import java.util.UUID;
 
-public interface IPlayerPermissionCheck {
+public abstract class PlayerPermissionCheckBase {
+
+    /**
+     * Returns whether the specified player has the specified permission
+     *
+     * @param player The {@link UUID} of the player.
+     * @param permissionNode The permission node to check.
+     * @return <code>true</code> if permission is granted.
+     */
+    public abstract boolean hasPermission(UUID player, String permissionNode);
 
     /**
      * Returns whether the specified player has permission to ban players
@@ -10,7 +19,9 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToBan(UUID player);
+    public final boolean hasPermissionToBan(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
 
     /**
      * Returns whether the specified player has permission to ban players permanently
@@ -18,7 +29,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToBanPermanent(UUID player);
+    public final boolean hasPermissionToBanPermanent(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to ban players from all servers
@@ -26,7 +40,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToBanOnAllServers(UUID player);
+    public final boolean hasPermissionToBanOnAllServers(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to ban players temporarily
@@ -34,7 +51,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToBanTemporarily(UUID player);
+    public final boolean hasPermissionToBanTemporarily(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to unban players
@@ -42,7 +62,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToUnban(UUID player);
+    public final boolean hasPermissionToUnban(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to unban players who
@@ -51,7 +74,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToUnbanFromAllServers(UUID player);
+    public final boolean hasPermissionToUnbanFromAllServers(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to unban players with
@@ -60,7 +86,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToUnbanPermanent(UUID player);
+    public final boolean hasPermissionToUnbanPermanent(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to ban IPs
@@ -68,7 +97,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToBanIP(UUID player);
+    public final boolean hasPermissionToBanIP(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player has permission to unban IPs
@@ -76,7 +108,10 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasPermissionToUnbanIP(UUID player);
+    public final boolean hasPermissionToUnbanIP(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
+
 
     /**
      * Returns whether the specified player is exempted from bans.
@@ -84,5 +119,7 @@ public interface IPlayerPermissionCheck {
      * @param player The UUID of the player to check the permission of
      * @return <code>true</code> if permission is granted
      */
-    boolean hasExemptionFromBan(UUID player);
+    public final boolean hasExemptionFromBan(UUID player) {
+        return hasPermission(player, "hammer.ban.normal");
+    }
 }

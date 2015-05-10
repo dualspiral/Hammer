@@ -18,6 +18,8 @@ public class KickCommandCore extends CommandCore {
 
     public KickCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.kick");
     }
 
     @Override
@@ -37,7 +39,7 @@ public class KickCommandCore extends CommandCore {
     @Override
     protected boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
         if (arguments.isEmpty()) {
-            sendUsageMessage(playerUUID, "/kick [-q] <name> [message]");
+            sendUsageMessage(playerUUID);
             return true;
         }
 
@@ -51,7 +53,7 @@ public class KickCommandCore extends CommandCore {
 
             // No good being quiet if we don't have that person to kick!
             if (!str.hasNext()) {
-                sendUsageMessage(playerUUID, "/kick [-q] <name> [message]");
+                sendUsageMessage(playerUUID);
                 return true;
             }
 
@@ -102,12 +104,17 @@ public class KickCommandCore extends CommandCore {
         return true;
     }
 
+    @Override
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/kick name reason", HammerTextColours.YELLOW).build();
+    }
+
     private HammerText[] createReasons(String playerKicked, String playerKicking, String reason) {
         HammerText[] t = new HammerText[2];
-        t[0] = new HammerTextBuilder().addText(playerKicked, HammerTextColours.WHITE)
-                .addText(" " + messageBundle.getString("hammer.kick.kickMessage"), HammerTextColours.RED)
-                .addText(" " + playerKicking, HammerTextColours.WHITE).build();
-        t[1] = new HammerTextBuilder().addText(MessageFormat.format(messageBundle.getString("hammer.kick.reason"), reason)
+        t[0] = new HammerTextBuilder().add(playerKicked, HammerTextColours.WHITE)
+                .add(" " + messageBundle.getString("hammer.kick.kickMessage"), HammerTextColours.RED)
+                .add(" " + playerKicking, HammerTextColours.WHITE).build();
+        t[1] = new HammerTextBuilder().add(MessageFormat.format(messageBundle.getString("hammer.kick.reason"), reason)
                 , HammerTextColours.RED).build();
         return t;
     }

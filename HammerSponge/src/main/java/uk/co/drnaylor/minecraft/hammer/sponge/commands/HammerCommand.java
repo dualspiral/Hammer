@@ -1,41 +1,33 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.args.CommandContext;
+import org.spongepowered.api.util.command.spec.CommandExecutor;
+import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class HammerCommand implements CommandCallable {
-    @Override
-    public boolean call(CommandSource source, String arguments, List<String> parents) throws CommandException {
-        return false;
+public class HammerCommand implements CommandExecutor {
+
+    private final HammerSponge plugin;
+    private final Collection<Text> texts;
+
+    public HammerCommand(HammerSponge plugin) {
+        this.plugin = plugin;
+        texts = new ArrayList<>();
+        texts.add(Texts.of("This server is running Hammer for Sponge version " + HammerSponge.VERSION, TextColors.GREEN));
+        texts.add(Texts.of("Using HammerCore version " + plugin.getCore().getHammerCoreVersion(), TextColors.GREEN));
     }
 
     @Override
-    public boolean testPermission(CommandSource source) {
-        return false;
-    }
-
-    @Override
-    public String getShortDescription(CommandSource commandSource) {
-        return null;
-    }
-
-    @Override
-    public Text getHelp(CommandSource commandSource) {
-        return null;
-    }
-
-    @Override
-    public String getUsage(CommandSource commandSource) {
-        return null;
-    }
-
-    @Override
-    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return null;
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        src.sendMessage(texts);
+        return CommandResult.success();
     }
 }

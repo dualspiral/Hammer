@@ -5,9 +5,6 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextFormats;
 
-/**
- * Created by daniel on 08/04/15.
- */
 public final class HammerTextConverter {
 
     private HammerTextConverter() { }

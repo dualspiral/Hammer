@@ -16,11 +16,16 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IMessageSender;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 public class CheckBanCommandCore extends CommandCore {
 
     public CheckBanCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.checkban");
     }
 
     @Override
@@ -30,7 +35,7 @@ public class CheckBanCommandCore extends CommandCore {
             IMessageSender sender = core.getActionProvider().getMessageSender();
 
             if (arguments.size() != 1) {
-                this.sendUsageMessage(playerUUID, "/checkban <player>");
+                this.sendUsageMessage(playerUUID);
                 return true;
             }
 
@@ -83,6 +88,11 @@ public class CheckBanCommandCore extends CommandCore {
     @Override
     protected boolean requiresDatabase() {
         return true;
+    }
+
+    @Override
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/checkban <name>", HammerTextColours.YELLOW).build();
     }
 
     private void sendBanReason(HammerPlayerBan ban, UUID playerUUID) {

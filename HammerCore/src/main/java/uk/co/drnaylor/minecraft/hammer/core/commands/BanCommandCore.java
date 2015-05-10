@@ -13,6 +13,9 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 /**
  * Provides the core Ban Command, based on the player and arguments sent down.
@@ -23,6 +26,8 @@ public class BanCommandCore extends BaseBanCommandCore {
 
     public BanCommandCore(HammerCore core) {
         super(core);
+
+        permissionNodes.add("hammer.ban.normal");
     }
 
     private Date timeParser(String time) {
@@ -69,8 +74,8 @@ public class BanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected String getUsage() {
-        return "/ban [-a -q] name reason";
+    public HammerText getUsageMessage() {
+        return new HammerTextBuilder().add("/ban [-a -q] name reason", HammerTextColours.YELLOW).build();
     }
 
     @Override
