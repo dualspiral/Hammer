@@ -21,16 +21,64 @@ public interface WrappedPlayer {
     UUID getUUID();
 
     /**
-     * Kicks a player with the specified reason.
+     * Sends a message to the player
      *
-     * @param reason The reason.
+     * @param message The message
      */
-    void kickPlayer(HammerText reason);
+    void sendMessage(HammerText message);
 
     /**
-     * Kicks a player with the specified reason.
+     * Sends a message to the player
+     *
+     * @param message The message
+     */
+    void sendMessage(String message);
+
+    /**
+     * Gets whether the player has the specified permission
+     *
+     * @param permission The permission
+     * @return <code>true</code> if the player has the permission specified.
+     */
+    boolean hasPermission(String permission);
+
+    /**
+     * Bans the player with the specified reason
+     *
+     * @param reason The reason
+     */
+    void ban(HammerText reason);
+
+    /**
+     * Bans the player with the specified reason
+     *
+     * @param reason The reason
+     */
+    void ban(String reason);
+
+    /**
+     * Unbans the player
+     */
+    void unban();
+
+    /**
+     * Gets whether the player is banned.
+     *
+     * @return Whether the player is banned or not.
+     */
+    boolean isBanned();
+
+    /**
+     * Kicks the player with the specified reason.
      *
      * @param reason The reason.
      */
-    void kickPlayer(String reason);
+    void kick(HammerText reason);
+
+    /**
+     * Kicks the player with the specified reason.
+     *
+     * @param reason The reason.
+     */
+    void kick(String reason);
 }

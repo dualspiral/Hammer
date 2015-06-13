@@ -31,4 +31,14 @@ public class HammerText {
             this.message = message;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (Element e : elements) {
+            sb.append(e.message);
+        }
+
+        return sb.toString();
+    }
 }

@@ -15,6 +15,27 @@ public final class HammerTextConverter {
     private HammerTextConverter() { }
 
     /**
+     * Constructs a message from the collection of {@link HammerText} messages,
+     * but without any styling.
+     *
+     * @param message The {@link HammerText} messages.
+     * @return The completed {@link org.spongepowered.api.text.Text.Literal}
+     */
+    public static Text.Literal constructLiteral(HammerText message) {
+        // Get the message, and just parse the actual text.
+        StringBuilder sb = new StringBuilder();
+        for (HammerText.Element e : message.getElements()) {
+            if (sb.length() > 0) {
+                sb.append(" ");
+            }
+
+            sb.append(e.message);
+        }
+
+        return Texts.builder(sb.toString()).build();
+    }
+
+    /**
      * Constructs a message from the collection of {@link HammerText} messages.
      *
      * @param message The {@link HammerText} messages.

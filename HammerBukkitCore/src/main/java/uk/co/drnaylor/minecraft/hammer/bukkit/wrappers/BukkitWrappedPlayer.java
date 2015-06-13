@@ -59,13 +59,90 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     }
 
     /**
+     * Sends a message to the player
+     *
+     * @param message The message
+     */
+    @Override
+    public void sendMessage(HammerText message) {
+        sendMessage(HammerTextConverter.constructMessage(message));
+    }
+
+    /**
+     * Sends a message to the player
+     *
+     * @param message The message
+     */
+    @Override
+    public void sendMessage(String message) {
+        if (player.isOnline()) {
+            player.getPlayer().sendMessage(message);
+        }
+    }
+
+    /**
+     * Gets whether the player has the specified permission
+     *
+     * @param permission The permission
+     * @return <code>true</code> if the player has the permission specified.
+     */
+    @Override
+    public boolean hasPermission(String permission) {
+        if (player.isOnline()) {
+            return player.getPlayer().hasPermission(permission);
+        }
+
+        return false;
+    }
+
+    /**
+     * Bans a player with the specified reason
+     *
+     * @param reason The reason
+     */
+    @Override
+    public void ban(HammerText reason) {
+        player.setBanned(true);
+        kick(reason);
+    }
+
+    /**
+     * Bans a player with the specified reason
+     *
+     * @param reason The reason
+     */
+    @Override
+    public void ban(String reason) {
+        player.setBanned(true);
+        kick(reason);
+    }
+
+    /**
+     * Unbans the player
+     */
+    @Override
+    public void unban() {
+        player.setBanned(false);
+    }
+
+    /**
+     * Gets whether the player is banned.
+     *
+     * @return Whether the player is banned or not.
+     */
+    @Override
+    public boolean isBanned() {
+        return player.isBanned();
+    }
+
+    /**
      * Kicks the player
      *
      * @param text The reason
      */
     @Override
-    public void kickPlayer(HammerText text) {
-        kickPlayer(HammerTextConverter.constructMessage(text));
+    public void kick(HammerText text) {
+        kick(HammerTextConverter.constructMessage(text));
     }
 
     /**
@@ -74,7 +151,7 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
      * @param reason The reason.
      */
     @Override
-    public void kickPlayer(String reason) {
+    public void kick(String reason) {
         if (player.isOnline()) {
             player.getPlayer().kickPlayer(reason);
         }

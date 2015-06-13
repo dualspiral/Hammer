@@ -1,6 +1,5 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -83,7 +82,7 @@ public class KickCommandCore extends CommandCore {
             reason = sb.toString();
         }
 
-        pl.kickPlayer(reason);
+        pl.kick(reason);
 
         String plName = "Console";
         if (!isConsole) {
