@@ -6,6 +6,7 @@ import java.util.UUID;
 
 public class SpongePlayerActions implements IPlayerActions {
     @Override
+    @Deprecated
     public void kickPlayer(UUID player, UUID kicker, String reason) {
 
     }

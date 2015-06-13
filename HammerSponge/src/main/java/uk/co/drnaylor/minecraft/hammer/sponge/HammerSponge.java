@@ -55,7 +55,7 @@ public class HammerSponge {
             // Register the commands
             logger.info("Registering Hammer commands...");
 
-            CommandSpec spec = CommandSpec.builder().setExecutor(new HammerCommand(this)).build();
+            CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this)).build();
             game.getCommandDispatcher().register(this, spec, "hammer");
 
             // Ban command

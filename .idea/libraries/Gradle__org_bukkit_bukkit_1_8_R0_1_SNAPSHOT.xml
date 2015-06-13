@@ -4,8 +4,6 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bukkit/bukkit/1.8-R0.1-SNAPSHOT/a245f7f25e38f977008bad10ae4a8095a72462a9/bukkit-1.8-R0.1-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.bukkit/bukkit/1.8-R0.1-SNAPSHOT/7b5c3e65b6c5bfd8a4a465f9abc56dc4dc94ad17/bukkit-1.8-R0.1-SNAPSHOT-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

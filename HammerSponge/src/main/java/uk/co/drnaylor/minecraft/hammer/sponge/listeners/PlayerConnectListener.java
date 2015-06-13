@@ -1,7 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
 import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.net.PlayerConnectionEvent;
+import org.spongepowered.api.event.network.PlayerConnectionEvent;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
 import java.util.UUID;

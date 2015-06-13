@@ -1,11 +1,21 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
+import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.text.Text;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
+import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
+
+    private final Player player;
+
+    public SpongeWrappedPlayer(Player player) {
+        this.player = player;
+    }
+
     /**
      * Gets the name of the player.
      *
@@ -13,7 +23,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public String getName() {
-        return null;
+        return player.getName();
     }
 
     /**
@@ -23,7 +33,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public UUID getUUID() {
-        return null;
+        return player.getUniqueId();
     }
 
     /**
@@ -33,7 +43,9 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void kickPlayer(HammerText reason) {
+        Text text = HammerTextConverter.constructMessage(reason);
 
+        player.kick();
     }
 
     /**
