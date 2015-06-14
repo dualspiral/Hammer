@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -100,15 +101,32 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         // Next up, the player. Can we find them?
+        UUID uuidToBan = null;
         WrappedPlayer playerToBan = server.getPlayer(currentArg);
-        if (playerToBan == null) {
-            sendNoPlayerMessage(source, currentArg);
-            return true;
+        if (playerToBan != null) {
+            uuidToBan = playerToBan.getUUID();
+        } else {
+            // We can't find them - but do they exist in Hammer?
+            HammerPlayer players = null;
+            try {
+                players = conn.getPlayerHandler().getLastPlayerByName(currentArg);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (players == null) {
+                // Nope.
+                sendNoPlayerMessage(source, currentArg);
+                return true;
+            }
+
+            // Yep!
+            uuidToBan = players.getUUID();
         }
 
         // Start a transaction. We might need to delete some rows here.
         conn.startTransaction();
-        BanInfo status = checkOtherBans(playerToBan.getUUID(), conn, isGlobal);
+        BanInfo status = checkOtherBans(uuidToBan, conn, isGlobal);
         if (status.status == BanStatus.NO_ACTION) {
             sendTemplatedMessage(source, "hammer.player.alreadyBanned", true, true);
 
@@ -122,11 +140,11 @@ public abstract class BaseBanCommandCore extends CommandCore {
             // Auto upgrade! If you get a perm ban, and a global ban is already in force, the 
             // permanent ban takes effect everywhere.
             sendTemplatedMessage(source, "hammer.player.upgradeToAll", false, false);
-            conn.getBanHandler().unbanFromAllServers(playerToBan.getUUID());
+            conn.getBanHandler().unbanFromAllServers(uuidToBan);
             builder.setAll(true);
         }
 
-        builder.setPlayerToBan(playerToBan.getUUID());
+        builder.setPlayerToBan(uuidToBan);
 
         if (!performSpecificActions(builder, argumentIterator)) {
             // Usage.
@@ -153,7 +171,9 @@ public abstract class BaseBanCommandCore extends CommandCore {
         conn.commitTransaction();
 
         // Now, ban the player!
-        playerToBan.ban(source, reason);
+        if (playerToBan != null) {
+            playerToBan.ban(source, reason);
+        }
 
         // Create the message to send out.
         HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());

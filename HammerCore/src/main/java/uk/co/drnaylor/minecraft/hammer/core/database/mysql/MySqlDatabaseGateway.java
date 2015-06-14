@@ -312,6 +312,20 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
+    public HammerPlayer getLastPlayerFromName(String name) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE LOWER(last_name) = ? ORDER BY last_seen DESC LIMIT 1");
+        ps.setString(1, name.toLowerCase());
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                return new HammerPlayer(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"));
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public void updateServerName(int serverId, String serverName) throws SQLException {
         PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) as count FROM server_data WHERE server_id = ?");
         ps.setInt(1, serverId);

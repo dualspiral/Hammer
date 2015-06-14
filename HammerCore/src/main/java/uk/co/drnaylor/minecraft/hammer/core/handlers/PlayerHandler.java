@@ -47,4 +47,12 @@ public class PlayerHandler {
             throw new HammerException("An error occurred getting the players.", ex);
         }
     }
+
+    public HammerPlayer getLastPlayerByName(String name) throws Exception {
+        try {
+            return dg.getLastPlayerFromName(name);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred getting the player.", ex);
+        }
+    }
 }

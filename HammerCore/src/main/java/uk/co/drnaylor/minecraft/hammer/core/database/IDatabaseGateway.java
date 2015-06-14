@@ -49,6 +49,17 @@ public interface IDatabaseGateway extends AutoCloseable {
     HammerPlayer getPlayer(UUID uuid) throws SQLException;
 
     /**
+     * Gets a {@link HammerPlayer} object from the provided name. It gets the last known UUID.
+     * Due to name changes, there is no guarantee that the names will be unique.
+     * The search is case-insenstive.
+     *
+     * @param name The name to search for.
+     * @return The player. May be null.
+     * @throws SQLException Thrown if the DB finds an error.
+     */
+    HammerPlayer getLastPlayerFromName(String name) throws SQLException;
+
+    /**
      * Gets a list of {@link HammerPlayer} objects from the provided name.
      * Due to name changes, there is no guarantee that the names will be unique.
      * The search is case-insenstive.
