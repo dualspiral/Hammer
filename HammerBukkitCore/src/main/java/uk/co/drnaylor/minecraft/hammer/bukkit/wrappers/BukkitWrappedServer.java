@@ -1,9 +1,13 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+
+import java.util.UUID;
 
 public class BukkitWrappedServer implements WrappedServer {
 
@@ -11,6 +15,28 @@ public class BukkitWrappedServer implements WrappedServer {
 
     public BukkitWrappedServer(Server server) {
         this.server = server;
+    }
+
+    /**
+     * Gets a player by the {@link UUID}
+     *
+     * @param uuid The {@link UUID}
+     * @return The {@link WrappedPlayer} if it exists, otherwise <code>null</code>
+     */
+    @Override
+    public WrappedPlayer getPlayer(UUID uuid) {
+        return BukkitWrappedPlayer.of(uuid);
+    }
+
+    /**
+     * Gets a player by their last known name
+     *
+     * @param name The name
+     * @return The {@link WrappedPlayer} if it exists, otherwise <code>null</code>
+     */
+    @Override
+    public WrappedPlayer getPlayer(String name) {
+        return BukkitWrappedPlayer.ofOnlinePlayer(name);
     }
 
     /**
