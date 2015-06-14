@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -17,11 +18,15 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.PlayerPermissionCheckBase
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
 public abstract class BaseBanCommandCore extends CommandCore {
 
     private final Pattern flagPattern = Pattern.compile("^-[ag]$");
     private final Pattern quietPattern = Pattern.compile("^-[q]$");
+    private final Pattern noisyPattern = Pattern.compile("^-[n]$");
 
     public BaseBanCommandCore(HammerCore core) {
         super(core);
@@ -42,41 +47,49 @@ public abstract class BaseBanCommandCore extends CommandCore {
     /**
      * Executes the specific command. Code here is common to all player bans
      * 
-     * @param playerUUID The UUID of the player executing this command.
+     * @param source The source that is executing this command.
      * @param arguments The arguments. Expecting 2+. [-a] player reason
-     * @param isConsole If the executor is the console, this will be true. The UUID will also be all zeros.
      * @return <code>true</code> if the command does the expected task. <code>false</code> if the specific 
      *         implementation command handler needs to take over.
      * 
      * @throws HammerException Thrown in place of all other exceptions.
      */
     @Override
-    public final boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
+    public final boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
         PlayerPermissionCheckBase check = core.getActionProvider().getPermissionCheck();
+
+        WrappedServer server = core.getWrappedServer();
+
         Iterator<String> argumentIterator = arguments.iterator();
 
+        // If we don't have enough arguments, the command is obviously malformed.
         if (arguments.size() < minArguments()) {
-            sendUsageMessage(playerUUID);
+            sendUsageMessage(source);
             return true;
         }
 
         String currentArg = argumentIterator.next();
 
-        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(playerUUID, cp.getServerId(), cp.getServerName());
+        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cp.getServerId(), cp.getServerName());
 
         // First argument may indicate a ban for all.
         boolean isGlobal = false;
         boolean isQuiet = false;
+        boolean isNoisy = false;
         while (currentArg.startsWith("-")) {
             if (!isQuiet) {
                 isQuiet = this.isQuietBan(currentArg);
             }
 
+            if (!isNoisy) {
+                isNoisy = this.isNoisyBan(currentArg);
+            }
+
             if (!isGlobal && this.isGlobalBan(currentArg)) {
                 isGlobal = true;
-                if (!check.hasPermissionToBanOnAllServers(playerUUID)) {
-                    sendNoPermsMessage(playerUUID);
+                if (!source.hasPermission(HammerPermissions.globalBan)) {
+                    sendNoPermsMessage(source);
                     return true;
                 }
 
@@ -86,38 +99,38 @@ public abstract class BaseBanCommandCore extends CommandCore {
             currentArg = argumentIterator.next();
         }
 
-        // Next up, the player
-        UUID uuidToBan = core.getActionProvider().getPlayerTranslator().playerNameToUUID(currentArg);
-        if (uuidToBan == null) {
-            sendNoPlayerMessage(playerUUID, currentArg);
+        // Next up, the player. Can we find them?
+        WrappedPlayer playerToBan = server.getPlayer(currentArg);
+        if (playerToBan == null) {
+            sendNoPlayerMessage(source, currentArg);
             return true;
         }
 
         // Start a transaction. We might need to delete some rows here.
         conn.startTransaction();
-        BanInfo status = checkOtherBans(uuidToBan, conn, isGlobal);
+        BanInfo status = checkOtherBans(playerToBan.getUUID(), conn, isGlobal);
         if (status.status == BanStatus.NO_ACTION) {
-            sendTemplatedMessage(playerUUID, "hammer.player.alreadyBanned", true, true);
+            sendTemplatedMessage(source, "hammer.player.alreadyBanned", true, true);
 
             return true;
         } else if (status.status == BanStatus.TO_PERM) {
             // Auto upgrade! If you get a global ban, and a permanent ban is already in force, the 
             // permanent ban takes effect everywhere.
-            sendTemplatedMessage(playerUUID, "hammer.player.upgradeToPerm", false, false);
+            sendTemplatedMessage(source, "hammer.player.upgradeToPerm", false, false);
             builder.setPerm(true);
         } else if (status.status == BanStatus.TO_GLOBAL) {
             // Auto upgrade! If you get a perm ban, and a global ban is already in force, the 
             // permanent ban takes effect everywhere.
-            sendTemplatedMessage(playerUUID, "hammer.player.upgradeToAll", false, false);
-            conn.getBanHandler().unbanFromAllServers(uuidToBan);
+            sendTemplatedMessage(source, "hammer.player.upgradeToAll", false, false);
+            conn.getBanHandler().unbanFromAllServers(playerToBan.getUUID());
             builder.setAll(true);
         }
 
-        builder.setPlayerToBan(uuidToBan);
+        builder.setPlayerToBan(playerToBan.getUUID());
 
         if (!performSpecificActions(builder, argumentIterator)) {
             // Usage.
-            sendUsageMessage(playerUUID);
+            sendUsageMessage(source);
             conn.rollbackTransaction();
             return true;
         }
@@ -125,7 +138,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         String reason = createReason(argumentIterator, status.reasons);
         if (reason == null) {
             // Usage.
-            sendUsageMessage(playerUUID);
+            sendUsageMessage(source);
             conn.rollbackTransaction();
             return true;
         }
@@ -139,18 +152,20 @@ public abstract class BaseBanCommandCore extends CommandCore {
         // Commit the transaction
         conn.commitTransaction();
 
-        core.getActionProvider().getPlayerActions().banPlayer(ban.getBannedUUID(), ban.getStaffUUID(), reason);
+        // Now, ban the player!
+        playerToBan.ban(source, reason);
 
+        // Create the message to send out.
         HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());
 
         // Do we tell the server, or just the notified?
-        if (!isQuiet && core.getActionProvider().getConfigurationProvider().notifyServerOfBans()) {
+        if (isNoisy || (!isQuiet && core.getActionProvider().getConfigurationProvider().notifyServerOfBans())) {
             for (HammerText t : msg) {
-                core.getActionProvider().getMessageSender().sendMessageToAllPlayers(t);
+                server.sendMessageToServer(t);
             }
         } else {
             for (HammerText t : msg) {
-                core.getActionProvider().getMessageSender().sendMessageToPlayersWithPermission("hammer.notify", t);
+                server.sendMessageToPermissionGroup(t, HammerPermissions.notify);
             }
         }
 
@@ -200,6 +215,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
     private boolean isQuietBan(String argument0) {
         return quietPattern.matcher(argument0).matches();
+    }
+
+    private boolean isNoisyBan(String argument0) {
+        return noisyPattern.matcher(argument0).matches();
     }
 
     /**

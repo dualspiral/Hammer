@@ -68,4 +68,26 @@ public class BukkitWrappedServer implements WrappedServer {
     public void sendMessageToPermissionGroup(HammerText message, String permission) {
         server.broadcast(HammerTextConverter.constructMessage(message), permission);
     }
+
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    @Override
+    public void kickAllPlayers(WrappedCommandSource source, String reason) {
+
+    }
+
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    @Override
+    public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
+
+    }
 }

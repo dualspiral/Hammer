@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 import java.util.UUID;
@@ -16,7 +17,7 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
 
     private final OfflinePlayer player;
 
-    private BukkitWrappedPlayer(OfflinePlayer player) {
+    public BukkitWrappedPlayer(OfflinePlayer player) {
         this.player = player;
     }
 
@@ -98,12 +99,12 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     /**
      * Bans a player with the specified reason
      *
+     * @param source The {@link WrappedCommandSource} that performed this ban
      * @param reason The reason
      */
     @Override
-    public void ban(HammerText reason) {
-        player.setBanned(true);
-        kick(reason);
+    public void ban(WrappedCommandSource source, HammerText reason) {
+        ban(source, HammerTextConverter.constructMessage(reason));
     }
 
     /**
@@ -112,8 +113,13 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
      * @param reason The reason
      */
     @Override
-    public void ban(String reason) {
+    public void ban(WrappedCommandSource source, String reason) {
         player.setBanned(true);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Banned by: ").append(source.getName()).append("\n");
+        sb.append("Reason: ").append(reason);
+
         kick(reason);
     }
 

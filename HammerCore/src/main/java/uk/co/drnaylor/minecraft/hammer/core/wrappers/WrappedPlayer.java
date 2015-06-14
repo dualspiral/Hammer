@@ -9,16 +9,18 @@ public interface WrappedPlayer extends WrappedCommandSource {
     /**
      * Bans the player with the specified reason
      *
+     * @param source The {@link WrappedCommandSource} that performed this ban
      * @param reason The reason
      */
-    void ban(HammerText reason);
+    void ban(WrappedCommandSource source, HammerText reason);
 
     /**
      * Bans the player with the specified reason
      *
+     * @param source The {@link WrappedCommandSource} that performed this ban
      * @param reason The reason
      */
-    void ban(String reason);
+    void ban(WrappedCommandSource source, String reason);
 
     /**
      * Unbans the player

@@ -19,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
 public class CheckBanCommandCore extends CommandCore {
 
@@ -29,13 +30,27 @@ public class CheckBanCommandCore extends CommandCore {
     }
 
     @Override
-    protected boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
-        try {    
+    protected boolean requiresDatabase() {
+        return true;
+    }
+
+    /**
+     * Executes the specific routines in this command core with the specified source.
+     *
+     * @param source    The {@link WrappedCommandSource} that is executing the command.
+     * @param arguments The arguments of the command
+     * @param conn      If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
+     * @return Whether the command succeeded
+     * @throws HammerException Thrown if an exception is thrown in the command core.
+     */
+    @Override
+    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+        try {
             IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
             IMessageSender sender = core.getActionProvider().getMessageSender();
 
             if (arguments.size() != 1) {
-                this.sendUsageMessage(playerUUID);
+                this.sendUsageMessage(source);
                 return true;
             }
 
@@ -54,27 +69,27 @@ public class CheckBanCommandCore extends CommandCore {
             }
 
             if (uuids.isEmpty()) {
-                sendNoPlayerMessage(playerUUID, playerName);
+                sendNoPlayerMessage(source, playerName);
                 return true;
             }
 
             if (uuids.size() > 1) {
-                sendTemplatedMessage(playerUUID, "hammer.player.multiple", false, true, playerName);
-                sendMessage(playerUUID, "------------------", false, false);
+                sendTemplatedMessage(source, "hammer.player.multiple", false, true, playerName);
+                sendMessage(source, "------------------", false, false);
             }
 
             for (UUID uuid : uuids) {
                 List<HammerPlayerBan> bans = conn.getBanHandler().getPlayerBans(uuid);
                 if (uuids.size() > 1) {
-                    sendMessage(playerUUID, "UUID: " + uuid.toString(), false, true);
+                    sendMessage(source, "UUID: " + uuid.toString(), false, true);
                 }
 
                 if (bans.isEmpty()) {
-                    sendTemplatedMessage(playerUUID, "hammer.player.check.nobans", false, true, playerName);
+                    sendTemplatedMessage(source, "hammer.player.check.nobans", false, true, playerName);
                 } else {
-                    sendTemplatedMessage(playerUUID, "hammer.player.check.bans", false, true, playerName, String.valueOf(bans.size()));
+                    sendTemplatedMessage(source, "hammer.player.check.bans", false, true, playerName, String.valueOf(bans.size()));
                     for (HammerPlayerBan b : bans) {
-                        sendBanReason(b, playerUUID);
+                        sendBanReason(b, source);
                     }
                 }
             }
@@ -86,17 +101,12 @@ public class CheckBanCommandCore extends CommandCore {
     }
 
     @Override
-    protected boolean requiresDatabase() {
-        return true;
-    }
-
-    @Override
     public HammerText getUsageMessage() {
         return new HammerTextBuilder().add("/checkban <name>", HammerTextColours.YELLOW).build();
     }
 
-    private void sendBanReason(HammerPlayerBan ban, UUID playerUUID) {
-        sendMessage(playerUUID, "------------------", false, false);
+    private void sendBanReason(HammerPlayerBan ban, WrappedCommandSource source) {
+        sendMessage(source, "------------------", false, false);
 
         String server = ban.getServerId() == null ? messageBundle.getString("hammer.player.check.allservers") :
                 MessageFormat.format(messageBundle.getString("hammer.player.check.serverid"), ban.getServerId().toString());
@@ -109,9 +119,9 @@ public class CheckBanCommandCore extends CommandCore {
                     core.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - (new Date()).getTime())));
         }
 
-        sendTemplatedMessage(playerUUID, "hammer.player.check.from", false, false, server, modifier);
-        sendTemplatedMessage(playerUUID, "hammer.player.check.banned", false, false, dateFormatter.format(ban.getDateOfBan()));
-        sendTemplatedMessage(playerUUID, "hammer.player.check.bannedby", false, false, ban.getBanningStaffName());
-        sendTemplatedMessage(playerUUID, "hammer.player.check.reason", false, false, ban.getReason());
+        sendTemplatedMessage(source, "hammer.player.check.from", false, false, server, modifier);
+        sendTemplatedMessage(source, "hammer.player.check.banned", false, false, dateFormatter.format(ban.getDateOfBan()));
+        sendTemplatedMessage(source, "hammer.player.check.bannedby", false, false, ban.getBanningStaffName());
+        sendTemplatedMessage(source, "hammer.player.check.reason", false, false, ban.getReason());
     }
 }

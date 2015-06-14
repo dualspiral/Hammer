@@ -43,4 +43,20 @@ public interface WrappedServer {
      * @param permission The permission group that should see it.
      */
     void sendMessageToPermissionGroup(HammerText message, String permission);
+
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    void kickAllPlayers(WrappedCommandSource source, String reason);
+
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    void kickAllPlayers(WrappedCommandSource source, HammerText reason);
 }

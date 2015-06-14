@@ -11,12 +11,15 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.util.ban.BanBuilder;
 import org.spongepowered.api.util.ban.BanFactory;
 import org.spongepowered.api.util.ban.Bans;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
+import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -94,8 +97,8 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      * @param reason The reason
      */
     @Override
-    public void ban(HammerText reason) {
-        ban(reason.toString());
+    public void ban(WrappedCommandSource source, HammerText reason) {
+        ban(source, reason.toString());
     }
 
     /**
@@ -104,9 +107,18 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      * @param reason The reason
      */
     @Override
-    public void ban(String reason) {
-        Ban ban = Bans.of(player, Texts.of(reason));
-        getBanService().ban(ban);
+    public void ban(WrappedCommandSource source, String reason) {
+        BanBuilder builder = Bans.builder().reason(Texts.of(reason)).user(player);
+        if (source instanceof SpongeWrappedPlayer) {
+            Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
+            if (sourceplayer.isPresent()) {
+                builder.source(sourceplayer.get());
+            }
+        } else if (source instanceof SpongeWrappedConsole) {
+            builder.source(((SpongeWrappedConsole) source).getSpongeSource());
+        }
+
+        getBanService().ban(builder.build());
     }
 
     /**
@@ -161,5 +173,18 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     private BanService getBanService() {
         return game.getServiceManager().provide(BanService.class).get();
+    }
+
+    /**
+     * Gets the Sponge {@link User}
+     *
+     * @return The {@link User}
+     */
+    public User getSpongeUser() {
+        return player;
+    }
+
+    public Optional<Player> getSpongePlayer() {
+        return player.getPlayer();
     }
 }

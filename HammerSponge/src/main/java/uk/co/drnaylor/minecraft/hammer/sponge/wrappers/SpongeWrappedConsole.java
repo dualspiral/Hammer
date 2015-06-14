@@ -70,4 +70,12 @@ public class SpongeWrappedConsole implements WrappedCommandSource {
         return true;
     }
 
+    /**
+     * Gets the Sponge {@link ConsoleSource}
+     *
+     * @return The source.
+     */
+    public ConsoleSource getSpongeSource() {
+        return console;
+    }
 }

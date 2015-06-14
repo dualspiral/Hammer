@@ -85,4 +85,26 @@ public class SpongeWrappedServer implements WrappedServer {
         MessageSinks.toPermission(permission).sendMessage(HammerTextConverter.constructMessage(message));
     }
 
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    @Override
+    public void kickAllPlayers(WrappedCommandSource source, String reason) {
+
+    }
+
+    /**
+     * Kicks all players from the server, apart from the executing user.
+     *
+     * @param source The {@link WrappedCommandSource} that kicked the user.
+     * @param reason The reason for the kick.
+     */
+    @Override
+    public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
+
+    }
+
 }

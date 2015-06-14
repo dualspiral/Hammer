@@ -1,11 +1,13 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 import java.text.MessageFormat;
@@ -27,32 +29,37 @@ public class KickCommandCore extends CommandCore {
     }
 
     /**
-     * Executes this command core with the specified player.
+     * Executes the specific routines in this command core with the specified source.
      *
-     * @param playerUUID
-     * @param arguments
-     * @param isConsole  Whether the command executor is the console.
-     * @param conn       If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
-     * @return Whether the command succeeded.
+     * @param source    The {@link WrappedCommandSource} that is executing the command.
+     * @param arguments The arguments of the command
+     * @param conn      If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
+     * @return Whether the command succeeded
+     * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         if (arguments.isEmpty()) {
-            sendUsageMessage(playerUUID);
+            sendUsageMessage(source);
             return true;
         }
 
         Iterator<String> str = arguments.iterator();
         String arg = str.next();
         boolean quietKick = false;
+        boolean noisyKick = false;
 
         // Do we want a quiet kick?
-        if (arg.equalsIgnoreCase("-q")) {
-            quietKick = true;
+        if (arg.equalsIgnoreCase("-q") || arg.equalsIgnoreCase("-n")) {
+            if (arg.equalsIgnoreCase("-q")) {
+                quietKick = true;
+            } else {
+                noisyKick = true;
+            }
 
             // No good being quiet if we don't have that person to kick!
             if (!str.hasNext()) {
-                sendUsageMessage(playerUUID);
+                sendUsageMessage(source);
                 return true;
             }
 
@@ -63,7 +70,7 @@ public class KickCommandCore extends CommandCore {
         // Get the player
         WrappedPlayer pl = core.getActionProvider().getPlayerTranslator().nameToOnlinePlayer(arg);
         if (pl == null) {
-            sendTemplatedMessage(playerUUID, "hammer.player.notonline", true, true);
+            sendTemplatedMessage(source, "hammer.player.notonline", true, true);
             return true;
         }
 
@@ -84,19 +91,17 @@ public class KickCommandCore extends CommandCore {
 
         pl.kick(reason);
 
-        String plName = "Console";
-        if (!isConsole) {
-            plName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(playerUUID);
-        }
+        // Get the name of the person doing the kicking.
+        String plName = source.getName();
 
         HammerText[] msg = createReasons(pl.getName(), plName, reason);
-        if (!quietKick && core.getActionProvider().getConfigurationProvider().notifyServerOfBans()) {
+        if (noisyKick || (!quietKick && core.getActionProvider().getConfigurationProvider().notifyServerOfBans())) {
             for (HammerText m : msg) {
-                core.getActionProvider().getMessageSender().sendMessageToAllPlayers(m);
+                core.getWrappedServer().sendMessageToServer(m);
             }
         } else {
             for (HammerText m : msg) {
-                core.getActionProvider().getMessageSender().sendMessageToPlayersWithPermission("hammer.notify", m);
+                core.getWrappedServer().sendMessageToPermissionGroup(m, HammerPermissions.notify);
             }
         }
 

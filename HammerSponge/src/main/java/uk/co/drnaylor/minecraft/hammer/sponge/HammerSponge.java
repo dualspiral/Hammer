@@ -60,15 +60,15 @@ public class HammerSponge {
             game.getCommandDispatcher().register(this, spec, "hammer");
 
             // Ban command
-            game.getCommandDispatcher().register(this, new SpongeCommand(new BanCommandCore(core)), "ban", "hban", "hammerban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
 
             // Kick commands
-            game.getCommandDispatcher().register(this, new SpongeCommand(new KickCommandCore(core)), "kick", "hkick", "hammerkick");
-            game.getCommandDispatcher().register(this, new SpongeCommand(new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
         } catch (Exception ex) {
             // Do some stuff
         }

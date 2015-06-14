@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -17,6 +18,8 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.PlayerPermissionCheckBase
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 public class UnbanCommandCore extends CommandCore {
 
@@ -35,25 +38,19 @@ public class UnbanCommandCore extends CommandCore {
     }
 
     /**
-     * Executes the unban command. Expecting /unban [-p] [-a] player.
-     * 
-     * <p>
-     * This command will only unban global and/or perm bans with the correct permission, and the correct flag. For an all server
-     * perm ban, either -pa, -ap, -p -a or -a -p will suffice - but both permissions must be enabled.
-     * </p>
-     * 
-     * @param playerUUID
-     * @param arguments
-     * @param isConsole
-     * @return
-     * @throws HammerException 
+     * Executes the specific routines in this command core with the specified source.
+     *
+     * @param source    The {@link WrappedCommandSource} that is executing the command.
+     * @param arguments The arguments of the command
+     * @param conn      If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
+     * @return Whether the command succeeded
+     * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         try {
-            PlayerPermissionCheckBase permsCheck = core.getActionProvider().getPermissionCheck();
             if (arguments.isEmpty()) {
-                sendUsageMessage(playerUUID);
+                sendUsageMessage(source);
                 return true;
             }
 
@@ -63,43 +60,54 @@ public class UnbanCommandCore extends CommandCore {
             // Last argument, player.
             String playerName = copy.remove(arguments.size() - 1);
             Set<UUID> uuids = new HashSet<>();
-            UUID unban = core.getActionProvider().getPlayerTranslator().playerNameToUUID(playerName);
+
+            // Get the player to unban if we can.
+            UUID unban = null;
+            WrappedPlayer player = core.getWrappedServer().getPlayer(playerName);
+            if (player != null) {
+                unban = player.getUUID();
+            }
+
+            // If we don't have them on this server...
             if (unban == null) {
-                // Do we have them in the Hammer DB?
+                // ...do we have them in the Hammer DB?
                 List<HammerPlayer> players = conn.getPlayerHandler().getPlayersByName(playerName);
                 for (HammerPlayer p : players) {
                     uuids.add(p.getUUID());
                 }
             } else {
+                // Otherwise, we want them in the set.
                 uuids.add(unban);
             }
 
+            // No users, throw them out
             if (uuids.isEmpty()) {
-                sendNoPlayerMessage(playerUUID, playerName);
+                sendNoPlayerMessage(source, playerName);
                 return true;
             }
 
+            // Check flags.
             boolean allFlag = false;
             boolean permFlag = false;
             if (!copy.isEmpty()) {
-                // Check flags.
                 for (String c : copy) {
                     if (all.matcher(c).matches() && !allFlag) {
-                        if (permsCheck.hasPermissionToUnbanFromAllServers(playerUUID)) {
+                        // Check for permission
+                        if (source.hasPermission(HammerPermissions.globalUnban)) {
                             allFlag = true;
                         } else {
-                            sendNoPermsMessage(playerUUID);
+                            sendNoPermsMessage(source);
                             return true;
                         }
                     } else if (perm.matcher(c).matches() && !permFlag) {
-                        if (permsCheck.hasPermissionToUnbanPermanent(playerUUID)) {
+                        if (source.hasPermission(HammerPermissions.permUnban)) {
                             permFlag = true;
                         } else {
-                            sendNoPermsMessage(playerUUID);
+                            sendNoPermsMessage(source);
                             return true;
                         }
                     } else {
-                        sendUsageMessage(playerUUID);
+                        sendUsageMessage(source);
                         return true;
                     }
                 }
@@ -118,16 +126,16 @@ public class UnbanCommandCore extends CommandCore {
                  ban = true;
                  if (bannee != null && !bannee.equals(ban2.getBannedUUID())) {
                      // OK, if this is the case, then we need to tell the user of this problem...
-                     sendTemplatedMessage(playerUUID, "hammer.unban.ambiguous", true, true, playerName);
+                     sendTemplatedMessage(source, "hammer.unban.ambiguous", true, true, playerName);
                      return true;
                  } else {
                      if (ban2.isPermBan() && !permFlag) {
-                         sendTemplatedMessage(playerUUID, "hammer.unban.permanent", true, true);
+                         sendTemplatedMessage(source, "hammer.unban.permanent", true, true);
                          return true;
                      }
 
                      if (ban2.getServerId() == null && !allFlag) {
-                         sendTemplatedMessage(playerUUID, "hammer.unban.allservers", true, true);
+                         sendTemplatedMessage(source, "hammer.unban.allservers", true, true);
                          return true;
                      }
 
@@ -135,20 +143,26 @@ public class UnbanCommandCore extends CommandCore {
                  }
             }
 
+            // You can't unban those who aren't banned!
             if (!ban) {
-                sendTemplatedMessage(playerUUID, "hammer.unban.noban", true, true, playerName);
+                sendTemplatedMessage(source, "hammer.unban.noban", true, true, playerName);
                 return true;
             }
 
             // If you get here, then we have a ban to undo!
             conn.getBanHandler().unbanFromServer(bannee, serverId);
-            core.getActionProvider().getPlayerActions().unbanPlayer(bannee);
+            if (player != null) {
+                player.unban();
+                playerName = player.getName();
+            }
+
+            // Unban from all servers if that's needed.
             if (allFlag) {
                 conn.getBanHandler().unbanFromAllServers(bannee);
             }
 
             // Unbanned. Tell the notified.
-            sendUnbanMessage(bannee, playerName, playerUUID, allFlag);
+            sendUnbanMessage(playerName, source, allFlag);
             return true;
         } catch (Exception ex) {
             throw new HammerException("Command failed to execute", ex);
@@ -160,18 +174,8 @@ public class UnbanCommandCore extends CommandCore {
         return new HammerTextBuilder().add("/unban [-a] [-p] player", HammerTextColours.YELLOW).build();
     }
 
-    private void sendUnbanMessage(UUID bannee, String playerName, UUID bannedBy, boolean allFlag) {
-        String name;
-        if (bannedBy.equals(HammerConstants.consoleUUID)) {
-            name = String.format("*%s*", messageBundle.getString("hammer.console"));
-        } else {
-            name = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(bannee);
-        }
-
-        String plName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(bannee);;
-        if (plName == null || plName == "") {
-            plName = playerName;
-        }
+    private void sendUnbanMessage(String playerName, WrappedCommandSource source, boolean allFlag) {
+        String name = source.getName();
 
         HammerTextBuilder htb = new HammerTextBuilder();
         htb.add(name, HammerTextColours.WHITE);
@@ -181,7 +185,7 @@ public class UnbanCommandCore extends CommandCore {
             htb.add(messageBundle.getString("hammer.unban.unbanOneServer"), HammerTextColours.GREEN);
         }
 
-        htb.add(" " + plName, HammerTextColours.WHITE);
-        core.getActionProvider().getMessageSender().sendMessageToPlayersWithPermission("hammer.notify", htb.build());
+        htb.add(" " + playerName, HammerTextColours.WHITE);
+        core.getWrappedServer().sendMessageToPermissionGroup(htb.build(), HammerPermissions.notify);
     }
 }

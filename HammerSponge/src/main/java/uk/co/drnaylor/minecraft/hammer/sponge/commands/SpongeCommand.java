@@ -10,9 +10,12 @@ import org.spongepowered.api.util.command.CommandCallable;
 import org.spongepowered.api.util.command.CommandException;
 import org.spongepowered.api.util.command.CommandResult;
 import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.util.command.source.ConsoleSource;
 import uk.co.drnaylor.minecraft.hammer.core.commands.CommandCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedConsole;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,8 +27,10 @@ public class SpongeCommand implements CommandCallable {
 
     private final CommandCore core;
     private final Text error = Texts.of("[Hammer] An error occurred", TextColors.RED);
+    private final Game game;
 
-    public SpongeCommand(CommandCore core) {
+    public SpongeCommand(Game game, CommandCore core) {
+        this.game = game;
         this.core = core;
     }
 
@@ -34,9 +39,9 @@ public class SpongeCommand implements CommandCallable {
         try {
             List<String> a = Arrays.asList(arguments.split(" "));
             if (source instanceof Player) {
-                core.executeCommandAsPlayer(((Player) source).getUniqueId(), a);
-            } else {
-                core.executeCommandAsConsole(a);
+                core.executeCommand(new SpongeWrappedPlayer(game, (Player)source), a);
+            } else if (source instanceof ConsoleSource) {
+                core.executeCommand(new SpongeWrappedConsole((ConsoleSource)source), a);
             }
 
             return Optional.of(CommandResult.success());

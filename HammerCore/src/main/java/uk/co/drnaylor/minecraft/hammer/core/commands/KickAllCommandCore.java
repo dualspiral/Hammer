@@ -6,6 +6,7 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,16 +25,16 @@ public class KickAllCommandCore extends CommandCore {
     }
 
     /**
-     * Executes this command core with the specified player.
+     * Executes the specific routines in this command core with the specified source.
      *
-     * @param playerUUID
-     * @param arguments
-     * @param isConsole  Whether the command executor is the console.
-     * @param conn       If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
-     * @return Whether the command succeeded.
+     * @param source    The {@link WrappedCommandSource} that is executing the command.
+     * @param arguments The arguments of the command
+     * @param conn      If the command requires database access, holds a {@link DatabaseConnection} object. Otherwise, null.
+     * @return Whether the command succeeded
+     * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(UUID playerUUID, List<String> arguments, boolean isConsole, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         String reason = "You have all been kicked from the server.";
         if (!arguments.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -44,10 +45,12 @@ public class KickAllCommandCore extends CommandCore {
 
                 sb.append(s);
             }
+
+            reason = sb.toString();
         }
 
-        core.getActionProvider().getPlayerActions().kickAllPlayers(playerUUID, reason);
-        sendTemplatedMessage(playerUUID, "hammer.kickall", false, true);
+        core.getWrappedServer().kickAllPlayers(source, reason);
+        sendTemplatedMessage(source, "hammer.kickall", false, true);
         return true;
     }
 
