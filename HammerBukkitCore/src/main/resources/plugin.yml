@@ -45,6 +45,10 @@ commands:
   hammer:
     description: Get information about Hammer.
     permission: hammer.about
+  importplayer:
+    description: Adds a player to the Hammer database
+    permission: hammer.importplayer
+    aliases: [himportplayer]
 #  banip:
 #    description: IP Ban a player.
 #    permission: hammer.banip
@@ -99,5 +103,7 @@ permissions:
     default: op
   hammer.kick:
     default: op
-  hammer.kickall
+  hammer.kickall:
+    default: op
+  hammer.importplayer:
     default: op

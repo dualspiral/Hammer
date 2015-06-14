@@ -69,6 +69,9 @@ public class HammerSponge {
             // Kick commands
             game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
             game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+
+            // Import Player command
+            game.getCommandDispatcher().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
         } catch (Exception ex) {
             // Do some stuff
         }

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ImportPlayerCommand extends CommandCore {
 
-    protected ImportPlayerCommand(HammerCore core) {
+    public ImportPlayerCommand(HammerCore core) {
         super(core);
         permissionNodes = new ArrayList<>();
         permissionNodes.add(HammerPermissions.importPlayer);
