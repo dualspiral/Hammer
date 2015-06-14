@@ -23,6 +23,13 @@ public interface WrappedServer {
     WrappedPlayer getPlayer(String name);
 
     /**
+     * Gets the console command sender.
+     *
+     * @return The {@link WrappedCommandSource} that represents the console.
+     */
+    WrappedCommandSource getConsole();
+
+    /**
      * Sends a message to the entire server.
      *
      * @param message The message to send.

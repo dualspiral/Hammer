@@ -34,8 +34,18 @@ public class HammerCore {
      *
      * @return The {@link HammerPluginActionProvider}
      */
+    @Deprecated
     public HammerPluginActionProvider getActionProvider() {
         return actionProvider;
+    }
+
+    /**
+     * Get the {@link WrappedServer} that represents the game server that is running.
+     *
+     * @return The {@link WrappedServer}
+     */
+    public WrappedServer getWrappedServer() {
+        return server;
     }
 
     /**

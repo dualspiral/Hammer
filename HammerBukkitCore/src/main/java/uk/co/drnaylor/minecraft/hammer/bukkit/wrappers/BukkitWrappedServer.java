@@ -1,9 +1,9 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
@@ -37,6 +37,15 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public WrappedPlayer getPlayer(String name) {
         return BukkitWrappedPlayer.ofOnlinePlayer(name);
+    }
+
+    /**
+     * Gets the console command sender.
+     *
+     * @return The {@link WrappedCommandSource} that represents the console.
+     */
+    public WrappedCommandSource getConsole() {
+        return new BukkitWrappedConsole(server.getConsoleSender());
     }
 
     /**

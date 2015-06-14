@@ -4,43 +4,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
 import java.util.UUID;
 
-public interface WrappedPlayer {
-
-    /**
-     * Gets the name of the player.
-     *
-     * @return The name.
-     */
-    String getName();
-
-    /**
-     * Gets the Unique Identifier of the player.
-     *
-     * @return The {@link UUID}
-     */
-    UUID getUUID();
-
-    /**
-     * Sends a message to the player
-     *
-     * @param message The message
-     */
-    void sendMessage(HammerText message);
-
-    /**
-     * Sends a message to the player
-     *
-     * @param message The message
-     */
-    void sendMessage(String message);
-
-    /**
-     * Gets whether the player has the specified permission
-     *
-     * @param permission The permission
-     * @return <code>true</code> if the player has the permission specified.
-     */
-    boolean hasPermission(String permission);
+public interface WrappedPlayer extends WrappedCommandSource {
 
     /**
      * Bans the player with the specified reason
