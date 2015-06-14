@@ -4,6 +4,8 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-core/1.2.2/7a08687b67a54e3609dae8fddeb9939a954f008a/configurate-core-1.2.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-core/1.2.2/2c4dd003f5f34b1e765083c9753cfab468bf4955/configurate-core-1.2.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

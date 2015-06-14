@@ -5,6 +5,7 @@ sourceCompatibility = 1.7
 version = '0.2'
 
 repositories {
+    mavenCentral()
     maven {
         url 'http://repo.md-5.net/content/repositories/repobo-snap/'
     }

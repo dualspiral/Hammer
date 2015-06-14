@@ -4,6 +4,8 @@
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-gson/1.2.2/e33436df6db3f5457bbd7b08d0c3b91cad439d00/configurate-gson-1.2.2.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-gson/1.2.2/dc364fc6f2e97279255df31dae25dad9c37f14c6/configurate-gson-1.2.2-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
