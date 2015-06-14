@@ -1,8 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
+import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.player.User;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -20,10 +22,10 @@ import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
 
-    private final Player player;
+    private final User player;
     private final Game game;
 
-    public SpongeWrappedPlayer(Game game, Player player) {
+    public SpongeWrappedPlayer(Game game, User player) {
         this.player = player;
         this.game = game;
     }
@@ -55,7 +57,11 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void sendMessage(HammerText message) {
-        player.sendMessage(HammerTextConverter.constructMessage(message));
+        Optional<Player> onlinePlayer = player.getPlayer();
+        if (onlinePlayer.isPresent()) {
+            onlinePlayer.get().sendMessage(HammerTextConverter.constructMessage(message));
+        }
+
     }
 
     /**
@@ -65,7 +71,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void sendMessage(String message) {
-        player.sendMessage(ChatTypes.SYSTEM, Texts.of(message));
+        Optional<Player> onlinePlayer = player.getPlayer();
+        if (onlinePlayer.isPresent()) {
+            onlinePlayer.get().sendMessage(ChatTypes.SYSTEM, Texts.of(message));
+        }
     }
 
     /**
@@ -126,7 +135,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void kick(HammerText reason) {
-        player.kick(HammerTextConverter.constructMessage(reason));
+        Optional<Player> onlinePlayer = player.getPlayer();
+        if (onlinePlayer.isPresent()) {
+            onlinePlayer.get().kick(HammerTextConverter.constructMessage(reason));
+        }
     }
 
     /**
@@ -136,7 +148,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void kick(String reason) {
-        player.kick(Texts.of(reason));
+        Optional<Player> onlinePlayer = player.getPlayer();
+        if (onlinePlayer.isPresent()) {
+            onlinePlayer.get().kick(Texts.of(reason));
+        }
     }
 
     /**

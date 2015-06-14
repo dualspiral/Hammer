@@ -2,7 +2,8 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.player.User;
+import org.spongepowered.api.service.user.UserStorage;
 import org.spongepowered.api.text.sink.MessageSinks;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
@@ -27,7 +28,8 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public WrappedPlayer getPlayer(UUID uuid) {
-        Optional<Player> player = game.getServer().getPlayer(uuid);
+        UserStorage service = game.getServiceManager().provide(UserStorage.class).get();
+        Optional<User> player = service.get(uuid);
         if (player.isPresent()) {
             return new SpongeWrappedPlayer(game, player.get());
         }
@@ -43,7 +45,8 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public WrappedPlayer getPlayer(String name) {
-        Optional<Player> player = game.getServer().getPlayer(name);
+        UserStorage service = game.getServiceManager().provide(UserStorage.class).get();
+        Optional<User> player = service.get(name);
         if (player.isPresent()) {
             return new SpongeWrappedPlayer(game, player.get());
         }
