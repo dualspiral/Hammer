@@ -5,16 +5,19 @@ import java.sql.SQLException;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
 public class HammerCore {
 
     private final IDatabaseProvider provider;
     private final HammerPluginActionProvider actionProvider;
+    private final WrappedServer server;
     private HammerExternalIDGenerator externalIdGenerator = null;
 
-    HammerCore(HammerPluginActionProvider actionProvider, IDatabaseProvider provider) {
+    HammerCore(HammerPluginActionProvider actionProvider, WrappedServer server, IDatabaseProvider provider) {
         this.actionProvider = actionProvider;
         this.provider = provider;
+        this.server = server;
     }
 
     /**

@@ -20,6 +20,7 @@ import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.coreimpl.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextToTextColorCoverter;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,6 +108,7 @@ public class HammerSponge {
 
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 createActionProvider(),
+                new SpongeWrappedServer(game),
                 mySqlNode.getNode("host").getString(),
                 mySqlNode.getNode("port").getInt(),
                 mySqlNode.getNode("database").getString(),

@@ -10,6 +10,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
+import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider;
@@ -134,6 +135,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         Configuration config = this.getConfig();
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 createActionProvider(),
+                new BukkitWrappedServer(this.getServer()),
                 config.getString("mysql.host"),
                 config.getInt("mysql.port"),
                 config.getString("mysql.database"),
