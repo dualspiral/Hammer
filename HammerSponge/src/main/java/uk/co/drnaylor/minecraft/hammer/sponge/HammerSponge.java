@@ -108,7 +108,7 @@ public class HammerSponge {
 
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 createActionProvider(),
-                new SpongeWrappedServer(game),
+                new SpongeWrappedServer(this, game),
                 mySqlNode.getNode("host").getString(),
                 mySqlNode.getNode("port").getInt(),
                 mySqlNode.getNode("database").getString(),
@@ -122,7 +122,6 @@ public class HammerSponge {
      */
     private HammerPluginActionProvider createActionProvider() {
         return new HammerPluginActionProvider(
-                new SpongePlayerActions(),
                 new SpongeMessageSender(),
                 new SpongePlayerTranslator(),
                 new SpongePlayerPermissionCheck(game),

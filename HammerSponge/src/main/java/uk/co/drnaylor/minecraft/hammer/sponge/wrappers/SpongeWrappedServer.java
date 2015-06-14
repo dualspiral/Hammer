@@ -9,6 +9,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.util.UUID;
@@ -16,8 +17,10 @@ import java.util.UUID;
 public class SpongeWrappedServer implements WrappedServer {
 
     private final Game game;
+    private final HammerSponge plugin;
 
-    public SpongeWrappedServer(Game game) {
+    public SpongeWrappedServer(HammerSponge plugin, Game game) {
+        this.plugin = plugin;
         this.game = game;
     }
 
@@ -107,4 +110,13 @@ public class SpongeWrappedServer implements WrappedServer {
 
     }
 
+    /**
+     * Schedules an action for the next tick loop.
+     *
+     * @param runnable The runnable to run on the next tick loop.
+     */
+    @Override
+    public void scheduleForNextTick(Runnable runnable) {
+        game.getSyncScheduler().runTask(plugin, runnable);
+    }
 }

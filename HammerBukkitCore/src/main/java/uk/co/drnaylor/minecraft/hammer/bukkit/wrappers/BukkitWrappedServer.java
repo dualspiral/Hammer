@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
 import org.bukkit.Server;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
@@ -12,8 +13,10 @@ import java.util.UUID;
 public class BukkitWrappedServer implements WrappedServer {
 
     private final Server server;
+    private final HammerBukkitPlugin plugin;
 
-    public BukkitWrappedServer(Server server) {
+    public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
+        this.plugin = plugin;
         this.server = server;
     }
 
@@ -89,5 +92,15 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
 
+    }
+
+    /**
+     * Schedules an action for the next tick loop.
+     *
+     * @param runnable The runnable to run on the next tick loop.
+     */
+    @Override
+    public void scheduleForNextTick(Runnable runnable) {
+        server.getScheduler().runTask(plugin, runnable);
     }
 }

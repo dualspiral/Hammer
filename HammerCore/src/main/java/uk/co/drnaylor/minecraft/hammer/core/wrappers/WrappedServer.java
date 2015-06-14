@@ -59,4 +59,11 @@ public interface WrappedServer {
      * @param reason The reason for the kick.
      */
     void kickAllPlayers(WrappedCommandSource source, HammerText reason);
+
+    /**
+     * Schedules an action for the next tick loop.
+     *
+     * @param runnable The runnable to run on the next tick loop.
+     */
+    void scheduleForNextTick(Runnable runnable);
 }

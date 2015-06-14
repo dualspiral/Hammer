@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
 }
 
 sourceSets {

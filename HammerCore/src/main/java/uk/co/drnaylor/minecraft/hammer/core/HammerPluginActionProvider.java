@@ -7,24 +7,18 @@ import uk.co.drnaylor.minecraft.hammer.core.interfaces.*;
  * specific methods.
  */
 public class HammerPluginActionProvider {
-    private final IPlayerActions actions;
     private final IPlayerTranslator playerTranslator;
     private final PlayerPermissionCheckBase permissionCheck;
     private final IConfigurationProvider configProvider;
     private final IMessageSender messageSender;
 
     public HammerPluginActionProvider(
-            IPlayerActions actions, IMessageSender messageSender, IPlayerTranslator playerTranslator,
+            IMessageSender messageSender, IPlayerTranslator playerTranslator,
             PlayerPermissionCheckBase permissionCheck, IConfigurationProvider configProvider) {
-        this.actions = actions;
         this.messageSender = messageSender;
         this.playerTranslator = playerTranslator;
         this.permissionCheck = permissionCheck;
         this.configProvider = configProvider;
-    }
-
-    public IPlayerActions getPlayerActions() {
-        return actions;
     }
 
     public IMessageSender getMessageSender() { return messageSender; }

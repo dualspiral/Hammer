@@ -135,7 +135,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         Configuration config = this.getConfig();
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 createActionProvider(),
-                new BukkitWrappedServer(this.getServer()),
+                new BukkitWrappedServer(this, this.getServer()),
                 config.getString("mysql.host"),
                 config.getInt("mysql.port"),
                 config.getString("mysql.database"),
@@ -149,7 +149,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
      */
     protected final HammerPluginActionProvider createActionProvider() {
         return new HammerPluginActionProvider(
-                new BukkitPlayerActions(),
                 new BukkitMessageSender(),
                 new BukkitPlayerTranslator(),
                 new BukkitPlayerPermissionCheck(),

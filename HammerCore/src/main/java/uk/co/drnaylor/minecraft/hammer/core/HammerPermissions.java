@@ -68,4 +68,9 @@ public class HammerPermissions {
      * Permission to indicate whether the specified player is exempted from bans.
      */
     public final static String exemptFromBan = "hammer.exempt";
+
+    /**
+     * Permission to indicate whether the specified player can import new players from the Mojang Web service.
+     */
+    public final static String importPlayer = "hammer.importplayer";
 }
