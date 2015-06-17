@@ -123,7 +123,7 @@ public class MojangNameRunnable implements Runnable {
 
     private static class PlayerData
     {
-        private static final Pattern uuidRegex = Pattern.compile("\"(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})\"");
+        private static final Pattern uuidRegex = Pattern.compile("(\\w{8})(\\w{4})(\\w{4})(\\w{4})(\\w{12})");
 
         public String id;
         public String name;
@@ -131,7 +131,16 @@ public class MojangNameRunnable implements Runnable {
         public UUID getID() {
             Matcher m = uuidRegex.matcher(id);
             if (m.matches()) {
-                return UUID.fromString(m.replaceAll("$1-$2-$3-$4-$5"));
+                StringBuilder sb = new StringBuilder();
+                for (int i = 1; i <= 5; i++) {
+                    if (i > 1) {
+                        sb.append("-");
+                    }
+
+                    sb.append(m.group(1));
+                }
+
+                return UUID.fromString(sb.toString());
             }
 
             return UUID.fromString(id);

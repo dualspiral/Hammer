@@ -50,7 +50,11 @@ public class ImportPlayerCommand extends CommandCore {
 
         // Fire the web service off.
         MojangNameRunnable mnr = new MojangNameRunnable(source, core, name);
-        new Thread(mnr).start();
+        Thread th = new Thread(mnr);
+
+        // We set this to be a Daemon thread.
+        th.setDaemon(true);
+        th.start();
 
         HammerTextBuilder htb = new HammerTextBuilder().add(HammerConstants.textTag + " Contacting Mojang for information about ", HammerTextColours.GREEN).add(name, HammerTextColours.YELLOW);
 

@@ -178,14 +178,14 @@ public class UnbanCommandCore extends CommandCore {
         String name = source.getName();
 
         HammerTextBuilder htb = new HammerTextBuilder();
-        htb.add(name, HammerTextColours.WHITE);
+        htb.add(playerName, HammerTextColours.WHITE);
         if (allFlag) {
             htb.add(messageBundle.getString("hammer.unban.unbanAllServers"), HammerTextColours.GREEN);
         } else {
             htb.add(messageBundle.getString("hammer.unban.unbanOneServer"), HammerTextColours.GREEN);
         }
 
-        htb.add(" " + playerName, HammerTextColours.WHITE);
+        htb.add(" " + source.getName(), HammerTextColours.WHITE);
         core.getWrappedServer().sendMessageToPermissionGroup(htb.build(), HammerPermissions.notify);
     }
 }
