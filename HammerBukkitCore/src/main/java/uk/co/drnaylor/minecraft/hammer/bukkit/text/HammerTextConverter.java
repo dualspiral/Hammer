@@ -41,8 +41,9 @@ public final class HammerTextConverter {
 
     private static void convertFormats(HammerTextFormats[] formats, StringBuilder sb) {
         for (HammerTextFormats f : formats) {
-            if (f != null) {
-                sb.append(HammerTextToCodeConverter.getCodeFromHammerText(f));
+            ChatColor cf = HammerTextToCodeConverter.getCodeFromHammerText(f);
+            if (cf != null) {
+                sb.append(cf);
             }
         }
     }
