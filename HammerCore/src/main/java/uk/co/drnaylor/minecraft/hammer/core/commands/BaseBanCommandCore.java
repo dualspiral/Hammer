@@ -277,7 +277,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         HammerTextBuilder htb = new HammerTextBuilder();
-        htb.add(HammerConstants.textTag, HammerTextColours.RED)
+        htb.add(HammerConstants.textTag + " ", HammerTextColours.RED)
                 .add(playerName, HammerTextColours.WHITE)
                 .add(" " + MessageFormat.format(messageBundle.getString("hammer.ban.banMessage"), modifier, fromAll), HammerTextColours.RED)
                 .add(" " + name, HammerTextColours.WHITE);
