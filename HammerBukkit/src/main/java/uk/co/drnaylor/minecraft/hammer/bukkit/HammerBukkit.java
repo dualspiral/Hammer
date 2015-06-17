@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 public class HammerBukkit extends HammerBukkitPlugin {
 
     @Override
-    protected Player[] getOnlinePlayers() {
+    public Player[] getOnlinePlayers() {
         return this.getServer().getOnlinePlayers();
     }
 }

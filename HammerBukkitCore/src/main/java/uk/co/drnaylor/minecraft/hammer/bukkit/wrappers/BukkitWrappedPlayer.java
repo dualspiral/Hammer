@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
@@ -159,7 +160,7 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     @Override
     public void kick(String reason) {
         if (player.isOnline()) {
-            player.getPlayer().kickPlayer(reason);
+            player.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', reason));
         }
     }
 }

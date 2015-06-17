@@ -25,7 +25,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
     protected HammerCore core;
     protected CreateHammerPlayerRunnable runnable;
 
-    protected abstract Player[] getOnlinePlayers();
+    public abstract Player[] getOnlinePlayers();
 
     /**
      * Runs when the plugin is enabled.

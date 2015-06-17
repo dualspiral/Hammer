@@ -8,7 +8,7 @@ import java.util.Collection;
 public class HammerBukkit extends HammerBukkitPlugin {
 
     @Override
-    protected Player[] getOnlinePlayers() {
+    public Player[] getOnlinePlayers() {
         Collection<Player> pl = ImmutableList.copyOf(this.getServer().getOnlinePlayers());
         return pl.toArray(new Player[0]);
     }

@@ -1,6 +1,8 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
+import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -8,7 +10,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
-import java.util.UUID;
+import java.util.*;
 
 public class BukkitWrappedServer implements WrappedServer {
 
@@ -80,7 +82,15 @@ public class BukkitWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, String reason) {
+        List<Player> lpl = Arrays.asList(plugin.getOnlinePlayers());
+        Iterator<Player> iterator = lpl.iterator();
 
+        while (iterator.hasNext()) {
+            Player pl = iterator.next();
+            if (pl.isOnline() && source.getUUID() != pl.getUniqueId()) {
+                pl.kickPlayer(ChatColor.translateAlternateColorCodes('&', reason));
+            }
+        }
     }
 
     /**
@@ -91,7 +101,7 @@ public class BukkitWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
-        
+        kickAllPlayers(source, HammerTextConverter.constructMessage(reason));
     }
 
     /**
