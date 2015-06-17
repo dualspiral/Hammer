@@ -11,7 +11,7 @@ public class HammerTextBuilder {
     }
 
     public HammerTextBuilder add(String text, HammerTextColours colour) {
-        return add(text, colour);
+        return add(text, colour, new HammerTextFormats[0]);
     }
 
     /**

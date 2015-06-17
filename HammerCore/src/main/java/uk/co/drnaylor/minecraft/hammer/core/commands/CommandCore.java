@@ -20,7 +20,7 @@ public abstract class CommandCore {
 
     protected static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
-    protected Collection<String> permissionNodes;
+    protected Collection<String> permissionNodes = new ArrayList<>();
 
     protected final HammerCore core;
 
