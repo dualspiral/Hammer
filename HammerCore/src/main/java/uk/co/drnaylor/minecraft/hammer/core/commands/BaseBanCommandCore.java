@@ -176,7 +176,8 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         // Create the message to send out.
-        HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() != null, ban.isPermanent());
+        HammerText[] msg = new HammerText[0];
+        msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
         if (isNoisy || (!isQuiet && core.getActionProvider().getConfigurationProvider().notifyServerOfBans())) {
@@ -252,15 +253,15 @@ public abstract class BaseBanCommandCore extends CommandCore {
      * @param isPerm
      * @return
      */
-    protected HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm) {
-        String playerName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(banned);
+    protected HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm, DatabaseConnection conn) throws HammerException {
+        String playerName = getName(banned, conn);
 
         HammerText[] messages = new HammerText[2];
         String name;
         if (bannedBy.equals(HammerConstants.consoleUUID)) {
             name = String.format("*%s*", messageBundle.getString("hammer.console"));
         } else {
-            name = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(bannedBy);
+            name = getName(bannedBy, conn);
         }
 
         String modifier = "";
@@ -285,13 +286,25 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         htb.clear();
 
-        StringBuilder sb = new StringBuilder(HammerConstants.textTag).append(" ")
-                .append(messageBundle.getString("hammer.reason")).append(" ")
-                .append(reason);
-        htb.add(sb.toString(), HammerTextColours.RED);
+        htb.add(HammerConstants.textTag + " " + messageBundle.getString("hammer.reason") + " " + reason, HammerTextColours.RED);
 
         messages[1] = htb.build();
         return messages;
+    }
+
+    private String getName(UUID name, DatabaseConnection conn) throws HammerException {
+        String playerName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(name);
+        if (playerName == null) {
+            // Do we have them in the Hammer DB?
+            HammerPlayer p = conn.getPlayerHandler().getPlayer(name);
+            if (p == null) {
+                playerName = "Unknown Player";
+            } else {
+                playerName = p.getName();
+            }
+        }
+
+        return playerName;
     }
 
     protected enum BanStatus

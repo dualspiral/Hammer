@@ -175,10 +175,8 @@ public class UnbanCommandCore extends CommandCore {
     }
 
     private void sendUnbanMessage(String playerName, WrappedCommandSource source, boolean allFlag) {
-        String name = source.getName();
-
         HammerTextBuilder htb = new HammerTextBuilder();
-        htb.add(playerName, HammerTextColours.WHITE);
+        htb.add(playerName + " ", HammerTextColours.WHITE);
         if (allFlag) {
             htb.add(messageBundle.getString("hammer.unban.unbanAllServers"), HammerTextColours.GREEN);
         } else {
