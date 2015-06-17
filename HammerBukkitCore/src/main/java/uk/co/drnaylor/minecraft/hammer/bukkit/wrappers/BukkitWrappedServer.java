@@ -91,7 +91,7 @@ public class BukkitWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
-
+        
     }
 
     /**

@@ -1,5 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -115,10 +116,10 @@ public class KickCommandCore extends CommandCore {
 
     private HammerText[] createReasons(String playerKicked, String playerKicking, String reason) {
         HammerText[] t = new HammerText[2];
-        t[0] = new HammerTextBuilder().add(playerKicked, HammerTextColours.WHITE)
+        t[0] = new HammerTextBuilder().add(HammerConstants.textTag + " ", HammerTextColours.RED).add(playerKicked, HammerTextColours.WHITE)
                 .add(" " + messageBundle.getString("hammer.kick.kickMessage"), HammerTextColours.RED)
                 .add(" " + playerKicking, HammerTextColours.WHITE).build();
-        t[1] = new HammerTextBuilder().add(MessageFormat.format(messageBundle.getString("hammer.kick.reason"), reason)
+        t[1] = new HammerTextBuilder().add(HammerConstants.textTag + " ", HammerTextColours.RED).add(MessageFormat.format(messageBundle.getString("hammer.kick.reason"), reason)
                 , HammerTextColours.RED).build();
         return t;
     }
