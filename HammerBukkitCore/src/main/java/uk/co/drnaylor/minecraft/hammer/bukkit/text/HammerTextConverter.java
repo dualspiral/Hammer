@@ -41,7 +41,9 @@ public final class HammerTextConverter {
 
     private static void convertFormats(HammerTextFormats[] formats, StringBuilder sb) {
         for (HammerTextFormats f : formats) {
-            sb.append(HammerTextToCodeConverter.getCodeFromHammerText(f));
+            if (f != null) {
+                sb.append(HammerTextToCodeConverter.getCodeFromHammerText(f));
+            }
         }
     }
 }
