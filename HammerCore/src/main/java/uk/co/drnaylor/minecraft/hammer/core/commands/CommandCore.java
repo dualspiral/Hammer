@@ -121,20 +121,6 @@ public abstract class CommandCore {
     }
 
     /**
-     * Sends the usage message to the player.
-     *
-     * @param uuid The {@link UUID} of the player
-     */
-    @Deprecated
-    public final void sendUsageMessage(UUID uuid) {
-        String f = String.format(" %s ", messageBundle.getString("hammer.player.commandUsage"));
-        HammerTextBuilder hb = createErrorMessageStub().add(f, HammerTextColours.RED)
-                .add(this.getUsageMessage());
-
-        core.getActionProvider().getMessageSender().sendMessageToPlayer(uuid, hb.build());
-    }
-
-    /**
      * Sends the usage message to the {@link WrappedCommandSource}.
      *
      * @param source The source.

@@ -125,9 +125,7 @@ public class HammerSponge {
      */
     private HammerPluginActionProvider createActionProvider() {
         return new HammerPluginActionProvider(
-                new SpongeMessageSender(),
                 new SpongePlayerTranslator(),
-                new SpongePlayerPermissionCheck(game),
                 new SpongeConfigurationProvider());
     }
 }

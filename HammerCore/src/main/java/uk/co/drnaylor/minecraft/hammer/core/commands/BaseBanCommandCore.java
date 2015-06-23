@@ -58,7 +58,6 @@ public abstract class BaseBanCommandCore extends CommandCore {
     @Override
     public final boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
-        PlayerPermissionCheckBase check = core.getActionProvider().getPermissionCheck();
 
         WrappedServer server = core.getWrappedServer();
 

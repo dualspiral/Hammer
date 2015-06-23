@@ -1,8 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.text.Format;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -14,8 +12,6 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IMessageSender;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IPlayerMessageBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
@@ -47,7 +43,6 @@ public class CheckBanCommandCore extends CommandCore {
     protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         try {
             IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
-            IMessageSender sender = core.getActionProvider().getMessageSender();
 
             if (arguments.size() != 1) {
                 this.sendUsageMessage(source);
