@@ -52,4 +52,6 @@ public abstract class HammerBan {
     public Integer getServerId() {
         return serverId;
     }
+
+    public String getServerName() { return serverName; }
 }

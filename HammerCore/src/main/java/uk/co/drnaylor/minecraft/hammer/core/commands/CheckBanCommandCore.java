@@ -104,7 +104,7 @@ public class CheckBanCommandCore extends CommandCore {
         sendMessage(source, "------------------", false, false);
 
         String server = ban.getServerId() == null ? messageBundle.getString("hammer.player.check.allservers") :
-                MessageFormat.format(messageBundle.getString("hammer.player.check.serverid"), ban.getServerId().toString());
+                MessageFormat.format(messageBundle.getString("hammer.player.check.serverid"), ban.getServerName(), ban.getServerId().toString());
 
         String modifier = "";
         if (ban.isPermBan()) {

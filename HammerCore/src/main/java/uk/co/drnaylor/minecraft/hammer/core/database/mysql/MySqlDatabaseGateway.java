@@ -112,6 +112,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
             }
 
             int serverValue = set.getInt("from_server");
+            String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
             HammerPlayerBan pb = new HammerPlayerBan(
                     set.getString("banned_name"), 
                     UUID.fromString(set.getString("banned_uuid")),
@@ -122,7 +123,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
                     set.getTimestamp("banned"), 
                     set.getTimestamp("banned_until"), 
                     serverValue == 0 ? null : serverValue,
-                    set.getString("server_name"),
+                    serverName,
                     set.getString("external_id"));
 
             return pb;
@@ -153,6 +154,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
 
             while (set.next()) {
                 int serverValue = set.getInt("from_server");
+                String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
                 HammerPlayerBan pb = new HammerPlayerBan(
                         set.getString("banned_name"), 
                         UUID.fromString(set.getString("banned_uuid")),
@@ -163,7 +165,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
                         set.getTimestamp("banned"), 
                         set.getTimestamp("banned_until"), 
                         serverValue == 0 ? null : serverValue,
-                        set.getString("server_name"),
+                        serverName,
                         set.getString("external_id"));
 
                 bans.add(pb);
