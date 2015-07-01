@@ -110,7 +110,7 @@ public class CheckBanCommandCore extends CommandCore {
         if (ban.isPermBan()) {
             modifier = String.format(" %s ", messageBundle.getString("hammer.player.check.perm"));
         } else if (ban.isTempBan()) {
-            modifier = String.format(" %s ", MessageFormat.format("hammer.player.check.temp",
+            modifier = String.format(" %s ", MessageFormat.format(messageBundle.getString("hammer.player.check.temp"),
                     core.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - (new Date()).getTime())));
         }
 
