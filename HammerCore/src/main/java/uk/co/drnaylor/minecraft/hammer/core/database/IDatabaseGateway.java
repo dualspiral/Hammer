@@ -6,6 +6,7 @@ import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
 public interface IDatabaseGateway extends AutoCloseable {
 
@@ -30,7 +31,7 @@ public interface IDatabaseGateway extends AutoCloseable {
 
     void updatePlayer(UUID player, String lastName, String ip) throws SQLException;
 
-    void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException;
+    void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException, HammerException;
 
     void removePlayerBan(UUID player, Integer serverId) throws SQLException;
 

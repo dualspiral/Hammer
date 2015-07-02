@@ -7,24 +7,20 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.InitializationEvent;
-import org.spongepowered.api.event.state.ServerStartedEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
-import uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
-import uk.co.drnaylor.minecraft.hammer.sponge.coreimpl.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextToTextColorCoverter;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
 
 /**
  * Sponge plugin entrypoint
@@ -111,7 +107,7 @@ public class HammerSponge {
      * @throws ClassNotFoundException The MySQL JDBC driver isn't on the classpath.
      * @throws IOException Configuration could not be loaded.
      */
-    protected final void createCore() throws ClassNotFoundException, IOException {
+    private void createCore() throws ClassNotFoundException, IOException {
         // TODO: Check this. It's probably wrong right now.
         CommentedConfigurationNode configNode = configurationManager.load();
         CommentedConfigurationNode mySqlNode = configNode.getNode("mysql");

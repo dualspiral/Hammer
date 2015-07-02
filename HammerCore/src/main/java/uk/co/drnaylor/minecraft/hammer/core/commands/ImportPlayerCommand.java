@@ -57,6 +57,7 @@ public class ImportPlayerCommand extends CommandCore {
         th.start();
 
         HammerTextBuilder htb = new HammerTextBuilder().add(HammerConstants.textTag + " Contacting Mojang for information about ", HammerTextColours.GREEN).add(name, HammerTextColours.YELLOW);
+        source.sendMessage(htb.build());
 
         // This command is done at this point - the thread will do the work from here.
         return true;

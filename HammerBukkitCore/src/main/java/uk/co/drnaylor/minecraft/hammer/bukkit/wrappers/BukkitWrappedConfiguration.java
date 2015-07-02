@@ -1,6 +1,5 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 

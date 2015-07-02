@@ -11,7 +11,7 @@ import java.util.Map;
  * Provides methods from converting from the server neutral {@link uk.co.drnaylor.minecraft.hammer.core.text.HammerText}
  * formats to Bukkit specific {@link ChatColor} objects.
  */
-public final class HammerTextToCodeConverter {
+final class HammerTextToCodeConverter {
     private HammerTextToCodeConverter() { }
 
     private static final Map<HammerTextColours, ChatColor> htc = new HashMap<>();

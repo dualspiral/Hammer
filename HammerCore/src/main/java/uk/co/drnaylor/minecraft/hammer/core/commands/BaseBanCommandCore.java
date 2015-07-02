@@ -28,7 +28,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
     private final Pattern quietPattern = Pattern.compile("^-[q]$");
     private final Pattern noisyPattern = Pattern.compile("^-[n]$");
 
-    public BaseBanCommandCore(HammerCore core) {
+    BaseBanCommandCore(HammerCore core) {
         super(core);
     }
 
@@ -40,7 +40,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
     /**
      * Gets the minimum number of arguments for the command.
      * 
-     * @return 
+     * @return The minimum number of arguments to accept.
      */
     protected abstract int minArguments();
 
@@ -98,7 +98,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         // Next up, the player. Can we find them?
-        UUID uuidToBan = null;
+        UUID uuidToBan;
         WrappedPlayer playerToBan = server.getPlayer(currentArg);
         if (playerToBan != null) {
             uuidToBan = playerToBan.getUUID();
@@ -173,8 +173,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         // Create the message to send out.
-        HammerText[] msg = new HammerText[0];
-        msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
+        HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
         if (isNoisy || (!isQuiet && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
@@ -196,15 +195,15 @@ public abstract class BaseBanCommandCore extends CommandCore {
      * Note that the provided iterator needs to have the next method called on it to get the first usable argument.
      * Do not advance the iterator at the end.
      * 
-     * @param builder
-     * @param argumentIterator
-     * @return 
+     * @param builder The {@link HammerCreatePlayerBanBuilder} to update.
+     * @param argumentIterator The arguments to pass to the method
+     * @return <code>true</code> to signify success.
      */
     protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator);
 
     protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException;
 
-    protected String createReason(Iterator<String> argumentIterator, List<String> otherReasons) {
+    String createReason(Iterator<String> argumentIterator, List<String> otherReasons) {
         if (!argumentIterator.hasNext()) {
             return null;
         }
@@ -239,18 +238,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         return noisyPattern.matcher(argument0).matches();
     }
 
-    /**
-     * Gets the constructed set of {@link HammerTextBuilder}
-     *
-     * @param banned
-     * @param bannedBy
-     * @param reason
-     * @param isTemp
-     * @param isAll
-     * @param isPerm
-     * @return
-     */
-    protected HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm, DatabaseConnection conn) throws HammerException {
+    private HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm, DatabaseConnection conn) throws HammerException {
         String playerName = getName(banned, conn);
 
         HammerText[] messages = new HammerText[2];
@@ -325,10 +313,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
     }
 
     protected class BanInfo {
-        protected final List<String> reasons;
-        protected final BanStatus status;
+        final List<String> reasons;
+        final BanStatus status;
 
-        protected BanInfo(BanStatus status, List<String> reasons) {
+        BanInfo(BanStatus status, List<String> reasons) {
             this.status = status;
             this.reasons = reasons;
         }

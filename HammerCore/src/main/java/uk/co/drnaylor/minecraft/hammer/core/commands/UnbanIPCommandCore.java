@@ -1,7 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.util.List;
-import java.util.UUID;
+
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;

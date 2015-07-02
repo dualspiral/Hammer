@@ -3,7 +3,6 @@ package uk.co.drnaylor.minecraft.hammer.core.runnables;
 import com.google.gson.Gson;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
@@ -48,10 +47,6 @@ public class MojangNameRunnable implements Runnable {
         // Got the data, now shove it into the system.
         try (DatabaseConnection conn = core.getDatabaseConnection()) {
             conn.getPlayerHandler().updatePlayer(pd.getID(), pd.name, "0.0.0.0");
-        } catch (HammerException e) {
-            e.printStackTrace();
-            noAdditions();
-            return;
         } catch (Exception e) {
             e.printStackTrace();
             noAdditions();

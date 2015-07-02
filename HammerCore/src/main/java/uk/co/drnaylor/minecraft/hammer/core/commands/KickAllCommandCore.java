@@ -9,7 +9,6 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
 import java.util.List;
-import java.util.UUID;
 
 public class KickAllCommandCore extends CommandCore {
 

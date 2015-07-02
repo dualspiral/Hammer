@@ -130,6 +130,6 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public WrappedConfiguration getConfiguration() {
-        return null;
+        return config;
     }
 }

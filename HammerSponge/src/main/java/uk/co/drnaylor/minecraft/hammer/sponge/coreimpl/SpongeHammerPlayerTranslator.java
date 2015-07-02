@@ -20,9 +20,9 @@ public class SpongeHammerPlayerTranslator  {
         return pls;
     }
 
-    public static HammerPlayer getHammerPlayer(Player player) {
+    private static HammerPlayer getHammerPlayer(Player player) {
         InetSocketAddress addr = player.getConnection().getAddress();
-        String ip = addr != null ? addr.toString().substring(1).split(":")[0] : "127.0.0.1";
+        String ip = addr.toString().substring(1).split(":")[0];
         return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
     }
 }

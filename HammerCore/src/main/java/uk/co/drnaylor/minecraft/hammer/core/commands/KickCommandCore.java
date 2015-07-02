@@ -14,7 +14,6 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class KickCommandCore extends CommandCore {
 

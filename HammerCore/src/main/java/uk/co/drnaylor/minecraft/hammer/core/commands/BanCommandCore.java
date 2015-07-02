@@ -1,11 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
@@ -54,7 +49,7 @@ public class BanCommandCore extends BaseBanCommandCore {
         return null;
     }
 
-    public static Date add(Date date, int unit, int span)
+    private static Date add(Date date, int unit, int span)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -106,7 +101,7 @@ public class BanCommandCore extends BaseBanCommandCore {
 
         for (HammerPlayerBan ban : bans) {
             Integer serverId = ban.getServerId();
-            if (serverId == null || serverId == core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id")) {
+            if (serverId == null || Objects.equals(serverId, core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id"))) {
                 // Banned. No further action.
                 return new BanInfo(BanStatus.NO_ACTION, null);
             }

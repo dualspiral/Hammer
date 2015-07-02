@@ -13,17 +13,17 @@ import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
-import uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class HammerBukkitPlugin extends JavaPlugin {
 
-    protected HammerCore core;
-    protected CreateHammerPlayerRunnable runnable;
+    private HammerCore core;
+    private CreateHammerPlayerRunnable runnable;
 
     public abstract Player[] getOnlinePlayers();
 
@@ -134,7 +134,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
      * Creates the {@link HammerCore} object.
      * @throws ClassNotFoundException The MySQL JDBC drive isn't on the classpath.
      */
-    protected final void createCore() throws ClassNotFoundException {
+    private void createCore() throws ClassNotFoundException {
         Configuration config = this.getConfig();
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 new BukkitWrappedServer(this, this.getServer()),

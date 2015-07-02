@@ -2,8 +2,6 @@ package uk.co.drnaylor.minecraft.hammer.core.wrappers;
 
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
-import java.util.UUID;
-
 public interface WrappedPlayer extends WrappedCommandSource {
 
     /**

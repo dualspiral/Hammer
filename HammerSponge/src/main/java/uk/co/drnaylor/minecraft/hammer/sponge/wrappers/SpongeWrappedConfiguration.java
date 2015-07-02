@@ -82,9 +82,7 @@ public class SpongeWrappedConfiguration implements WrappedConfiguration {
 
     private Object[] createNodePath(String[] path) {
         Object[] o = new Object[path.length];
-        for (int i = 0; i < path.length; i++) {
-            o[i] = path[i];
-        }
+        System.arraycopy(path, 0, o, 0, path.length);
 
         return o;
     }

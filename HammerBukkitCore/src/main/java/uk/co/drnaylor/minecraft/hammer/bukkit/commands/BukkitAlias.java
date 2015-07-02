@@ -26,6 +26,6 @@ public class BukkitAlias implements CommandExecutor {
         s.addAll(argumentsPrepend);
         s.addAll(Arrays.asList(strings));
         Command c = plugin.getCommand(targetCommand);
-        return c.execute(cs, targetCommand, s.toArray(new String[0]));
+        return c.execute(cs, targetCommand, s.toArray(new String[s.size()]));
     }
 }

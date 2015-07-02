@@ -13,6 +13,7 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
 class MySqlDatabaseGateway implements IDatabaseGateway {
 
@@ -113,20 +114,19 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
 
             int serverValue = set.getInt("from_server");
             String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
-            HammerPlayerBan pb = new HammerPlayerBan(
-                    set.getString("banned_name"), 
+
+            return new HammerPlayerBan(
+                    set.getString("banned_name"),
                     UUID.fromString(set.getString("banned_uuid")),
                     set.getBoolean("is_permanent"),
                     UUID.fromString(set.getString("banning_uuid")),
-                    set.getString("banning_name"), 
-                    set.getString("reason"), 
-                    set.getTimestamp("banned"), 
-                    set.getTimestamp("banned_until"), 
+                    set.getString("banning_name"),
+                    set.getString("reason"),
+                    set.getTimestamp("banned"),
+                    set.getTimestamp("banned_until"),
                     serverValue == 0 ? null : serverValue,
                     serverName,
                     set.getString("external_id"));
-
-            return pb;
         }
     }
 
@@ -205,7 +205,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException {
+    public void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException, HammerException {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO player_bans("
                 + "external_id, banned_player, banned, banned_until, banned_by, from_server, is_permanent, reason) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
@@ -277,11 +277,8 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         PreparedStatement ps = connection.prepareStatement("SELECT COUNT(external_id) as counter FROM player_bans WHERE external_id = ?");
         ps.setString(1, id);
         ResultSet rs = ps.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("counter") > 0;
-        }
+        return rs.next() && rs.getInt("counter") > 0;
 
-        return false;
     }
 
     @Override
@@ -319,7 +316,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         ps.setString(1, name.toLowerCase());
 
         try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
+            if (rs.next()) {
                 return new HammerPlayer(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"));
             }
         }
@@ -371,7 +368,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         return new java.sql.Timestamp(new Date().getTime());
     }
 
-    private Integer getIdForPlayerFromUUID(UUID uuid) throws SQLException {
+    private Integer getIdForPlayerFromUUID(UUID uuid) throws SQLException, HammerException {
         PreparedStatement ps = connection.prepareStatement("SELECT player_id FROM player_data WHERE uuid = ?");
         ps.setString(1, uuid.toString());
         ResultSet rs = ps.executeQuery();
@@ -379,7 +376,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
             return rs.getInt("player_id");
         }
 
-        return null;
+        throw new HammerException("No player with that UUID exists.");
     }
 
     @Override

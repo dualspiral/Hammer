@@ -39,7 +39,7 @@ public class CreateHammerPlayerRunnable implements Runnable {
 
             // Process them on the async thread!
             try (DatabaseConnection conn = plugin.getHammerCore().getDatabaseConnection()) {
-                conn.getPlayerHandler().updatePlayers(BukkitHammerPlayerTranslator.getHammerPlayers(pl.toArray(new Player[0])));
+                conn.getPlayerHandler().updatePlayers(BukkitHammerPlayerTranslator.getHammerPlayers(pl.toArray(new Player[pl.size()])));
             }
         } catch (Exception ex) {
 

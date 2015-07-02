@@ -18,7 +18,7 @@ public class BukkitHammerPlayerTranslator {
         return pls;
     }
 
-    public static HammerPlayer getHammerPlayer(Player player) {
+    private static HammerPlayer getHammerPlayer(Player player) {
         InetSocketAddress addr = player.getAddress();
         String ip = addr != null ? addr.toString().substring(1).split(":")[0] : "127.0.0.1";
         return new HammerPlayer(player.getUniqueId(), player.getName(), ip);

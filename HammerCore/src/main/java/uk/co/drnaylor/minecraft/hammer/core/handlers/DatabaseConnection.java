@@ -10,7 +10,7 @@ public class DatabaseConnection implements AutoCloseable {
     private final IDatabaseProvider provider;
     private IDatabaseGateway gateway;
 
-    public DatabaseConnection(IDatabaseProvider provider) throws SQLException {
+    public DatabaseConnection(IDatabaseProvider provider) {
         this.provider = provider;
     }
 

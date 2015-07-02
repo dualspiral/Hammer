@@ -15,11 +15,9 @@ import java.util.Collection;
 
 public class HammerCommand implements CommandExecutor {
 
-    private final HammerSponge plugin;
     private final Collection<Text> texts;
 
     public HammerCommand(HammerSponge plugin) {
-        this.plugin = plugin;
         texts = new ArrayList<>();
         texts.add(Texts.of("This server is running Hammer for Sponge version " + HammerSponge.VERSION, TextColors.GREEN));
         texts.add(Texts.of("Using HammerCore version " + plugin.getCore().getHammerCoreVersion(), TextColors.GREEN));

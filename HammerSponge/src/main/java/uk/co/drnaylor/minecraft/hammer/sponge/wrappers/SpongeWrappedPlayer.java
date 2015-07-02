@@ -2,25 +2,18 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.Server;
 import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.entity.player.User;
 import org.spongepowered.api.service.ban.BanService;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.chat.ChatType;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanBuilder;
-import org.spongepowered.api.util.ban.BanFactory;
 import org.spongepowered.api.util.ban.Bans;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
-import javax.swing.text.html.Option;
-import java.util.Collection;
 import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
@@ -184,7 +177,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
         return player;
     }
 
-    public Optional<Player> getSpongePlayer() {
+    private Optional<Player> getSpongePlayer() {
         return player.getPlayer();
     }
 }

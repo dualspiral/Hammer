@@ -16,5 +16,5 @@ public interface IDatabaseProvider {
      *
      * @return The {@link IDatabaseGateway}.
      */
-    public IDatabaseGateway openConnection() throws SQLException;
+     IDatabaseGateway openConnection() throws SQLException;
 }

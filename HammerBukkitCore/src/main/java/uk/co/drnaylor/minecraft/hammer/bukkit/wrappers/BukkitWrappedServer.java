@@ -88,6 +88,8 @@ public class BukkitWrappedServer implements WrappedServer {
         List<Player> lpl = Arrays.asList(plugin.getOnlinePlayers());
         Iterator<Player> iterator = lpl.iterator();
 
+        // Note that we are using an interator here as we cannot guarantee that the player remains in the
+        // list of online players.
         while (iterator.hasNext()) {
             Player pl = iterator.next();
             if (pl.isOnline() && source.getUUID() != pl.getUniqueId()) {

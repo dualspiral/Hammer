@@ -16,19 +16,19 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
 public abstract class CommandCore {
 
-    protected static final Format dateFormatter;
+    static final Format dateFormatter;
 
-    protected static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+    static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
-    protected Collection<String> permissionNodes = new ArrayList<>();
+    Collection<String> permissionNodes = new ArrayList<>();
 
-    protected final HammerCore core;
+    final HammerCore core;
 
     static {
         dateFormatter = new SimpleDateFormat(messageBundle.getString("hammer.display.date"));
     }
 
-    protected CommandCore(HammerCore core) {
+    CommandCore(HammerCore core) {
         this.core = core;
     }
 
@@ -96,8 +96,8 @@ public abstract class CommandCore {
      * @param useStub Whether to use the [Hammer] tag
      * @param replacements The replacements in the templated message
      */
-    protected final void sendTemplatedMessage(WrappedCommandSource player, String messageKey, boolean isError, boolean useStub, String... replacements) {
-        sendMessage(player, MessageFormat.format(messageBundle.getString(messageKey), getFromStringArray(replacements)), isError, useStub);
+    final void sendTemplatedMessage(WrappedCommandSource player, String messageKey, boolean isError, boolean useStub, String... replacements) {
+        sendMessage(player, MessageFormat.format(messageBundle.getString(messageKey), (Object[]) replacements), isError, useStub);
     }
 
     /**
@@ -108,7 +108,7 @@ public abstract class CommandCore {
      * @param isError Whether the message is an error
      * @param useStub Whether to use the [Hammer] tag
      */
-    protected final void sendMessage(WrappedCommandSource player, String message, boolean isError, boolean useStub) {
+    final void sendMessage(WrappedCommandSource player, String message, boolean isError, boolean useStub) {
         HammerTextBuilder hb;
         if (useStub) {
             hb = isError ? createErrorMessageStub() : createNormalMessageStub();
@@ -125,7 +125,7 @@ public abstract class CommandCore {
      *
      * @param source The source.
      */
-    public final void sendUsageMessage(WrappedCommandSource source) {
+    final void sendUsageMessage(WrappedCommandSource source) {
         String f = String.format(" %s ", messageBundle.getString("hammer.player.commandUsage"));
         HammerTextBuilder hb = createErrorMessageStub().add(f, HammerTextColours.RED)
                 .add(this.getUsageMessage());
@@ -133,11 +133,11 @@ public abstract class CommandCore {
         source.sendMessage(hb.build());
     }
 
-    protected final void sendNoPlayerMessage(WrappedCommandSource target, String name) {
+    final void sendNoPlayerMessage(WrappedCommandSource target, String name) {
         sendTemplatedMessage(target, "hammer.player.noplayer", true, true, name);
     }
 
-    protected final void sendNoPermsMessage(WrappedCommandSource target) {
+    final void sendNoPermsMessage(WrappedCommandSource target) {
         sendTemplatedMessage(target, "hammer.player.noperms", true, true);
     }
 
@@ -147,14 +147,5 @@ public abstract class CommandCore {
 
     private HammerTextBuilder createNormalMessageStub() {
         return new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.GREEN);
-    }
-
-    private Object[] getFromStringArray(String[] s) {
-        Object[] obj = new Object[s.length];
-        for (int i = 0; i < s.length; i++) {
-            obj[i] = s[i];
-        }
-
-        return obj;
     }
 }

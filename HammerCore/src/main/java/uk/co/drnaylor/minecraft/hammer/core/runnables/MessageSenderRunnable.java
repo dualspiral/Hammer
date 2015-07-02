@@ -6,7 +6,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 /**
  * Sends a message to a player.
  */
-public class MessageSenderRunnable implements Runnable {
+class MessageSenderRunnable implements Runnable {
 
     private final WrappedCommandSource source;
     private final HammerText[] message;

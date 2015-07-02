@@ -5,17 +5,17 @@ import java.util.UUID;
 
 public abstract class HammerBan {
 
-    protected final UUID banningStaffUUID;
-    protected final String banningStaffName;
-    protected final String reason;
-    protected final Date dateOfBan;
-    protected Date dateOfUnban;
+    private final UUID banningStaffUUID;
+    private final String banningStaffName;
+    private final String reason;
+    private final Date dateOfBan;
+    private final Date dateOfUnban;
     
     /* Server Id can be null */
-    protected Integer serverId;
-    protected String serverName;
+    private final Integer serverId;
+    private final String serverName;
 
-    protected HammerBan(UUID banningStaffUUID, String banningStaffName, String reason, Date dateOfBan, Date dateOfUnban, Integer serverId, String serverName) {
+    HammerBan(UUID banningStaffUUID, String banningStaffName, String reason, Date dateOfBan, Date dateOfUnban, Integer serverId, String serverName) {
         this.banningStaffUUID = banningStaffUUID;
         this.banningStaffName = banningStaffName;
         this.reason = reason;

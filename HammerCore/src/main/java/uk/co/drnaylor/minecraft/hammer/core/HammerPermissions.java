@@ -1,7 +1,5 @@
 package uk.co.drnaylor.minecraft.hammer.core;
 
-import java.util.UUID;
-
 /**
  * Contains all the permissions that Hammer uses.
  */

@@ -90,11 +90,8 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean hasPermission(String permission) {
-        if (player.isOnline()) {
-            return player.getPlayer().hasPermission(permission);
-        }
+        return player.isOnline() && player.getPlayer().hasPermission(permission);
 
-        return false;
     }
 
     /**
@@ -117,11 +114,7 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     public void ban(WrappedCommandSource source, String reason) {
         player.setBanned(true);
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Banned by: ").append(source.getName()).append("\n");
-        sb.append("Reason: ").append(reason);
-
-        kick(reason);
+        kick("Banned by: " + source.getName() + "\n" + "Reason: " + reason);
     }
 
     /**

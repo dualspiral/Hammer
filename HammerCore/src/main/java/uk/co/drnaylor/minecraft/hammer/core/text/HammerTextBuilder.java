@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class HammerTextBuilder {
 
-    private ArrayList<HammerText.Element> textList = new ArrayList<>();
+    private final ArrayList<HammerText.Element> textList = new ArrayList<>();
 
     public HammerTextBuilder add(String text) {
         return add(text, null);
@@ -22,7 +22,7 @@ public class HammerTextBuilder {
      * @param formats The formats to use. Defaults to an array of NONE only.
      * @return Returns the builder, for chaining.
      */
-    public HammerTextBuilder add(String text, HammerTextColours colour, HammerTextFormats... formats) {
+    private HammerTextBuilder add(String text, HammerTextColours colour, HammerTextFormats... formats) {
         if (colour == null) {
             colour = HammerTextColours.RESET;
         }

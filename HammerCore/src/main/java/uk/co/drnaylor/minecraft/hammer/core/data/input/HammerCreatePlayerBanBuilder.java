@@ -7,13 +7,14 @@ package uk.co.drnaylor.minecraft.hammer.core.data.input;
 
 import java.util.Date;
 import java.util.UUID;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
 /**
  * A builder class that helps create a {@link HammerPlayerBan} object safely.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class HammerCreatePlayerBanBuilder {
 
     private Date temporary = null;

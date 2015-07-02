@@ -60,6 +60,8 @@ public final class HammerTextConverter {
                 for (HammerTextFormats format : e.formats) {
                     styles.add(HammerTextToTextColorCoverter.getCodeFromHammerText(format));
                 }
+
+                inner.style(styles.toArray(new TextStyle[styles.size()]));
             }
 
             // Into the builder it goes.
