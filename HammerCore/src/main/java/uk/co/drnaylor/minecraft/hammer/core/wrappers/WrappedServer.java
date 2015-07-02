@@ -66,4 +66,11 @@ public interface WrappedServer {
      * @param runnable The runnable to run on the next tick loop.
      */
     void scheduleForNextTick(Runnable runnable);
+
+    /**
+     * Gets a object that contains methods for obtaining configuration notes.
+     *
+     * @return Gets a {@link WrappedConfiguration} object.
+     */
+    WrappedConfiguration getConfiguration();
 }

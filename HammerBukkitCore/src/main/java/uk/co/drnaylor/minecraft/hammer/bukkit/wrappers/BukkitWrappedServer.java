@@ -7,6 +7,7 @@ import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
@@ -16,10 +17,12 @@ public class BukkitWrappedServer implements WrappedServer {
 
     private final Server server;
     private final HammerBukkitPlugin plugin;
+    private final WrappedConfiguration config;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
+        this.config = new BukkitWrappedConfiguration(plugin);
     }
 
     /**
@@ -112,5 +115,15 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public void scheduleForNextTick(Runnable runnable) {
         server.getScheduler().runTask(plugin, runnable);
+    }
+
+    /**
+     * Gets a object that contains methods for obtaining configuration notes.
+     *
+     * @return Gets a {@link WrappedConfiguration} object.
+     */
+    @Override
+    public WrappedConfiguration getConfiguration() {
+        return this.config;
     }
 }

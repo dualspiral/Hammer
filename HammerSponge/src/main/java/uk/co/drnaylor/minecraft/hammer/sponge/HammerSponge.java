@@ -98,6 +98,15 @@ public class HammerSponge {
     }
 
     /**
+     * Gets the configuration manager for Hammer.
+     *
+     * @return The {@link ConfigurationLoader}
+     */
+    public ConfigurationLoader<CommentedConfigurationNode> getConfigurationManager() {
+        return this.configurationManager;
+    }
+
+    /**
      * Creates the {@link HammerCore} object.
      * @throws ClassNotFoundException The MySQL JDBC driver isn't on the classpath.
      * @throws IOException Configuration could not be loaded.
