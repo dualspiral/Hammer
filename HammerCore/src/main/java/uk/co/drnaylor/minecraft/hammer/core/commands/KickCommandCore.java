@@ -69,7 +69,7 @@ public class KickCommandCore extends CommandCore {
 
         // First argument - name. Second argument+, reason.
         // Get the player
-        WrappedPlayer pl = core.getActionProvider().getPlayerTranslator().nameToOnlinePlayer(arg);
+        WrappedPlayer pl = core.getWrappedServer().getPlayer(arg);
         if (pl == null) {
             sendTemplatedMessage(source, "hammer.player.notonline", true, true);
             return true;
@@ -96,7 +96,7 @@ public class KickCommandCore extends CommandCore {
         String plName = source.getName();
 
         HammerText[] msg = createReasons(pl.getName(), plName, reason);
-        if (noisyKick || (!quietKick && core.getActionProvider().getConfigurationProvider().notifyServerOfBans())) {
+        if (noisyKick || (!quietKick && core.getWrappedServer().getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
             for (HammerText m : msg) {
                 core.getWrappedServer().sendMessageToServer(m);
             }

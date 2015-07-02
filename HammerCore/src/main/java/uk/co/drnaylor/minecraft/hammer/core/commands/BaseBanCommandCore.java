@@ -14,12 +14,11 @@ import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.PlayerPermissionCheckBase;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
@@ -57,8 +56,6 @@ public abstract class BaseBanCommandCore extends CommandCore {
      */
     @Override
     public final boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
-        IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
-
         WrappedServer server = core.getWrappedServer();
 
         Iterator<String> argumentIterator = arguments.iterator();
@@ -71,7 +68,8 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         String currentArg = argumentIterator.next();
 
-        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cp.getServerId(), cp.getServerName());
+        WrappedConfiguration cp = core.getWrappedServer().getConfiguration();
+        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cp.getConfigIntegerValue("server", "id"), cp.getConfigStringValue("server", "name"));
 
         // First argument may indicate a ban for all.
         boolean isGlobal = false;
@@ -179,7 +177,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
-        if (isNoisy || (!isQuiet && core.getActionProvider().getConfigurationProvider().notifyServerOfBans())) {
+        if (isNoisy || (!isQuiet && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
             for (HammerText t : msg) {
                 server.sendMessageToServer(t);
             }
@@ -292,8 +290,9 @@ public abstract class BaseBanCommandCore extends CommandCore {
     }
 
     private String getName(UUID name, DatabaseConnection conn) throws HammerException {
-        String playerName = core.getActionProvider().getPlayerTranslator().uuidToPlayerName(name);
-        if (playerName == null) {
+        WrappedPlayer playerTarget = core.getWrappedServer().getPlayer(name);
+        String playerName;
+        if (playerTarget == null) {
             // Do we have them in the Hammer DB?
             HammerPlayer p = conn.getPlayerHandler().getPlayer(name);
             if (p == null) {
@@ -301,6 +300,8 @@ public abstract class BaseBanCommandCore extends CommandCore {
             } else {
                 playerName = p.getName();
             }
+        } else {
+            playerName = playerTarget.getName();
         }
 
         return playerName;

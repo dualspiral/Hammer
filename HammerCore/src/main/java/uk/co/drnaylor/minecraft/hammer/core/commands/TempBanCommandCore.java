@@ -94,7 +94,7 @@ public class TempBanCommandCore extends BaseBanCommandCore {
      */
     @Override
     protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException {
-        if (conn.getBanHandler().getPlayerBanForServer(bannedPlayer, core.getActionProvider().getConfigurationProvider().getServerId()) != null) {
+        if (conn.getBanHandler().getPlayerBanForServer(bannedPlayer, core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id")) != null) {
             return new BanInfo(BanStatus.NO_ACTION, null);
         }
 

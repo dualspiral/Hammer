@@ -106,7 +106,7 @@ public class BanCommandCore extends BaseBanCommandCore {
 
         for (HammerPlayerBan ban : bans) {
             Integer serverId = ban.getServerId();
-            if (serverId == null || serverId == core.getActionProvider().getConfigurationProvider().getServerId()) {
+            if (serverId == null || serverId == core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id")) {
                 // Banned. No further action.
                 return new BanInfo(BanStatus.NO_ACTION, null);
             }

@@ -137,22 +137,11 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
     protected final void createCore() throws ClassNotFoundException {
         Configuration config = this.getConfig();
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
-                createActionProvider(),
                 new BukkitWrappedServer(this, this.getServer()),
                 config.getString("mysql.host"),
                 config.getInt("mysql.port"),
                 config.getString("mysql.database"),
                 config.getString("mysql.username"),
                 config.getString("mysql.password"));
-    }
-
-    /**
-     * Creates a {@link uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider} for the {@link HammerCore}.
-     * @return The {@link uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider}
-     */
-    protected final HammerPluginActionProvider createActionProvider() {
-        return new HammerPluginActionProvider(
-                new BukkitPlayerTranslator(),
-                new BukkitConfigurationProvider(this));
     }
 }

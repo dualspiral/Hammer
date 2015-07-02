@@ -10,12 +10,10 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 public class HammerCore {
 
     private final IDatabaseProvider provider;
-    private final HammerPluginActionProvider actionProvider;
     private final WrappedServer server;
     private HammerExternalIDGenerator externalIdGenerator = null;
 
-    HammerCore(HammerPluginActionProvider actionProvider, WrappedServer server, IDatabaseProvider provider) {
-        this.actionProvider = actionProvider;
+    HammerCore(WrappedServer server, IDatabaseProvider provider) {
         this.provider = provider;
         this.server = server;
     }
@@ -26,17 +24,6 @@ public class HammerCore {
      */
     public String getHammerCoreVersion() {
         return "0.2.1";
-    }
-
-    /**
-     * Returns a provider that provides interfaces for interaction with server
-     * specific APIs.
-     *
-     * @return The {@link HammerPluginActionProvider}
-     */
-    @Deprecated
-    public HammerPluginActionProvider getActionProvider() {
-        return actionProvider;
     }
 
     /**

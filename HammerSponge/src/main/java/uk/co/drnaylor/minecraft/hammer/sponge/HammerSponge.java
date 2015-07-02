@@ -119,22 +119,11 @@ public class HammerSponge {
         configurationManager.save(configNode);
 
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
-                createActionProvider(),
                 new SpongeWrappedServer(this, game),
                 mySqlNode.getNode("host").getString(),
                 mySqlNode.getNode("port").getInt(),
                 mySqlNode.getNode("database").getString(),
                 mySqlNode.getNode("username").getString(),
                 mySqlNode.getNode("password").getString());
-    }
-
-    /**
-     * Creates a {@link uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider} for the {@link HammerCore}.
-     * @return The {@link uk.co.drnaylor.minecraft.hammer.core.HammerPluginActionProvider}
-     */
-    private HammerPluginActionProvider createActionProvider() {
-        return new HammerPluginActionProvider(
-                new SpongePlayerTranslator(),
-                new SpongeConfigurationProvider());
     }
 }

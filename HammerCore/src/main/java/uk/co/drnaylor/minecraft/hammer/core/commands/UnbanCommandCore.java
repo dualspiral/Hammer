@@ -7,14 +7,12 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.PlayerPermissionCheckBase;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
@@ -115,7 +113,7 @@ public class UnbanCommandCore extends CommandCore {
 
             // If we have a ban...
             UUID bannee = null;
-            int serverId =  core.getActionProvider().getConfigurationProvider().getServerId();
+            int serverId =  core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id");
             boolean ban = false;
             for (UUID u : uuids) {
                  HammerPlayerBan ban2 = conn.getBanHandler().getPlayerBanForServer(u, serverId);

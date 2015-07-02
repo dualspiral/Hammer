@@ -12,6 +12,7 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 
 public class PermBanCommandCore extends BaseBanCommandCore {
 
@@ -58,6 +59,8 @@ public class PermBanCommandCore extends BaseBanCommandCore {
             return new BanInfo(BanStatus.CONTINUE, reasons);
         }
 
+        WrappedConfiguration cp = core.getWrappedServer().getConfiguration();
+        int currentServerId = cp.getConfigIntegerValue("server", "id");
         for (HammerPlayerBan ban : bans) {
             Integer serverId = ban.getServerId();
             if (serverId == null) {
@@ -69,12 +72,12 @@ public class PermBanCommandCore extends BaseBanCommandCore {
                 List<String> reason = new ArrayList<>();
                 reason.add(ban.getReason());
                 return new BanInfo(BanStatus.TO_GLOBAL, reason);
-            } else if (serverId == core.getActionProvider().getConfigurationProvider().getServerId() && ban.isPermBan()) {
+            } else if (serverId == currentServerId && ban.isPermBan()) {
                 return new BanInfo(BanStatus.NO_ACTION, null);
             }
         }
 
-        conn.getBanHandler().unbanFromServer(bannedPlayer, core.getActionProvider().getConfigurationProvider().getServerId());
+        conn.getBanHandler().unbanFromServer(bannedPlayer, currentServerId);
         return new BanInfo(BanStatus.CONTINUE, null);
     }
 }

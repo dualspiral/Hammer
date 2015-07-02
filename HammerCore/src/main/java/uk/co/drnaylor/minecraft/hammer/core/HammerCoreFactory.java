@@ -11,8 +11,7 @@ public class HammerCoreFactory {
 
     /**
      * Creates a {@link HammerCore} object that uses a MySQL database.
-     * 
-     * @param pluginActionProvider The {@link HammerPluginActionProvider} to use with this instance of Hammer.
+     *
      * @param server The {@link WrappedServer}
      * @param host The host name of the database.
      * @param port The port to connect to. 0 for default
@@ -22,9 +21,9 @@ public class HammerCoreFactory {
      * @return The {@link HammerCore} object
      * @throws ClassNotFoundException Thrown if the MySQL driver cannot be found.
      */
-    public static HammerCore CreateHammerCoreWithMySQL(HammerPluginActionProvider pluginActionProvider, WrappedServer server, String host, int port, String databaseName, String user, String password) throws ClassNotFoundException {
+    public static HammerCore CreateHammerCoreWithMySQL(WrappedServer server, String host, int port, String databaseName, String user, String password) throws ClassNotFoundException {
         // Default to 3306
         int portNo = port <= 0 ? 3306 : port;
-        return new HammerCore(pluginActionProvider, server, new MySqlDatabaseProvider(host, portNo, databaseName, user, password));
+        return new HammerCore(server, new MySqlDatabaseProvider(host, portNo, databaseName, user, password));
     }
 }

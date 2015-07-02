@@ -38,6 +38,25 @@ public class BukkitWrappedConfiguration implements WrappedConfiguration {
         return plugin.getConfig().getInt(getNodePath(nodePath));
     }
 
+    /**
+     * Gets the boolean value from the node specified by the set of strings provided.
+     * <p/>
+     * <p>
+     * This uses zml's Configurate standard, as it is ultimately more flexible.
+     * Getting <code>node1.node2</code> should be entered as "node1", "node2".
+     * </p>
+     * <p>
+     * This will return false if no value could be found.
+     * </p>
+     *
+     * @param nodePath The path to the configuration node.
+     * @return The returned object.
+     */
+    @Override
+    public boolean getConfigBooleanValue(String... nodePath) {
+        return plugin.getConfig().getBoolean(getNodePath(nodePath), false);
+    }
+
     private String getNodePath(String[] nodePath) {
         StringBuilder sb = new StringBuilder();
         for (String n : nodePath) {

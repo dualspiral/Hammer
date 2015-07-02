@@ -11,11 +11,11 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.interfaces.IConfigurationProvider;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 public class CheckBanCommandCore extends CommandCore {
 
@@ -42,8 +42,6 @@ public class CheckBanCommandCore extends CommandCore {
     @Override
     protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
         try {
-            IConfigurationProvider cp = core.getActionProvider().getConfigurationProvider();
-
             if (arguments.size() != 1) {
                 this.sendUsageMessage(source);
                 return true;
@@ -52,14 +50,16 @@ public class CheckBanCommandCore extends CommandCore {
             // Get the player out.
             String playerName = arguments.get(0);
             Set<UUID> uuids = new HashSet<>();
-            UUID u = core.getActionProvider().getPlayerTranslator().playerNameToUUID(playerName);
-            if (u == null) {
+            WrappedPlayer pl = core.getWrappedServer().getPlayer(playerName);
+            UUID u;
+            if (pl == null) {
                 // Do we have them in the Hammer DB?
                 List<HammerPlayer> players = conn.getPlayerHandler().getPlayersByName(playerName);
                 for (HammerPlayer p : players) {
                     uuids.add(p.getUUID());
                 }
             } else {
+                u = pl.getUUID();
                 uuids.add(u);
             }
 
