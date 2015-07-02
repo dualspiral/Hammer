@@ -117,6 +117,6 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public void scheduleForNextTick(Runnable runnable) {
-        game.getSyncScheduler().runTask(plugin, runnable);
+        game.getScheduler().getTaskBuilder().delay(0).execute(runnable).submit(plugin);
     }
 }

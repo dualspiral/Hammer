@@ -33,5 +33,7 @@
     <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.2.4" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:1.2.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-yaml:1.2.2" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.yaml:snakeyaml:1.15" level="project" />
   </component>
 </module>
