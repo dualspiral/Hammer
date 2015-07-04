@@ -42,11 +42,7 @@ public class HammerCore {
      * @throws HammerException Thrown if the connection fails to open.
      */
     public DatabaseConnection getDatabaseConnection() throws HammerException {
-        try {
-            return new DatabaseConnection(provider);
-        } catch (SQLException ex) {
-            throw new HammerException("There was an error opening the connection", ex);
-        }
+        return new DatabaseConnection(provider);
     }
 
     /**
