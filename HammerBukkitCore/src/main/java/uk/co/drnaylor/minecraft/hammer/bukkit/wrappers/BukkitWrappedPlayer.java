@@ -5,10 +5,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 /**
@@ -155,5 +157,16 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
         if (player.isOnline()) {
             player.getPlayer().kickPlayer(ChatColor.translateAlternateColorCodes('&', reason));
         }
+    }
+
+    @Override
+    public HammerPlayer getHammerPlayer() {
+        if (player.isOnline()) {
+            InetSocketAddress addr = player.getPlayer().getAddress();
+            String ip = addr != null ? addr.toString().substring(1).split(":")[0] : "127.0.0.1";
+            return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
+        }
+
+        return null;
     }
 }

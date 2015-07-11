@@ -9,11 +9,13 @@ import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.BanBuilder;
 import org.spongepowered.api.util.ban.Bans;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
@@ -157,6 +159,17 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
         if (onlinePlayer.isPresent()) {
             onlinePlayer.get().kick(Texts.of(reason));
         }
+    }
+
+    @Override
+    public HammerPlayer getHammerPlayer() {
+        if (player.isOnline()) {
+            InetSocketAddress addr = player.getPlayer().get().getConnection().getAddress();
+            String ip = addr.toString().substring(1).split(":")[0];
+            return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
+        }
+
+        return null;
     }
 
     /**

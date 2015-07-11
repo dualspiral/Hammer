@@ -5,22 +5,33 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.player.Player;
 import org.spongepowered.api.event.Subscribe;
 import org.spongepowered.api.event.state.InitializationEvent;
 import org.spongepowered.api.event.state.ServerStartingEvent;
+import org.spongepowered.api.event.state.ServerStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
+import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
+import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
+import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
+import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerConnectListener;
+import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerJoinListener;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextToTextColorCoverter;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 /**
  * Sponge plugin entrypoint
@@ -36,6 +47,9 @@ public class HammerSponge {
     @Inject @DefaultConfig(sharedRoot = false) private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
 
     private HammerCore core;
+    private HammerPlayerUpdateRunnable runnable;
+    private Task updateTask;
+    private boolean isLoaded = false;
 
     /**
      * Runs when the plugin is being initialised.
@@ -45,6 +59,10 @@ public class HammerSponge {
     @Subscribe
     public void onPluginInitialisation(InitializationEvent event) {
         try {
+            logger.info("-----------------------------------------------------------------");
+            logger.info("Welcome to Hammer for Sponge version " + VERSION);
+            logger.info("Hammer will now perform some startup tasks. Stand by...");
+
             createCore();
 
             // Register the service.
@@ -52,25 +70,62 @@ public class HammerSponge {
             // Register the commands
             logger.info("Registering Hammer commands...");
 
-            CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this)).build();
-            game.getCommandDispatcher().register(this, spec, "hammer");
+            logger.info("Establishing DB link and creating any missing tables...");
+            try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
+                // Special case. We want true/false, not an exception here.
+                if (!core.performStartupTasks(conn)) {
+                    logger.error("Your DB credentials were rejected, or do not allow the required access to the database. Hammer will now disable itself.");
+                    logger.error("-----------------------------------------------------------------");
+                    return;
+                }
 
-            // Ban command
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+                logger.info("Connection to DB was successful and all required tables were created.");
+                logger.info("Registering Hammer commands...");
 
-            // Kick commands
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+                CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this)).build();
+                game.getCommandDispatcher().register(this, spec, "hammer");
 
-            // Import Player command
-            game.getCommandDispatcher().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
+                // Ban command
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+
+                // Kick commands
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+
+                // Import Player command
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
+
+                logger.info("Registering Hammer events...");
+
+                // Register the events
+                game.getEventManager().register(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
+                game.getEventManager().register(this, new PlayerJoinListener(this));
+
+                // Register server
+                logger.info("Registering server ID group...");
+                CommentedConfigurationNode configNode = configurationManager.load();
+                conn.getServerHandler().updateServerNameForId(configNode.getNode("server", "id").getInt(), configNode.getNode("server", "name").getString("Unknown"));
+
+                // Register the runnable.
+                logger.info("Starting the async task...");
+                runnable = new HammerPlayerUpdateRunnable(core);
+                updateTask = game.getScheduler().getTaskBuilder().async().interval(10, TimeUnit.SECONDS).execute(runnable).submit(this);
+            }
         } catch (Exception ex) {
-            // Do some stuff
+            logger.error("A fatal error has occurred. Hammer will now disable itself.");
+            logger.error("Here. Have a stack trace to tell you why!");
+            ex.printStackTrace();
+            logger.info("-----------------------------------------------------------------");
+            return;
         }
+
+        isLoaded = true;
+        logger.info("Hammer has successfully initialised and is managing your bans.");
+        logger.info("-----------------------------------------------------------------");
     }
 
     /**
@@ -80,8 +135,24 @@ public class HammerSponge {
      */
     @Subscribe
     public void onServerStarting(ServerStartingEvent event) {
-        // Once the server is starting, reset the text colour map.
-        HammerTextToTextColorCoverter.init();
+        if (isLoaded) {
+            // Once the server is starting, reset the text colour map.
+            HammerTextToTextColorCoverter.init();
+        }
+    }
+
+    /**
+     * Runs when the server is about to stop.
+     *
+     * @param event The event
+     */
+    @Subscribe
+    public void onServerStopping(ServerStoppingEvent event) {
+        if (isLoaded) {
+            // Server is stopping, stop the runnable, but run it (sync) one last time.
+            updateTask.cancel();
+            updateTask.getRunnable().run();
+        }
     }
 
     /**
@@ -121,5 +192,9 @@ public class HammerSponge {
                 mySqlNode.getNode("database").getString(),
                 mySqlNode.getNode("username").getString(),
                 mySqlNode.getNode("password").getString());
+    }
+
+    public void addPlayerToRunnable(Player user) {
+        runnable.addPlayer(new SpongeWrappedPlayer(game, user));
     }
 }

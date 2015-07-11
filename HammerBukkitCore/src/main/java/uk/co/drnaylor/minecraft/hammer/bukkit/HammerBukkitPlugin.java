@@ -5,16 +5,17 @@ import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.coreimpl.*;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
-import uk.co.drnaylor.minecraft.hammer.bukkit.runnables.CreateHammerPlayerRunnable;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
+import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -23,7 +24,7 @@ import java.util.logging.Level;
 public abstract class HammerBukkitPlugin extends JavaPlugin {
 
     private HammerCore core;
-    private CreateHammerPlayerRunnable runnable;
+    private HammerPlayerUpdateRunnable runnable;
 
     public abstract Player[] getOnlinePlayers();
 
@@ -98,7 +99,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
             // Start the scheduled task...
             this.getLogger().info("Starting the async task...");
-            this.runnable = new CreateHammerPlayerRunnable(this);
+            this.runnable = new HammerPlayerUpdateRunnable(this.getHammerCore());
             this.getServer().getScheduler().runTaskTimerAsynchronously(this, runnable, 600l, 600l);
 
         } catch (Exception e) {
@@ -127,7 +128,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
     }
 
     public void addToHammerPlayerRunnable(Player p) {
-        this.runnable.addPlayer(p);
+        this.runnable.addPlayer(new BukkitWrappedPlayer(p));
     }
 
     /**
