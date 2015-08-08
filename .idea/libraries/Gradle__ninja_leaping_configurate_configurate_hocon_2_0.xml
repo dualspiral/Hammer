@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: ninja.leaping.configurate:configurate-hocon:2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-hocon/2.0/3fd50f5cc88eefc7b5addb2c2cf3e2bae57d4dec/configurate-hocon-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-hocon/2.0/6f4bdc436574a6151710471055ea3a9a5c68010c/configurate-hocon-2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

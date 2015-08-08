@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: ninja.leaping.configurate:configurate-gson:2.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-gson/2.0/3dcff1d5f2aaa65f2024456c9b8c1c66b87cc0d4/configurate-gson-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/ninja.leaping.configurate/configurate-gson/2.0/fcfa7a08968245bc975436795ee1c0aef7933fda/configurate-gson-2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

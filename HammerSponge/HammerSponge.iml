@@ -28,12 +28,12 @@
     <orderEntry type="library" exported="" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.inject:guice:4.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.flowpowered:flow-noise:1.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-gson:1.2.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-hocon:1.2.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.2.4" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:1.2.2" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-yaml:1.2.2" level="project" />
     <orderEntry type="library" exported="" name="Gradle: org.yaml:snakeyaml:1.15" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-hocon:2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-gson:2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-yaml:2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:2.0" level="project" />
   </component>
 </module>

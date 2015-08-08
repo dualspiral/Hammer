@@ -35,7 +35,7 @@ public class SpongeCommand implements CommandCallable {
     }
 
     @Override
-    public Optional<CommandResult> process(CommandSource source, String arguments) throws CommandException {
+    public CommandResult process(CommandSource source, String arguments) throws CommandException {
         try {
             List<String> a = Arrays.asList(arguments.split(" "));
             if (source instanceof Player) {
@@ -44,7 +44,7 @@ public class SpongeCommand implements CommandCallable {
                 core.executeCommand(new SpongeWrappedConsole((ConsoleSource)source), a);
             }
 
-            return Optional.of(CommandResult.success());
+            return CommandResult.success();
         } catch (HammerException e) {
             e.printStackTrace();
             throw new CommandException(error, e);
