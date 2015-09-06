@@ -2,8 +2,8 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.entity.player.User;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorage;
 import org.spongepowered.api.text.sink.MessageSinks;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -15,7 +15,8 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 public class SpongeWrappedServer implements WrappedServer {
@@ -113,11 +114,12 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
-        Iterator<Player> players = game.getServer().getOnlinePlayers().iterator();
+        // Copy the collection so that we can operate on it, in case the implemenation removes
+        // players from the collection as we kick them.
+        Collection<Player> players = new ArrayList<>(game.getServer().getOnlinePlayers());
 
         // We use a while in case the loop has been mutated.
-        while (players.hasNext()) {
-            Player player = players.next();
+        for (Player player : players) {
             if (player.getUniqueId() == source.getUUID()) {
                 // Don't kick the current player.
                 continue;
@@ -134,7 +136,7 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public void scheduleForNextTick(Runnable runnable) {
-        game.getScheduler().getTaskBuilder().delay(0).execute(runnable).submit(plugin);
+        game.getScheduler().createTaskBuilder().delay(0).execute(runnable).submit(plugin);
     }
 
     /**

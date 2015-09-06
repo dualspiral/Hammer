@@ -1,6 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.coreimpl;
 
-import org.spongepowered.api.entity.player.Player;
+import org.spongepowered.api.entity.living.player.Player;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 
 import java.net.InetSocketAddress;

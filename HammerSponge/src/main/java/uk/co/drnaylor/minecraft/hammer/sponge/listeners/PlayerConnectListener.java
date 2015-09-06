@@ -3,9 +3,9 @@ package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameProfile;
-import org.spongepowered.api.entity.player.User;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.network.GameClientAuthEvent;
+import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.user.UserStorage;
 import org.spongepowered.api.text.Texts;
@@ -46,8 +46,8 @@ public class PlayerConnectListener {
      *
      * @param event The event to fire.
      */
-    @Subscribe
-    public void onPlayerConnection(GameClientAuthEvent event) {
+    @Listener
+    public void onPlayerConnection(ClientConnectionEvent.Auth event) {
         getServices();
         try {
             GameProfile pl = event.getProfile();
@@ -75,7 +75,7 @@ public class PlayerConnectListener {
             }
 
             event.setCancelled(true);
-            event.setDisconnectMessage(HammerTextConverter.constructMessage(eventCore.constructBanMessage(ban)));
+            event.setMessage(HammerTextConverter.constructMessage(eventCore.constructBanMessage(ban)));
         } catch (HammerException e) {
             logger.error("Connection to the MySQL database failed. Falling back to the Minecraft ban list.");
             e.printStackTrace();

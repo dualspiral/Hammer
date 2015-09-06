@@ -2,8 +2,8 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.entity.player.User;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatTypes;

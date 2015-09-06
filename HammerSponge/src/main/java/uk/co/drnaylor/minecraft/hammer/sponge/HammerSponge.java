@@ -5,11 +5,11 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.entity.player.Player;
-import org.spongepowered.api.event.Subscribe;
-import org.spongepowered.api.event.state.InitializationEvent;
-import org.spongepowered.api.event.state.ServerStartingEvent;
-import org.spongepowered.api.event.state.ServerStoppingEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartingServerEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.service.scheduler.Task;
@@ -31,7 +31,6 @@ import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 /**
  * Sponge plugin entrypoint
@@ -56,8 +55,8 @@ public class HammerSponge {
      *
      * @param event The event
      */
-    @Subscribe
-    public void onPluginInitialisation(InitializationEvent event) {
+    @Listener
+    public void onPluginInitialisation(GameInitializationEvent event) {
         try {
             logger.info("-----------------------------------------------------------------");
             logger.info("Welcome to Hammer for Sponge version " + VERSION);
@@ -102,8 +101,8 @@ public class HammerSponge {
                 logger.info("Registering Hammer events...");
 
                 // Register the events
-                game.getEventManager().register(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
-                game.getEventManager().register(this, new PlayerJoinListener(this));
+                game.getEventManager().registerListeners(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
+                game.getEventManager().registerListeners(this, new PlayerJoinListener(this));
 
                 // Register server
                 logger.info("Registering server ID group...");
@@ -113,7 +112,7 @@ public class HammerSponge {
                 // Register the runnable.
                 logger.info("Starting the async task...");
                 runnable = new HammerPlayerUpdateRunnable(core);
-                updateTask = game.getScheduler().getTaskBuilder().async().interval(10, TimeUnit.SECONDS).execute(runnable).submit(this);
+                updateTask = game.getScheduler().createTaskBuilder().async().interval(10, TimeUnit.SECONDS).execute(runnable).submit(this);
             }
         } catch (Exception ex) {
             logger.error("A fatal error has occurred. Hammer will now disable itself.");
@@ -133,8 +132,8 @@ public class HammerSponge {
      *
      * @param event The event
      */
-    @Subscribe
-    public void onServerStarting(ServerStartingEvent event) {
+    @Listener
+    public void onServerStarting(GameStartingServerEvent event) {
         if (isLoaded) {
             // Once the server is starting, reset the text colour map.
             HammerTextToTextColorCoverter.init();
@@ -146,8 +145,8 @@ public class HammerSponge {
      *
      * @param event The event
      */
-    @Subscribe
-    public void onServerStopping(ServerStoppingEvent event) {
+    @Listener
+    public void onServerStopping(GameStoppingServerEvent event) {
         if (isLoaded) {
             // Server is stopping, stop the runnable, but run it (sync) one last time.
             updateTask.cancel();

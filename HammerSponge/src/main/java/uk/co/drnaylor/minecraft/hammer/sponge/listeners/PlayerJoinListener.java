@@ -1,6 +1,9 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
-import org.spongepowered.api.event.entity.player.PlayerJoinEvent;
+import com.google.common.base.Optional;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
 public class PlayerJoinListener {
@@ -11,7 +14,11 @@ public class PlayerJoinListener {
         this.hammerSponge = hammerSponge;
     }
 
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        hammerSponge.addPlayerToRunnable(event.getUser());
+    @Listener
+    public void onPlayerJoin(ClientConnectionEvent.Join event) {
+        Optional<Player> pl = event.getTargetEntity().getPlayer();
+        if (pl.isPresent()) {
+            hammerSponge.addPlayerToRunnable(pl.get());
+        }
     }
 }
