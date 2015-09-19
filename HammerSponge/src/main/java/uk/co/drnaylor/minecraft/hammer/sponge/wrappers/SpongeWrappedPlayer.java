@@ -2,12 +2,15 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanBuilder;
+import org.spongepowered.api.util.ban.BanType;
 import org.spongepowered.api.util.ban.Bans;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -16,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.net.InetSocketAddress;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
@@ -103,17 +107,20 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void ban(WrappedCommandSource source, String reason) {
-        BanBuilder builder = Bans.builder().reason(Texts.of(reason)).user(player);
-        if (source instanceof SpongeWrappedPlayer) {
-            Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
-            if (sourceplayer.isPresent()) {
-                builder.source(sourceplayer.get());
+        Optional<BanService> serviceOptional = getBanService();
+        if (serviceOptional.isPresent()) {
+            BanBuilder builder = Bans.builder().reason(Texts.of(reason)).user(player).type(BanType.USER_BAN);
+            if (source instanceof SpongeWrappedPlayer) {
+                Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
+                if (sourceplayer.isPresent()) {
+                    builder.source(sourceplayer.get());
+                }
+            } else if (source instanceof SpongeWrappedConsole) {
+                builder.source(((SpongeWrappedConsole) source).getSpongeSource());
             }
-        } else if (source instanceof SpongeWrappedConsole) {
-            builder.source(((SpongeWrappedConsole) source).getSpongeSource());
-        }
 
-        getBanService().ban(builder.build());
+            serviceOptional.get().ban(builder.build());
+        }
     }
 
     /**
@@ -121,7 +128,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void unban() {
-        getBanService().pardon(player);
+        Optional<BanService> serviceOptional = getBanService();
+        if (serviceOptional.isPresent()) {
+            serviceOptional.get().pardon(player);
+        }
     }
 
     /**
@@ -131,8 +141,13 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean isBanned() {
-        BanService service = getBanService();
-        return service.isBanned(player);
+        Optional<BanService> serviceOptional = getBanService();
+        if (serviceOptional.isPresent()) {
+            return serviceOptional.get().isBanned(player);
+        } else {
+            // No ban service means that bans aren't likely to materialise...
+            return false;
+        }
     }
 
     /**
@@ -177,8 +192,8 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      *
      * @return The {@link BanService}
      */
-    private BanService getBanService() {
-        return game.getServiceManager().provide(BanService.class).get();
+    private Optional<BanService> getBanService() {
+        return game.getServiceManager().provide(BanService.class);
     }
 
     /**

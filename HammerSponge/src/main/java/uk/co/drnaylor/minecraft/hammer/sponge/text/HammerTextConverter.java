@@ -3,6 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.sponge.text;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextBuilder;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextStyle;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextFormats;
@@ -51,14 +52,21 @@ public final class HammerTextConverter {
 
             // Colour?
             if (e.colour != null) {
-                inner.color(HammerTextToTextColorCoverter.getCodeFromHammerText(e.colour));
+                TextColor c = HammerTextToTextColorCoverter.getCodeFromHammerText(e.colour);
+                if (c != null) {
+                    inner.color(c);
+                }
             }
 
             // Format?
             if (e.formats != null && e.formats.length > 0) {
                 List<TextStyle> styles = new ArrayList<>();
                 for (HammerTextFormats format : e.formats) {
-                    styles.add(HammerTextToTextColorCoverter.getCodeFromHammerText(format));
+                    // Sometimes can be null...
+                    TextStyle ts = HammerTextToTextColorCoverter.getCodeFromHammerText(format);
+                    if (ts != null) {
+                        styles.add(ts);
+                    }
                 }
 
                 inner.style(styles.toArray(new TextStyle[styles.size()]));

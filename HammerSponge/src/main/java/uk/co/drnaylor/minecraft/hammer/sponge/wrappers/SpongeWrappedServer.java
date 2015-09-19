@@ -6,6 +6,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorage;
 import org.spongepowered.api.text.sink.MessageSinks;
+import org.spongepowered.api.util.command.CommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
@@ -15,9 +16,8 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SpongeWrappedServer implements WrappedServer {
 
@@ -92,7 +92,14 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public void sendMessageToPermissionGroup(HammerText message, String permission) {
-        MessageSinks.toPermission(permission).sendMessage(HammerTextConverter.constructMessage(message));
+        // Get the players with the permission group.
+        Set<CommandSource> targets = game.getServer().getOnlinePlayers().stream().filter(p -> p.hasPermission(permission)).collect(Collectors.toSet());
+
+        // Add the console.
+        targets.add(game.getServer().getConsole());
+
+        // Send
+        MessageSinks.to(targets).sendMessage(HammerTextConverter.constructMessage(message));
     }
 
     /**

@@ -3,6 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameProfile;
+import org.spongepowered.api.data.value.mutable.SetValue;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -15,7 +16,9 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -35,8 +38,8 @@ public class PlayerConnectListener {
     }
 
     private void getServices() {
-        if (service == null || storageService == null) {
-            service = game.getServiceManager().provide(BanService.class).get();
+        if (/* service == null || */ storageService == null) {
+            service = game.getServiceManager().provide(BanService.class).orNull();
             storageService = game.getServiceManager().provide(UserStorage.class).get();
         }
     }
@@ -55,22 +58,21 @@ public class PlayerConnectListener {
             String host = event.getConnection().getAddress().getAddress().getHostAddress();
 
             User user = storageService.getOrCreate(pl);
+            WrappedPlayer player = new SpongeWrappedPlayer(game, user);
             HammerBan ban = eventCore.getBan(uuid, host);
             if (ban == null) {
-                if (service.isBanned(user)) {
-                    service.pardon(user);
-                }
-
+                player.unban();
                 return;
             }
 
             // Set their ban on the server too - in case Hammer goes down.
             if (ban instanceof HammerPlayerBan) {
-                BanService service = game.getServiceManager().provide(BanService.class).get();
-                Collection<Ban.User> bans = service.getBansFor(user);
+                if (service != null) {
+                    Collection<Ban.User> bans = service.getBansFor(user);
 
-                if (bans.isEmpty()) {
-                    service.ban(Bans.of(user, Texts.of(ban.getReason())));
+                    if (bans.isEmpty()) {
+                        service.ban(Bans.of(user, Texts.of(ban.getReason())));
+                    }
                 }
             }
 

@@ -76,7 +76,7 @@ public class PlayerConnectListenerCore {
 
         sb.append("\n");
         htb.add(sb.toString(), HammerTextColours.RED);
-        htb.add("---------\n\"Banned by: \"", HammerTextColours.GRAY);
+        htb.add("---------\nBanned by: ", HammerTextColours.GRAY);
         htb.add(name + "\n", HammerTextColours.BLUE);
         htb.add("Reason: ", HammerTextColours.GRAY);
         htb.add(ban.getReason(), HammerTextColours.BLUE);

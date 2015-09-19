@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Sponge plugin entrypoint
  */
-@Plugin(id = "hammersponge", name = "Hammer for Sponge", version = HammerSponge.VERSION)
+@Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
     public static final String VERSION = "0.2";
@@ -178,12 +178,19 @@ public class HammerSponge {
      * @throws IOException Configuration could not be loaded.
      */
     private void createCore() throws ClassNotFoundException, IOException {
+        // Create the path if it does not exist.
+        if (!defaultConfig.exists()) {
+            defaultConfig.getParentFile().mkdirs();
+            defaultConfig.createNewFile();
+        }
+
         // TODO: Check this. It's probably wrong right now.
         CommentedConfigurationNode configNode = configurationManager.load();
+        if (configNode.getChildrenMap().isEmpty()) {
+            createConfig(configNode);
+        }
+
         CommentedConfigurationNode mySqlNode = configNode.getNode("mysql");
-
-        configurationManager.save(configNode);
-
         core = HammerCoreFactory.CreateHammerCoreWithMySQL(
                 new SpongeWrappedServer(this, game),
                 mySqlNode.getNode("host").getString(),
@@ -191,6 +198,18 @@ public class HammerSponge {
                 mySqlNode.getNode("database").getString(),
                 mySqlNode.getNode("username").getString(),
                 mySqlNode.getNode("password").getString());
+    }
+
+    private void createConfig(CommentedConfigurationNode node) throws IOException {
+        node.getNode("mysql", "host").setValue("localhost").setComment("The location of the database");
+        node.getNode("mysql", "port").setValue(3306).setComment("The port for the database");
+        node.getNode("mysql", "database").setValue("hammer").setComment("The name of the database to connect to.");
+        node.getNode("mysql", "username").setValue("username").setComment("The username for the database connection");
+        node.getNode("mysql", "password").setValue("password").setComment("The password for the database connection");
+        node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
+        node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
+        node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
+        configurationManager.save(node);
     }
 
     public void addPlayerToRunnable(Player user) {
