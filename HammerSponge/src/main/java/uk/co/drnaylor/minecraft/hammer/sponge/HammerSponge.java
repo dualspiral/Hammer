@@ -22,6 +22,7 @@ import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerC
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
+import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeAlias;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerConnectListener;
 import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerJoinListener;
@@ -31,6 +32,7 @@ import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -88,6 +90,10 @@ public class HammerSponge {
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+
+                ArrayList<String> arguments = new ArrayList<>();
+                arguments.add("-a");
+                game.getCommandDispatcher().register(this, new SpongeAlias(game, "ban", arguments), "gban");
 
                 // Kick commands
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
