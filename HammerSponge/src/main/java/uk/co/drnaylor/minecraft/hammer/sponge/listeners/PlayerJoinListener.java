@@ -1,24 +1,29 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
 import com.google.common.base.Optional;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
+import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
+import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 
 public class PlayerJoinListener {
 
-    private final HammerSponge hammerSponge;
+    private final Game game;
+    private final PlayerJoinListenerCore core;
 
-    public PlayerJoinListener(HammerSponge hammerSponge) {
-        this.hammerSponge = hammerSponge;
+    public PlayerJoinListener(Game game, PlayerJoinListenerCore core) {
+        this.game = game;
+        this.core = core;
     }
+
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
         Optional<Player> pl = event.getTargetEntity().getPlayer();
         if (pl.isPresent()) {
-            hammerSponge.addPlayerToRunnable(pl.get());
+            core.handleEvent(new SpongeWrappedPlayer(game, pl.get()));
         }
     }
 }

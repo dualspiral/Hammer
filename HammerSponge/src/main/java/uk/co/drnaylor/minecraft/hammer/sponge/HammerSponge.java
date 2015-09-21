@@ -19,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
+import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
@@ -46,7 +47,6 @@ public class HammerSponge {
     @Inject @DefaultConfig(sharedRoot = false) private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
 
     private HammerCore core;
-    private HammerPlayerUpdateRunnable runnable;
     private Task updateTask;
     private boolean isLoaded = false;
 
@@ -63,11 +63,9 @@ public class HammerSponge {
             logger.info("Hammer will now perform some startup tasks. Stand by...");
 
             createCore();
+            HammerPlayerUpdateRunnable runnable = new HammerPlayerUpdateRunnable(core);
 
-            // Register the service.
-
-            // Register the commands
-            logger.info("Registering Hammer commands...");
+            // TODO: Register the service.
 
             logger.info("Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
@@ -102,7 +100,7 @@ public class HammerSponge {
 
                 // Register the events
                 game.getEventManager().registerListeners(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
-                game.getEventManager().registerListeners(this, new PlayerJoinListener(this));
+                game.getEventManager().registerListeners(this, new PlayerJoinListener(game, new PlayerJoinListenerCore(runnable)));
 
                 // Register server
                 logger.info("Registering server ID group...");
@@ -111,7 +109,7 @@ public class HammerSponge {
 
                 // Register the runnable.
                 logger.info("Starting the async task...");
-                runnable = new HammerPlayerUpdateRunnable(core);
+
                 updateTask = game.getScheduler().createTaskBuilder().async().interval(10, TimeUnit.SECONDS).execute(runnable).submit(this);
             }
         } catch (Exception ex) {
@@ -184,7 +182,6 @@ public class HammerSponge {
             defaultConfig.createNewFile();
         }
 
-        // TODO: Check this. It's probably wrong right now.
         CommentedConfigurationNode configNode = configurationManager.load();
         if (configNode.getChildrenMap().isEmpty()) {
             createConfig(configNode);
@@ -210,9 +207,5 @@ public class HammerSponge {
         node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
         node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
         configurationManager.save(node);
-    }
-
-    public void addPlayerToRunnable(Player user) {
-        runnable.addPlayer(new SpongeWrappedPlayer(game, user));
     }
 }

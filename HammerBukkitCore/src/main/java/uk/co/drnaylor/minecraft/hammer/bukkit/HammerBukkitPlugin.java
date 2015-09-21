@@ -15,6 +15,7 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.logging.Level;
 public abstract class HammerBukkitPlugin extends JavaPlugin {
 
     private HammerCore core;
-    private HammerPlayerUpdateRunnable runnable;
 
     public abstract Player[] getOnlinePlayers();
 
@@ -45,6 +45,9 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         try {
             createCore();
             this.getLogger().log(Level.INFO, "Loading Hammer Core version {0}", core.getHammerCoreVersion());
+
+            // Create the runnable now.
+            HammerPlayerUpdateRunnable runnable = new HammerPlayerUpdateRunnable(this.getHammerCore());
 
             this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
@@ -84,7 +87,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
                 this.getLogger().log(Level.INFO, "Registering Hammer events...");
                 this.getServer().getPluginManager().registerEvents(new PlayerConnectListener(this), this);
-                this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+                this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(new PlayerJoinListenerCore(runnable)), this);
 
                 // Register server
                 this.getLogger().log(Level.INFO, "Registering server ID group...");
@@ -99,9 +102,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
             // Start the scheduled task...
             this.getLogger().info("Starting the async task...");
-            this.runnable = new HammerPlayerUpdateRunnable(this.getHammerCore());
             this.getServer().getScheduler().runTaskTimerAsynchronously(this, runnable, 600l, 600l);
-
         } catch (Exception e) {
             this.getLogger().severe("A fatal error has occurred. Hammer will now disable itself.");
             this.getLogger().severe("Here. Have a stack trace to tell you why!");
@@ -125,10 +126,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
     public HammerCore getHammerCore() {
         return core;
-    }
-
-    public void addToHammerPlayerRunnable(Player p) {
-        this.runnable.addPlayer(new BukkitWrappedPlayer(p));
     }
 
     /**
