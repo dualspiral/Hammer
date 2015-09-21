@@ -9,6 +9,7 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 import java.util.Date;
 import java.util.UUID;
@@ -22,6 +23,23 @@ public class PlayerConnectListenerCore {
 
     public PlayerConnectListenerCore(HammerCore core) {
         this.core = core;
+    }
+
+    public HammerText handleEvent(WrappedPlayer player, String hostAddress) throws HammerException {
+        HammerBan ban = getBan(player.getHammerPlayer().getUUID(), hostAddress);
+        if (ban == null && player.isBanned()) {
+            player.unban();
+            return null;
+        }
+
+        // Set their ban on the server too - in case Hammer goes down.
+        if (ban instanceof HammerPlayerBan && !player.isBanned()) {
+            player.ban(core.getWrappedServer().getConsole(), ban.getReason());
+        } else if (ban instanceof HammerIPBan && player.isBanned()) {
+            player.unban();
+        }
+
+        return constructBanMessage(ban);
     }
 
     /**
