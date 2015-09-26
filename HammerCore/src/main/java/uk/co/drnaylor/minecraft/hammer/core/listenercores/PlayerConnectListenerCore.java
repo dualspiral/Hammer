@@ -27,8 +27,11 @@ public class PlayerConnectListenerCore {
 
     public HammerText handleEvent(WrappedPlayer player, String hostAddress) throws HammerException {
         HammerBan ban = getBan(player.getUUID(), hostAddress);
-        if (ban == null && player.isBanned()) {
-            player.unban();
+        if (ban == null) {
+            if (player.isBanned()) {
+                player.unban();
+            }
+
             return null;
         }
 
