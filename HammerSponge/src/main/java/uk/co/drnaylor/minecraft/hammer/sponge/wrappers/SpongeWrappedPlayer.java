@@ -178,7 +178,8 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
 
     @Override
     public HammerPlayer getHammerPlayer() {
-        if (player.isOnline()) {
+        Optional<Player> pl = player.getPlayer();
+        if (pl.isPresent()) {
             InetSocketAddress addr = player.getPlayer().get().getConnection().getAddress();
             String ip = addr.toString().substring(1).split(":")[0];
             return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
