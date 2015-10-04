@@ -3,26 +3,15 @@ package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.GameProfile;
-import org.spongepowered.api.data.value.mutable.SetValue;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.service.user.UserStorage;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.ban.Ban;
-import org.spongepowered.api.util.ban.Bans;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
-
-import java.util.Collection;
-import java.util.UUID;
 
 public class PlayerConnectListener {
 

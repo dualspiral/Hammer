@@ -1,6 +1,5 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -19,6 +18,7 @@ import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Executes a Sponge Command
@@ -70,12 +70,12 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override
     public Optional<Text> getHelp(CommandSource source) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     @Override

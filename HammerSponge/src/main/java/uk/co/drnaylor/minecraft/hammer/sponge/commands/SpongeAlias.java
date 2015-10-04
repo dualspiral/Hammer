@@ -1,13 +1,16 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.*;
+import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
+import org.spongepowered.api.util.command.CommandSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SpongeAlias implements CommandCallable {
 
@@ -80,7 +83,7 @@ public class SpongeAlias implements CommandCallable {
      */
     @Override
     public Optional<? extends Text> getShortDescription(CommandSource source) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**
@@ -100,7 +103,7 @@ public class SpongeAlias implements CommandCallable {
      */
     @Override
     public Optional<? extends Text> getHelp(CommandSource source) {
-        return Optional.absent();
+        return Optional.empty();
     }
 
     /**

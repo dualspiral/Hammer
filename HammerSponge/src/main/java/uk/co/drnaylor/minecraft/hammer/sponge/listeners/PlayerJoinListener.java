@@ -1,12 +1,13 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
+
+import java.util.Optional;
 
 public class PlayerJoinListener {
 
