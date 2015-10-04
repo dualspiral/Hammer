@@ -1,6 +1,5 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
-import com.google.common.base.Optional;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
@@ -16,7 +15,11 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class SpongeWrappedServer implements WrappedServer {
