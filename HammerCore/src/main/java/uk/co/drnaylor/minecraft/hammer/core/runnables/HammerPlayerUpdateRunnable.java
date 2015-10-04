@@ -1,7 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.runnables;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
@@ -35,9 +35,9 @@ public class HammerPlayerUpdateRunnable implements Runnable {
             pl.addAll(player);
             player.clear();
 
-            List<HammerPlayer> players = new ArrayList<>();
+            List<HammerPlayerInfo> players = new ArrayList<>();
             for (WrappedPlayer p : pl) {
-                HammerPlayer hp = p.getHammerPlayer();
+                HammerPlayerInfo hp = p.getHammerPlayer();
                 if (hp != null) {
                     players.add(hp);
                 }

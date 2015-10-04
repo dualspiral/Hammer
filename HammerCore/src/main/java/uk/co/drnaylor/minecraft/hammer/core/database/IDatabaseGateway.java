@@ -3,7 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.core.database;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -47,10 +47,10 @@ public interface IDatabaseGateway extends AutoCloseable {
      */
     boolean externalIdExists(String externalId) throws SQLException;
 
-    HammerPlayer getPlayer(UUID uuid) throws SQLException;
+    HammerPlayerInfo getPlayerInfo(UUID uuid) throws SQLException;
 
     /**
-     * Gets a {@link HammerPlayer} object from the provided name. It gets the last known UUID.
+     * Gets a {@link HammerPlayerInfo} object from the provided name. It gets the last known UUID.
      * Due to name changes, there is no guarantee that the names will be unique.
      * The search is case-insenstive.
      *
@@ -58,10 +58,10 @@ public interface IDatabaseGateway extends AutoCloseable {
      * @return The player. May be null.
      * @throws SQLException Thrown if the DB finds an error.
      */
-    HammerPlayer getLastPlayerFromName(String name) throws SQLException;
+    HammerPlayerInfo getLastPlayerInfoFromName(String name) throws SQLException;
 
     /**
-     * Gets a list of {@link HammerPlayer} objects from the provided name.
+     * Gets a list of {@link HammerPlayerInfo} objects from the provided name.
      * Due to name changes, there is no guarantee that the names will be unique.
      * The search is case-insenstive.
      * 
@@ -69,7 +69,7 @@ public interface IDatabaseGateway extends AutoCloseable {
      * @return The list of players. May be empty.
      * @throws SQLException Thrown if the DB finds an error.
      */
-    List<HammerPlayer> getPlayerFromName(String name) throws SQLException;
+    List<HammerPlayerInfo> getPlayerInfoFromName(String name) throws SQLException;
 
     void updateServerName(int serverId, String serverName) throws SQLException;
 

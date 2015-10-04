@@ -3,7 +3,10 @@ package uk.co.drnaylor.minecraft.hammer.core.data;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 
-public class HammerPlayer {
+/**
+ * Represents data from the Hammer Data store.
+ */
+public class HammerPlayerInfo {
     private final UUID uuid;
     private final String name;
     private final String ip;
@@ -11,7 +14,7 @@ public class HammerPlayer {
     /**
      * Creates the "Console" player.
      */
-    public HammerPlayer() {
+    public HammerPlayerInfo() {
         this.uuid = HammerConstants.consoleUUID;
         this.name = "*Console*";
         this.ip = "127.0.0.1";
@@ -23,7 +26,7 @@ public class HammerPlayer {
      * @param name The last known name of the player
      * @param ip The IP address of the player.
      */
-    public HammerPlayer(UUID uuid, String name, String ip) {
+    public HammerPlayerInfo(UUID uuid, String name, String ip) {
         this.uuid = uuid;
         this.name = name;
         this.ip = ip;

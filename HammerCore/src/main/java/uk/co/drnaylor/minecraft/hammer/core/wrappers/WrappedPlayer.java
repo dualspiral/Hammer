@@ -1,6 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.wrappers;
 
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
 public interface WrappedPlayer extends WrappedCommandSource {
@@ -48,9 +48,9 @@ public interface WrappedPlayer extends WrappedCommandSource {
     void kick(String reason);
 
     /**
-     * Gets the {@link HammerPlayer} that represents this player.
+     * Gets the {@link HammerPlayerInfo} that represents this player.
      *
-     * @return The {@link HammerPlayer}
+     * @return The {@link HammerPlayerInfo}
      */
-    HammerPlayer getHammerPlayer();
+    HammerPlayerInfo getHammerPlayer();
 }

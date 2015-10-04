@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -69,8 +69,8 @@ public class UnbanCommandCore extends CommandCore {
             // If we don't have them on this server...
             if (unban == null) {
                 // ...do we have them in the Hammer DB?
-                List<HammerPlayer> players = conn.getPlayerHandler().getPlayersByName(playerName);
-                for (HammerPlayer p : players) {
+                List<HammerPlayerInfo> players = conn.getPlayerHandler().getPlayersByName(playerName);
+                for (HammerPlayerInfo p : players) {
                     uuids.add(p.getUUID());
                 }
             } else {

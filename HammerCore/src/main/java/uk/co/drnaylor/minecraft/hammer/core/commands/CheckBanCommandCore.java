@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -54,8 +54,8 @@ public class CheckBanCommandCore extends CommandCore {
             UUID u;
             if (pl == null) {
                 // Do we have them in the Hammer DB?
-                List<HammerPlayer> players = conn.getPlayerHandler().getPlayersByName(playerName);
-                for (HammerPlayer p : players) {
+                List<HammerPlayerInfo> players = conn.getPlayerHandler().getPlayersByName(playerName);
+                for (HammerPlayerInfo p : players) {
                     uuids.add(p.getUUID());
                 }
             } else {

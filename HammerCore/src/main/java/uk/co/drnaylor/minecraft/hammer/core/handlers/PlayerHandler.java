@@ -3,7 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.core.handlers;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
@@ -22,9 +22,9 @@ public class PlayerHandler {
         }
     }
 
-    public void updatePlayers(Collection<HammerPlayer> players) throws HammerException {
+    public void updatePlayers(Collection<HammerPlayerInfo> players) throws HammerException {
         try {
-            for (HammerPlayer pl : players) {
+            for (HammerPlayerInfo pl : players) {
                 dg.updatePlayer(pl.getUUID(), pl.getName(), pl.getIp());
             }
         } catch (Exception ex) {
@@ -32,25 +32,25 @@ public class PlayerHandler {
         }
     }
 
-    public HammerPlayer getPlayer(UUID uuid) throws HammerException {
+    public HammerPlayerInfo getPlayer(UUID uuid) throws HammerException {
         try {
-            return dg.getPlayer(uuid);
+            return dg.getPlayerInfo(uuid);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the player.", ex);
         }
     }
 
-    public List<HammerPlayer> getPlayersByName(String name) throws Exception {
+    public List<HammerPlayerInfo> getPlayersByName(String name) throws Exception {
         try {
-            return dg.getPlayerFromName(name);
+            return dg.getPlayerInfoFromName(name);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the players.", ex);
         }
     }
 
-    public HammerPlayer getLastPlayerByName(String name) throws Exception {
+    public HammerPlayerInfo getLastPlayerByName(String name) throws Exception {
         try {
-            return dg.getLastPlayerFromName(name);
+            return dg.getLastPlayerInfoFromName(name);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the player.", ex);
         }

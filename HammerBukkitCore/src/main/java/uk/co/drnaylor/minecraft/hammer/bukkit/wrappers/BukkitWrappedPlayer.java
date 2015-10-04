@@ -4,8 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
@@ -160,11 +163,17 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     }
 
     @Override
-    public HammerPlayer getHammerPlayer() {
+    public HammerPlayerInfo getHammerPlayer() {
         if (player.isOnline()) {
             InetSocketAddress addr = player.getPlayer().getAddress();
             String ip = addr != null ? addr.toString().substring(1).split(":")[0] : "127.0.0.1";
-            return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
+            return new HammerPlayerInfo(player.getUniqueId(), player.getName(), ip);
+        } else {
+            try (DatabaseConnection c = HammerBukkitPlugin.getPlugin().getHammerCore().getDatabaseConnection()) {
+                return c.getPlayerHandler().getPlayer(player.getUniqueId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

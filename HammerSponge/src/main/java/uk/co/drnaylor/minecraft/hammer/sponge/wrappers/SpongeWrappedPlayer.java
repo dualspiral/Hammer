@@ -9,10 +9,12 @@ import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.BanBuilder;
 import org.spongepowered.api.util.ban.BanType;
 import org.spongepowered.api.util.ban.Bans;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
+import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
+import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.net.InetSocketAddress;
@@ -174,12 +176,18 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     }
 
     @Override
-    public HammerPlayer getHammerPlayer() {
+    public HammerPlayerInfo getHammerPlayer() {
         Optional<Player> pl = player.getPlayer();
         if (pl.isPresent()) {
             InetSocketAddress addr = player.getPlayer().get().getConnection().getAddress();
             String ip = addr.toString().substring(1).split(":")[0];
-            return new HammerPlayer(player.getUniqueId(), player.getName(), ip);
+            return new HammerPlayerInfo(player.getUniqueId(), player.getName(), ip);
+        } else {
+            try (DatabaseConnection c = HammerSponge.getInstance().getCore().getDatabaseConnection()) {
+                return c.getPlayerHandler().getPlayer(player.getUniqueId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

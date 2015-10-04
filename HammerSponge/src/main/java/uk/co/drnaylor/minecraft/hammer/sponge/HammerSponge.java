@@ -53,6 +53,7 @@ public class HammerSponge {
     @Inject @DefaultConfig(sharedRoot = false) private File defaultConfig;
     @Inject @DefaultConfig(sharedRoot = false) private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
 
+    private static HammerSponge instance;
     private HammerCore core;
     private Task updateTask;
     private boolean isLoaded = false;
@@ -132,6 +133,7 @@ public class HammerSponge {
         }
 
         isLoaded = true;
+        instance = this;
         logger.info("Hammer has successfully initialised and is managing your bans.");
         logger.info("-----------------------------------------------------------------");
     }
@@ -218,5 +220,9 @@ public class HammerSponge {
         node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
         node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
         configurationManager.save(node);
+    }
+
+    public static HammerSponge getInstance() {
+        return instance;
     }
 }

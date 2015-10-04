@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -104,7 +104,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
             uuidToBan = playerToBan.getUUID();
         } else {
             // We can't find them - but do they exist in Hammer?
-            HammerPlayer players = null;
+            HammerPlayerInfo players = null;
             try {
                 players = conn.getPlayerHandler().getLastPlayerByName(currentArg);
             } catch (Exception e) {
@@ -282,7 +282,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         String playerName;
         if (playerTarget == null) {
             // Do we have them in the Hammer DB?
-            HammerPlayer p = conn.getPlayerHandler().getPlayer(name);
+            HammerPlayerInfo p = conn.getPlayerHandler().getPlayer(name);
             if (p == null) {
                 playerName = "Unknown Player";
             } else {

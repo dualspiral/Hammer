@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayer;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
@@ -63,18 +63,20 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
             "    reason varchar(200) not null\n" +
             ");");
 
-        try {
-            connection.createStatement().execute(
-                "CREATE UNIQUE INDEX idx_pl_ban_1 ON player_bans(banned_player, from_server);");
+        String[] catchableStatements = new String[] {
+            "CREATE UNIQUE INDEX idx_pl_ban_1 ON player_bans(banned_player, from_server);",
+            "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);"
+        };
 
-            connection.createStatement().execute(
-                "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);");
-        }
-        catch (SQLException e) {
-            // Swallow.
+        for (String c : catchableStatements) {
+            try {
+                connection.createStatement().execute(c);
+            }
+            catch (SQLException e) {
+                // Swallow.
+            }
         }
 
-        
         ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) as counter FROM player_data");
         rs.next();
         if (rs.getInt("counter") == 0) {
@@ -282,13 +284,14 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public HammerPlayer getPlayer(UUID uuid) throws SQLException {
+    @Deprecated
+    public HammerPlayerInfo getPlayerInfo(UUID uuid) throws SQLException {
         PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE uuid = ?");
         ps.setString(1, uuid.toString());
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayer(uuid, rs.getString("last_name"), rs.getString("last_ip"));
+                return new HammerPlayerInfo(uuid, rs.getString("last_name"), rs.getString("last_ip"));
             }
 
             return null;
@@ -296,14 +299,15 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public List<HammerPlayer> getPlayerFromName(String name) throws SQLException {
+    @Deprecated
+    public List<HammerPlayerInfo> getPlayerInfoFromName(String name) throws SQLException {
         PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE LOWER(last_name) = ?");
         ps.setString(1, name.toLowerCase());
 
-        List<HammerPlayer> player = new ArrayList<>();
+        List<HammerPlayerInfo> player = new ArrayList<>();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                player.add(new HammerPlayer(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip")));
+                player.add(new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip")));
             }
         }
 
@@ -311,13 +315,14 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public HammerPlayer getLastPlayerFromName(String name) throws SQLException {
+    @Deprecated
+    public HammerPlayerInfo getLastPlayerInfoFromName(String name) throws SQLException {
         PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE LOWER(last_name) = ? ORDER BY last_seen DESC LIMIT 1");
         ps.setString(1, name.toLowerCase());
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayer(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"));
+                return new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"));
             }
         }
 
