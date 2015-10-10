@@ -17,6 +17,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
+@RunAsync
 public class CheckBanCommandCore extends CommandCore {
 
     public CheckBanCommandCore(HammerCore core) {

@@ -22,6 +22,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
+@RunAsync
 public abstract class BaseBanCommandCore extends CommandCore {
 
     private final Pattern flagPattern = Pattern.compile("^-[ag]$");
@@ -99,7 +100,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         // Next up, the player. Can we find them?
         UUID uuidToBan;
-        WrappedPlayer playerToBan = server.getPlayer(currentArg);
+        final WrappedPlayer playerToBan = server.getPlayer(currentArg);
         if (playerToBan != null) {
             uuidToBan = playerToBan.getUUID();
         } else {
@@ -169,11 +170,11 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         // Now, ban the player!
         if (playerToBan != null) {
-            playerToBan.ban(source, reason);
+            core.getWrappedServer().getScheduler().runSyncNow(() -> playerToBan.ban(source, reason));
         }
 
         // Create the message to send out.
-        HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
+        final HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
         if (isNoisy || (!isQuiet && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {

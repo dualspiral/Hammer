@@ -17,10 +17,11 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 public abstract class CommandCore {
 
     static final Format dateFormatter;
-
     static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
     Collection<String> permissionNodes = new ArrayList<>();
+    private final Class<? extends CommandCore> clazz;
+    private final boolean isAsync;
 
     final HammerCore core;
 
@@ -30,6 +31,9 @@ public abstract class CommandCore {
 
     CommandCore(HammerCore core) {
         this.core = core;
+        this.clazz = this.getClass();
+        RunAsync a = clazz.getAnnotation(RunAsync.class);
+        this.isAsync = a != null && a.isAsync();
     }
 
     protected abstract boolean requiresDatabase();
@@ -64,7 +68,7 @@ public abstract class CommandCore {
      * @return Whether the command succeeded
      * @throws HammerException Thrown if an exception is thrown in the command core
      */
-    public final boolean executeCommand(WrappedCommandSource source, List<String> arguments) throws HammerException {
+    public final boolean executeCommand(final WrappedCommandSource source, final List<String> arguments) throws HammerException {
         // Permission check
         for (String p : this.getRequiredPermissions()) {
             if (!source.hasPermission(p)) {
@@ -73,18 +77,43 @@ public abstract class CommandCore {
             }
         }
 
-        // Command execution.
-        if (requiresDatabase()) {
-            try (DatabaseConnection conn = core.getDatabaseConnection()) {
-                return executeCommand(source, arguments, conn);
-            } catch (HammerException ex) {
-                throw ex;
-            } catch (Exception ex) {
-                throw new HammerException("An unspecified error occurred", ex);
+        /**
+         * This runner allows us to run commands async, if the class is marked with the {@link RunAsync} annotation
+         */
+        CommandRunner r = new CommandRunner() {
+            @Override
+            public boolean runCommand() throws HammerException {
+                // Command execution.
+                if (requiresDatabase()) {
+                    try (DatabaseConnection conn = core.getDatabaseConnection()) {
+                        return executeCommand(source, arguments, conn);
+                    } catch (HammerException ex) {
+                        throw ex;
+                    } catch (Exception ex) {
+                        throw new HammerException("An unspecified error occurred", ex);
+                    }
+                } else {
+                    return executeCommand(source, arguments, null);
+                }
             }
-        } else {
-            return executeCommand(source, arguments, null);
+
+            @Override
+            public void run() {
+                try {
+                    runCommand();
+                } catch (HammerException ex) {
+                    source.sendMessage(ex.getMessage());
+                }
+            }
+        };
+
+        // Get the class and check for the RunAsync annotation.
+        if (isAsync) {
+            core.getWrappedServer().getScheduler().runAsyncNow(r);
+            return true;
         }
+
+        return r.runCommand();
     }
 
     /**
@@ -147,5 +176,9 @@ public abstract class CommandCore {
 
     private HammerTextBuilder createNormalMessageStub() {
         return new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.GREEN);
+    }
+
+    private interface CommandRunner extends Runnable {
+        boolean runCommand() throws HammerException;
     }
 }

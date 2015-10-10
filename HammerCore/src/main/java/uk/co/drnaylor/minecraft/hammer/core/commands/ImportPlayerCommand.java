@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * Provides the common logic for the /importplayer command
  */
+@RunAsync
 public class ImportPlayerCommand extends CommandCore {
 
     public ImportPlayerCommand(HammerCore core) {

@@ -19,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
+@RunAsync
 public class UnbanCommandCore extends CommandCore {
 
     private static final Pattern all = Pattern.compile("^-p?ap?$", Pattern.CASE_INSENSITIVE);
@@ -61,7 +62,7 @@ public class UnbanCommandCore extends CommandCore {
 
             // Get the player to unban if we can.
             UUID unban = null;
-            WrappedPlayer player = core.getWrappedServer().getPlayer(playerName);
+            final WrappedPlayer player = core.getWrappedServer().getPlayer(playerName);
             if (player != null) {
                 unban = player.getUUID();
             }
@@ -150,7 +151,7 @@ public class UnbanCommandCore extends CommandCore {
             // If you get here, then we have a ban to undo!
             conn.getBanHandler().unbanFromServer(bannee, serverId);
             if (player != null) {
-                player.unban();
+                core.getWrappedServer().getScheduler().runSyncNow(player::unban);
                 playerName = player.getName();
             }
 
