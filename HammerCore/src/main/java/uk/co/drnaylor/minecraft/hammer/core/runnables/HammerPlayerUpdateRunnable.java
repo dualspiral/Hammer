@@ -12,9 +12,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 public class HammerPlayerUpdateRunnable implements Runnable {
-    private final Set<WrappedPlayer> player;
+    private final Set<HammerPlayerInfo> player;
     private final HammerCore core;
-    private final HashSet<WrappedPlayer> pl = new HashSet<>();
 
     public HammerPlayerUpdateRunnable(HammerCore core) {
         this.core = core;
@@ -22,7 +21,11 @@ public class HammerPlayerUpdateRunnable implements Runnable {
     }
 
     public void addPlayer(WrappedPlayer pl) {
-        player.add(pl);
+        HammerPlayerInfo hp = pl.getHammerPlayer();
+
+        if (hp != null) {
+            player.add(pl.getHammerPlayer());
+        }
     }
 
     @Override
@@ -31,29 +34,20 @@ public class HammerPlayerUpdateRunnable implements Runnable {
             return;
         }
 
-        try {
-            pl.addAll(player);
-            player.clear();
+        // In case a new player comes in, we transfer the players to a second set.
+        // This way, new players who weren't sent to the DB won't get wiped.
+        HashSet<HammerPlayerInfo> hpi = new HashSet<>();
+        hpi.addAll(player);
+        player.clear();
 
-            List<HammerPlayerInfo> players = new ArrayList<>();
-            for (WrappedPlayer p : pl) {
-                HammerPlayerInfo hp = p.getHammerPlayer();
-                if (hp != null) {
-                    players.add(hp);
-                }
-            }
-
-            if (players.isEmpty()) {
-                return;
-            }
-
-            // Process them on the async thread!
-            try (DatabaseConnection conn = core.getDatabaseConnection()) {
-                conn.getPlayerHandler().updatePlayers(players);
-                pl.clear();
-            }
+        // Process them on the async thread!
+        try (DatabaseConnection conn = core.getDatabaseConnection()) {
+            conn.getPlayerHandler().updatePlayers(hpi);
         } catch (Exception ex) {
             Logger.getAnonymousLogger().warning("Could not update Hammer with latest player information. Will try again during the next cycle.");
+
+            // Put them back, we'll try again.
+            player.addAll(hpi);
         }
     }
 }

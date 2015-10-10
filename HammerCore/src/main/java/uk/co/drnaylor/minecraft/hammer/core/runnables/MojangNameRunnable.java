@@ -132,7 +132,7 @@ public class MojangNameRunnable implements Runnable {
                         sb.append("-");
                     }
 
-                    sb.append(m.group(1));
+                    sb.append(m.group(i));
                 }
 
                 return UUID.fromString(sb.toString());
