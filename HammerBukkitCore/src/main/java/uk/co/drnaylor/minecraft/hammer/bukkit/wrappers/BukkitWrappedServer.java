@@ -6,10 +6,7 @@ import org.bukkit.entity.Player;
 import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 
 import java.util.*;
 
@@ -18,11 +15,13 @@ public class BukkitWrappedServer implements WrappedServer {
     private final Server server;
     private final HammerBukkitPlugin plugin;
     private final WrappedConfiguration config;
+    private final WrappedScheduler scheduler;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
         this.config = new BukkitWrappedConfiguration(plugin);
+        this.scheduler = new BukkitWrappedScheduler(plugin);
     }
 
     /**
@@ -88,7 +87,7 @@ public class BukkitWrappedServer implements WrappedServer {
         List<Player> lpl = Arrays.asList(plugin.getOnlinePlayers());
         Iterator<Player> iterator = lpl.iterator();
 
-        // Note that we are using an interator here as we cannot guarantee that the player remains in the
+        // Note that we are using an iterator here as we cannot guarantee that the player remains in the
         // list of online players.
         while (iterator.hasNext()) {
             Player pl = iterator.next();
@@ -110,16 +109,6 @@ public class BukkitWrappedServer implements WrappedServer {
     }
 
     /**
-     * Schedules an action for the next tick loop.
-     *
-     * @param runnable The runnable to run on the next tick loop.
-     */
-    @Override
-    public void scheduleForNextTick(Runnable runnable) {
-        server.getScheduler().runTask(plugin, runnable);
-    }
-
-    /**
      * Gets a object that contains methods for obtaining configuration notes.
      *
      * @return Gets a {@link WrappedConfiguration} object.
@@ -127,5 +116,10 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public WrappedConfiguration getConfiguration() {
         return this.config;
+    }
+
+    @Override
+    public WrappedScheduler getScheduler() {
+        return this.scheduler;
     }
 }

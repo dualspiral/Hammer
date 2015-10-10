@@ -61,16 +61,16 @@ public interface WrappedServer {
     void kickAllPlayers(WrappedCommandSource source, HammerText reason);
 
     /**
-     * Schedules an action for the next tick loop.
-     *
-     * @param runnable The runnable to run on the next tick loop.
-     */
-    void scheduleForNextTick(Runnable runnable);
-
-    /**
-     * Gets a object that contains methods for obtaining configuration notes.
+     * Gets an object that contains methods for obtaining configuration notes.
      *
      * @return Gets a {@link WrappedConfiguration} object.
      */
     WrappedConfiguration getConfiguration();
+
+    /**
+     * Gets an object that contains methods for running code on or off the main thread.
+     *
+     * @return The {@link WrappedScheduler}
+     */
+    WrappedScheduler getScheduler();
 }

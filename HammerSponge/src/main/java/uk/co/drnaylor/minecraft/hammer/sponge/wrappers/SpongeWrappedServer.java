@@ -8,10 +8,7 @@ import org.spongepowered.api.text.sink.MessageSinks;
 import org.spongepowered.api.util.command.CommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
@@ -27,11 +24,13 @@ public class SpongeWrappedServer implements WrappedServer {
     private final Game game;
     private final HammerSponge plugin;
     private final SpongeWrappedConfiguration config;
+    private final WrappedScheduler scheduler;
 
     public SpongeWrappedServer(HammerSponge plugin, Game game) {
         this.plugin = plugin;
         this.game = game;
         this.config = new SpongeWrappedConfiguration(plugin, game);
+        this.scheduler = new SpongeWrappedScheduler(plugin, game);
     }
 
     /**
@@ -140,16 +139,6 @@ public class SpongeWrappedServer implements WrappedServer {
     }
 
     /**
-     * Schedules an action for the next tick loop.
-     *
-     * @param runnable The runnable to run on the next tick loop.
-     */
-    @Override
-    public void scheduleForNextTick(Runnable runnable) {
-        game.getScheduler().createTaskBuilder().delay(0).execute(runnable).submit(plugin);
-    }
-
-    /**
      * Gets a object that contains methods for obtaining configuration notes.
      *
      * @return Gets a {@link WrappedConfiguration} object.
@@ -157,5 +146,10 @@ public class SpongeWrappedServer implements WrappedServer {
     @Override
     public WrappedConfiguration getConfiguration() {
         return config;
+    }
+
+    @Override
+    public WrappedScheduler getScheduler() {
+        return scheduler;
     }
 }

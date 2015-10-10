@@ -60,13 +60,13 @@ public class MojangNameRunnable implements Runnable {
     private void noAdditions() {
         HammerText ht1 = new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.RED).add(" The player ", HammerTextColours.RED)
                 .add(playerName, HammerTextColours.YELLOW).add(" could not be added to Hammer - most likely because they do not exist.", HammerTextColours.RED).build();
-        core.getWrappedServer().scheduleForNextTick(new MessageSenderRunnable(source, ht1));
+        core.getWrappedServer().getScheduler().runSyncNow(new MessageSenderRunnable(source, ht1));
     }
 
     private void added() {
         HammerText ht1 = new HammerTextBuilder().add(HammerConstants.textTag, HammerTextColours.GREEN).add(" The player ", HammerTextColours.GREEN)
                 .add(playerName, HammerTextColours.YELLOW).add(" was added to Hammer successfully.", HammerTextColours.GREEN).build();
-        core.getWrappedServer().scheduleForNextTick(new MessageSenderRunnable(source, ht1));
+        core.getWrappedServer().getScheduler().runSyncNow(new MessageSenderRunnable(source, ht1));
     }
 
     private String getJsonResponse() {
