@@ -19,8 +19,6 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
  */
 public class BanCommandCore extends BaseBanCommandCore {
 
-    private final Pattern timeFormat = Pattern.compile("^(\\d+)([dhm])$");
-
     public BanCommandCore(HammerCore core) {
         super(core);
 
@@ -34,38 +32,6 @@ public class BanCommandCore extends BaseBanCommandCore {
         entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
         entries.add(new ParserEntry("reason", new StringParser(true), false));
         return entries;
-    }
-
-    private Date timeParser(String time) {
-        Matcher m = timeFormat.matcher(time);
-        if (m.matches()) {
-            // Get the last character.
-            Integer number = Integer.parseInt(m.group(1));
-            String unit = m.group(2);
-            Date until = new Date();
-
-            int u;
-            if (unit.equalsIgnoreCase("d")) {
-                u = Calendar.DATE;
-            } else if (unit.equalsIgnoreCase("h")) {
-                u = Calendar.HOUR;
-            } else {
-                // It has to be minutes
-                u = Calendar.MINUTE;
-            }
-
-            return add(until, u, number);
-        }
-
-        return null;
-    }
-
-    private static Date add(Date date, int unit, int span)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(unit, span);
-        return cal.getTime();
     }
 
     @Override

@@ -15,8 +15,6 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 public class TempBanCommandCore extends BaseBanCommandCore {
 
-    private final Pattern timeFormat = Pattern.compile("^(\\d+)([dhm])$");
-
     public TempBanCommandCore(HammerCore core) {
         super(core);
 

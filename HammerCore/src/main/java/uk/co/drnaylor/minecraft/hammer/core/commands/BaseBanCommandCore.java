@@ -2,7 +2,6 @@ package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
@@ -218,19 +217,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
     protected enum BanStatus
     {
-        CONTINUE(""),
-        NO_ACTION(""),
-        TO_PERM("The ban was upgraded to a permanent ban, due to one being in force on this or another server."),
-        TO_GLOBAL("The ban was upgraded to a global ban, due to one being in force on this or another server.");
-        
-        private final String msg;
-        BanStatus(String msg) {
-            this.msg = msg;
-        }
-
-        protected String getMsg() {
-            return msg;
-        }
+        CONTINUE,
+        NO_ACTION,
+        TO_PERM,
+        TO_GLOBAL
     }
 
     protected class BanInfo {

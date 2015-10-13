@@ -218,10 +218,6 @@ public abstract class CommandCore {
         source.sendMessage(hb.build());
     }
 
-    final void sendNoPlayerMessage(WrappedCommandSource target, String name) {
-        sendTemplatedMessage(target, "hammer.player.noplayer", true, true, name);
-    }
-
     final void sendNoPermsMessage(WrappedCommandSource target) {
         sendTemplatedMessage(target, "hammer.player.noperms", true, true);
     }

@@ -25,9 +25,6 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 @RunAsync
 public class UnbanCommandCore extends CommandCore {
 
-    private static final Pattern all = Pattern.compile("^-p?ap?$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern perm = Pattern.compile("^-a?pa?$", Pattern.CASE_INSENSITIVE);
-    
     public UnbanCommandCore(HammerCore core) {
         super(core);
 
