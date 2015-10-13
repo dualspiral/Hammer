@@ -286,12 +286,12 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     @Override
     @Deprecated
     public HammerPlayerInfo getPlayerInfo(UUID uuid) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE uuid = ?");
+        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip, last_seen FROM player_data WHERE uuid = ?");
         ps.setString(1, uuid.toString());
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayerInfo(uuid, rs.getString("last_name"), rs.getString("last_ip"));
+                return new HammerPlayerInfo(uuid, rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen"));
             }
 
             return null;
@@ -301,13 +301,13 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     @Override
     @Deprecated
     public List<HammerPlayerInfo> getPlayerInfoFromName(String name) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE LOWER(last_name) = ?");
+        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip, last_seen FROM player_data WHERE LOWER(last_name) = ?");
         ps.setString(1, name.toLowerCase());
 
         List<HammerPlayerInfo> player = new ArrayList<>();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                player.add(new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip")));
+                player.add(new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen")));
             }
         }
 
@@ -317,12 +317,12 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     @Override
     @Deprecated
     public HammerPlayerInfo getLastPlayerInfoFromName(String name) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip FROM player_data WHERE LOWER(last_name) = ? ORDER BY last_seen DESC LIMIT 1");
+        PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip, last_seen FROM player_data WHERE LOWER(last_name) = ? ORDER BY last_seen DESC LIMIT 1");
         ps.setString(1, name.toLowerCase());
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"));
+                return new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen"));
             }
         }
 

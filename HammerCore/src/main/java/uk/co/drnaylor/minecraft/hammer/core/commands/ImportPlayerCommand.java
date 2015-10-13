@@ -3,6 +3,8 @@ package uk.co.drnaylor.minecraft.hammer.core.commands;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.MojangNameRunnable;
@@ -27,6 +29,13 @@ public class ImportPlayerCommand extends CommandCore {
     }
 
     @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("player", new StringParser(false), false));
+        return entries;
+    }
+
+    @Override
     protected boolean requiresDatabase() {
         return true;
     }
@@ -41,13 +50,13 @@ public class ImportPlayerCommand extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         if (arguments.isEmpty()) {
             source.sendMessage(getUsageMessage());
             return true;
         }
 
-        String name = arguments.get(0);
+        String name = arguments.<String>getArgument("player").get();
 
         // Fire the web service off.
         MojangNameRunnable mnr = new MojangNameRunnable(source, core, name);

@@ -1,12 +1,15 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -27,6 +30,13 @@ public class CheckBanCommandCore extends CommandCore {
     }
 
     @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
+        return entries;
+    }
+
+    @Override
     protected boolean requiresDatabase() {
         return true;
     }
@@ -41,34 +51,17 @@ public class CheckBanCommandCore extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         try {
-            if (arguments.size() != 1) {
-                this.sendUsageMessage(source);
-                return true;
-            }
-
             // Get the player out.
-            String playerName = arguments.get(0);
-            Set<UUID> uuids = new HashSet<>();
-            WrappedPlayer pl = core.getWrappedServer().getPlayer(playerName);
-            UUID u;
-            if (pl == null) {
-                // Do we have them in the Hammer DB?
-                List<HammerPlayerInfo> players = conn.getPlayerHandler().getPlayersByName(playerName);
-                for (HammerPlayerInfo p : players) {
-                    uuids.add(p.getUUID());
-                }
-            } else {
-                u = pl.getUUID();
-                uuids.add(u);
+            Optional<List<HammerPlayerInfo>> opt = arguments.<List<HammerPlayerInfo>>getArgument("player");
+            if (!opt.isPresent()) {
+                // Something went wrong.
+                throw new HammerException("No player argument");
             }
 
-            if (uuids.isEmpty()) {
-                sendNoPlayerMessage(source, playerName);
-                return true;
-            }
-
+            String playerName = opt.get().get(0).getName();
+            List<UUID> uuids = opt.get().stream().map(HammerPlayerInfo::getUUID).collect(Collectors.toList());
             if (uuids.size() > 1) {
                 sendTemplatedMessage(source, "hammer.player.multiple", false, true, playerName);
                 sendMessage(source, "------------------", false, false);

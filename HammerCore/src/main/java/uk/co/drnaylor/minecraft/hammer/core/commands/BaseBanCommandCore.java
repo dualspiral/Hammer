@@ -1,14 +1,14 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
@@ -25,10 +25,6 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 @RunAsync
 public abstract class BaseBanCommandCore extends CommandCore {
 
-    private final Pattern flagPattern = Pattern.compile("^-[ag]$");
-    private final Pattern quietPattern = Pattern.compile("^-[q]$");
-    private final Pattern noisyPattern = Pattern.compile("^-[n]$");
-
     BaseBanCommandCore(HammerCore core) {
         super(core);
     }
@@ -39,95 +35,37 @@ public abstract class BaseBanCommandCore extends CommandCore {
     }
 
     /**
-     * Gets the minimum number of arguments for the command.
-     * 
-     * @return The minimum number of arguments to accept.
-     */
-    protected abstract int minArguments();
-
-    /**
      * Executes the specific command. Code here is common to all player bans
      * 
      * @param source The source that is executing this command.
      * @param arguments The arguments. Expecting 2+. [-a] player reason
-     * @return <code>true</code> if the command does the expected task. <code>false</code> if the specific 
+     * @return <code>true</code> if the command does the expected task. <code>false</code> if the specific
      *         implementation command handler needs to take over.
      * 
      * @throws HammerException Thrown in place of all other exceptions.
      */
     @Override
-    public final boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    public final boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         WrappedServer server = core.getWrappedServer();
-
-        Iterator<String> argumentIterator = arguments.iterator();
-
-        // If we don't have enough arguments, the command is obviously malformed.
-        if (arguments.size() < minArguments()) {
-            sendUsageMessage(source);
-            return true;
-        }
-
-        String currentArg = argumentIterator.next();
 
         WrappedConfiguration cp = core.getWrappedServer().getConfiguration();
         HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cp.getConfigIntegerValue("server", "id"), cp.getConfigStringValue("server", "name"));
 
-        // First argument may indicate a ban for all.
-        boolean isGlobal = false;
-        boolean isQuiet = false;
-        boolean isNoisy = false;
-        while (currentArg.startsWith("-")) {
-            if (!isQuiet) {
-                isQuiet = this.isQuietBan(currentArg);
-            }
-
-            if (!isNoisy) {
-                isNoisy = this.isNoisyBan(currentArg);
-            }
-
-            if (!isGlobal && this.isGlobalBan(currentArg)) {
-                isGlobal = true;
-                if (!source.hasPermission(HammerPermissions.globalBan)) {
-                    sendNoPermsMessage(source);
-                    return true;
-                }
-
-                builder.setAll(true);
-            }
-
-            currentArg = argumentIterator.next();
-        }
-
-        // Next up, the player. Can we find them?
-        UUID uuidToBan;
-        final WrappedPlayer playerToBan = server.getPlayer(currentArg);
-        if (playerToBan != null) {
-            uuidToBan = playerToBan.getUUID();
+        // Next up, the player. Can we find them? Get the last player...
+        UUID uuidToBan = arguments.<List<HammerPlayerInfo>>getArgument("player").get().stream().sorted(Collections.reverseOrder()).findFirst().get().getUUID();
+        Optional<List<BanFlagEnum>> flags = arguments.<List<BanFlagEnum>>getArgument("flags");
+        List<BanFlagEnum> flag;
+        if (flags.isPresent()) {
+            flag = flags.get();
         } else {
-            // We can't find them - but do they exist in Hammer?
-            HammerPlayerInfo players = null;
-            try {
-                players = conn.getPlayerHandler().getLastPlayerByName(currentArg);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (players == null) {
-                // Nope.
-                sendNoPlayerMessage(source, currentArg);
-                return true;
-            }
-
-            // Yep!
-            uuidToBan = players.getUUID();
+            flag = Collections.emptyList();
         }
 
         // Start a transaction. We might need to delete some rows here.
         conn.startTransaction();
-        BanInfo status = checkOtherBans(uuidToBan, conn, isGlobal);
+        BanInfo status = checkOtherBans(uuidToBan, conn, flag.contains(BanFlagEnum.ALL));
         if (status.status == BanStatus.NO_ACTION) {
             sendTemplatedMessage(source, "hammer.player.alreadyBanned", true, true);
-
             return true;
         } else if (status.status == BanStatus.TO_PERM) {
             // Auto upgrade! If you get a global ban, and a permanent ban is already in force, the 
@@ -144,14 +82,14 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         builder.setPlayerToBan(uuidToBan);
 
-        if (!performSpecificActions(builder, argumentIterator)) {
+        if (!performSpecificActions(builder, arguments)) {
             // Usage.
             sendUsageMessage(source);
             conn.rollbackTransaction();
             return true;
         }
 
-        String reason = createReason(argumentIterator, status.reasons);
+        String reason = createReason(arguments, status.reasons);
         if (reason == null) {
             // Usage.
             sendUsageMessage(source);
@@ -169,6 +107,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         conn.commitTransaction();
 
         // Now, ban the player!
+        WrappedPlayer playerToBan = core.getWrappedServer().getPlayer(uuidToBan);
         if (playerToBan != null) {
             core.getWrappedServer().getScheduler().runSyncNow(() -> playerToBan.ban(source, reason));
         }
@@ -177,7 +116,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         final HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
-        if (isNoisy || (!isQuiet && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
+        if (flag.contains(BanFlagEnum.NOISY) || (!flag.contains(BanFlagEnum.QUIET) && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
             for (HammerText t : msg) {
                 server.sendMessageToServer(t);
             }
@@ -195,29 +134,22 @@ public abstract class BaseBanCommandCore extends CommandCore {
      * 
      * Note that the provided iterator needs to have the next method called on it to get the first usable argument.
      * Do not advance the iterator at the end.
-     * 
+     *
      * @param builder The {@link HammerCreatePlayerBanBuilder} to update.
-     * @param argumentIterator The arguments to pass to the method
+     * @param argumentMap The arguments to pass to the method
      * @return <code>true</code> to signify success.
      */
-    protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator);
+    protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap);
 
     protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException;
 
-    String createReason(Iterator<String> argumentIterator, List<String> otherReasons) {
-        if (!argumentIterator.hasNext()) {
+    protected String createReason(ArgumentMap argumentMap, List<String> otherReasons) {
+        Optional<String> reas = argumentMap.<String>getArgument("reason");
+        if (!reas.isPresent()) {
             return null;
         }
 
-        StringBuilder sb = new StringBuilder();
-        while (argumentIterator.hasNext()) {
-            if (sb.length() > 0) {
-                sb.append(" ");
-            }
-
-            sb.append(argumentIterator.next());
-        }
-
+        StringBuilder sb = new StringBuilder(reas.get());
         if (otherReasons != null) {
             for (String reasons : otherReasons) {
                 sb.append(" - ").append(reasons);
@@ -225,18 +157,6 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         return sb.toString();
-    }
-
-    private boolean isGlobalBan(String argument0) {
-        return flagPattern.matcher(argument0).matches();
-    }
-
-    private boolean isQuietBan(String argument0) {
-        return quietPattern.matcher(argument0).matches();
-    }
-
-    private boolean isNoisyBan(String argument0) {
-        return noisyPattern.matcher(argument0).matches();
     }
 
     private HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm, DatabaseConnection conn) throws HammerException {

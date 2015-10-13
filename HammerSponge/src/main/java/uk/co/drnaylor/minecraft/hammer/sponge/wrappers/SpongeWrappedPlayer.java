@@ -176,6 +176,11 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     }
 
     @Override
+    public boolean isOnline() {
+        return player.isOnline();
+    }
+
+    @Override
     public HammerPlayerInfo getHammerPlayer() {
         Optional<Player> pl = player.getPlayer();
         if (pl.isPresent()) {

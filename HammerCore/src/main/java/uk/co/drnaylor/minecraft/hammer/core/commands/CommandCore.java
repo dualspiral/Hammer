@@ -7,6 +7,9 @@ import java.util.*;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentParseException;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.IParser;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -20,8 +23,8 @@ public abstract class CommandCore {
     static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
     Collection<String> permissionNodes = new ArrayList<>();
-    private final Class<? extends CommandCore> clazz;
     private final boolean isAsync;
+    private final List<ParserEntry> parsersList;
 
     final HammerCore core;
 
@@ -31,9 +34,42 @@ public abstract class CommandCore {
 
     CommandCore(HammerCore core) {
         this.core = core;
-        this.clazz = this.getClass();
-        RunAsync a = clazz.getAnnotation(RunAsync.class);
+        RunAsync a = this.getClass().getAnnotation(RunAsync.class);
         this.isAsync = a != null && a.isAsync();
+        this.parsersList = createArgumentParserList();
+    }
+
+    protected abstract List<ParserEntry> createArgumentParserList();
+
+    private Optional<ArgumentMap> getArguments(List<String> arguments) throws HammerException, ArgumentParseException {
+        ListIterator<String> lis = arguments.listIterator();
+        ArgumentMap am = new ArgumentMap();
+        for (ParserEntry pe : parsersList) {
+            Optional o;
+            try {
+                o = pe.parser.parseArgument(lis);
+            } catch (ArgumentParseException ape) {
+                if (pe.isOptional) {
+                    o = Optional.empty();
+                } else {
+                    // Re-throw
+                    throw ape;
+                }
+            }
+
+            if (o.isPresent()) {
+                am.put(pe.name, o.get());
+            } else {
+                // Is it optional?
+                if (pe.isOptional) {
+                    pe.parser.onFailedButOptional(lis);
+                } else {
+                    return Optional.empty();
+                }
+            }
+        }
+
+        return Optional.of(am);
     }
 
     protected abstract boolean requiresDatabase();
@@ -47,7 +83,7 @@ public abstract class CommandCore {
      * @return Whether the command succeeded
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
-    protected abstract boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException;
+    protected abstract boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException;
 
     /**
      * Gets the usage of this command
@@ -82,27 +118,34 @@ public abstract class CommandCore {
          */
         CommandRunner r = new CommandRunner() {
             @Override
-            public boolean runCommand() throws HammerException {
+            public boolean runCommand(ArgumentMap args) throws HammerException {
                 // Command execution.
                 if (requiresDatabase()) {
                     try (DatabaseConnection conn = core.getDatabaseConnection()) {
-                        return executeCommand(source, arguments, conn);
+                        return executeCommand(source, args, conn);
                     } catch (HammerException ex) {
                         throw ex;
                     } catch (Exception ex) {
                         throw new HammerException("An unspecified error occurred", ex);
                     }
                 } else {
-                    return executeCommand(source, arguments, null);
+                    return executeCommand(source, args, null);
                 }
             }
 
             @Override
             public void run() {
                 try {
-                    runCommand();
+                    Optional<ArgumentMap> arg = getArguments(arguments);
+                    if (arg.isPresent()) {
+                        runCommand(arg.get());
+                    } else {
+                        sendUsageMessage(source);
+                    }
                 } catch (HammerException ex) {
                     source.sendMessage(ex.getMessage());
+                } catch (ArgumentParseException e) {
+                    source.sendMessage(e.getHammerTextMessage());
                 }
             }
         };
@@ -113,7 +156,20 @@ public abstract class CommandCore {
             return true;
         }
 
-        return r.runCommand();
+        Optional<ArgumentMap> arg = null;
+        try {
+            arg = getArguments(arguments);
+            if (arg.isPresent()) {
+                return r.runCommand(arg.get());
+            } else {
+                sendUsageMessage(source);
+                return true;
+            }
+        } catch (ArgumentParseException e) {
+            e.printStackTrace();
+            source.sendMessage(e.getHammerTextMessage());
+            return true;
+        }
     }
 
     /**
@@ -179,6 +235,18 @@ public abstract class CommandCore {
     }
 
     private interface CommandRunner extends Runnable {
-        boolean runCommand() throws HammerException;
+        boolean runCommand(ArgumentMap args) throws HammerException;
+    }
+
+    protected final class ParserEntry {
+        public final String name;
+        public final IParser parser;
+        public final boolean isOptional;
+
+        public ParserEntry(String name, IParser parser, boolean isOptional) {
+            this.name = name;
+            this.parser = parser;
+            this.isOptional = isOptional;
+        }
     }
 }

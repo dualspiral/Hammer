@@ -1,6 +1,8 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -8,7 +10,9 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class KickAllCommandCore extends CommandCore {
 
@@ -16,6 +20,13 @@ public class KickAllCommandCore extends CommandCore {
         super(core);
 
         permissionNodes.add("hammer.kickall");
+    }
+
+    @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("reason", new StringParser(true), true));
+        return entries;
     }
 
     @Override
@@ -33,22 +44,9 @@ public class KickAllCommandCore extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
-        String reason = "You have all been kicked from the server.";
-        if (!arguments.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (String s : arguments) {
-                if (sb.length() > 0) {
-                    sb.append(" ");
-                }
-
-                sb.append(s);
-            }
-
-            reason = sb.toString();
-        }
-
-        core.getWrappedServer().kickAllPlayers(source, reason);
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
+        Optional<String> reasonOptional = arguments.<String>getArgument("reason");
+        core.getWrappedServer().kickAllPlayers(source, reasonOptional.isPresent() ? reasonOptional.get() : "You have all been kicked from the server.");
         sendTemplatedMessage(source, "hammer.kickall", false, true);
         return true;
     }

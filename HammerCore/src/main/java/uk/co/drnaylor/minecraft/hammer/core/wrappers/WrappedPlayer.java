@@ -48,6 +48,13 @@ public interface WrappedPlayer extends WrappedCommandSource {
     void kick(String reason);
 
     /**
+     * Gets whether the player is online.
+     *
+     * @return <code>true</code> if the player is online, <code>false</code> otherwise.
+     */
+    boolean isOnline();
+
+    /**
      * Gets the {@link HammerPlayerInfo} that represents this player.
      *
      * @return The {@link HammerPlayerInfo}

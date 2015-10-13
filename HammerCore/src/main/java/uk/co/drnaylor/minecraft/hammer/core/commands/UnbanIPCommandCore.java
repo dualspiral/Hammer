@@ -1,8 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.util.List;
-
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -10,10 +9,17 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
+import java.util.List;
+
 public class UnbanIPCommandCore extends CommandCore {
 
     public UnbanIPCommandCore(HammerCore core) {
         super(core);
+    }
+
+    @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        return null;
     }
 
     @Override
@@ -31,7 +37,7 @@ public class UnbanIPCommandCore extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

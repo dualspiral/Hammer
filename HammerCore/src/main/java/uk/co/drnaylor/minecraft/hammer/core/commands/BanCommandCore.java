@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -23,6 +25,15 @@ public class BanCommandCore extends BaseBanCommandCore {
         super(core);
 
         permissionNodes.add("hammer.ban.normal");
+    }
+
+    @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("flags", new FlagParser<>(BanFlagEnum.class), true));
+        entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
+        entries.add(new ParserEntry("reason", new StringParser(true), false));
+        return entries;
     }
 
     private Date timeParser(String time) {
@@ -58,12 +69,7 @@ public class BanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected int minArguments() {
-        return 2;
-    }
-
-    @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator) {
+    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
         // Nothing
         return true;
     }

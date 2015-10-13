@@ -1,14 +1,17 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.UnbanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -32,6 +35,14 @@ public class UnbanCommandCore extends CommandCore {
     }
 
     @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("flags", new FlagParser<>(UnbanFlagEnum.class), true));
+        entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
+        return entries;
+    }
+
+    @Override
     protected boolean requiresDatabase() {
         return true;
     }
@@ -46,70 +57,42 @@ public class UnbanCommandCore extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         try {
-            if (arguments.isEmpty()) {
-                sendUsageMessage(source);
-                return true;
+            // Get the player out.
+            Optional<List<HammerPlayerInfo>> opt = arguments.<List<HammerPlayerInfo>>getArgument("player");
+            if (!opt.isPresent()) {
+                // Something went wrong.
+                throw new HammerException("No player argument");
             }
 
-            // Make a copy.
-            List<String> copy = new ArrayList<>(arguments);
+            List<HammerPlayerInfo> hpi = opt.get();
+            String playerName = hpi.get(0).getName();
 
-            // Last argument, player.
-            String playerName = copy.remove(arguments.size() - 1);
-            Set<UUID> uuids = new HashSet<>();
-
-            // Get the player to unban if we can.
+            // Get the player to unban if we can. We want the last known
             UUID unban = null;
-            final WrappedPlayer player = core.getWrappedServer().getPlayer(playerName);
+            final WrappedPlayer player = core.getWrappedServer().getPlayer(hpi.get(0).getName());
             if (player != null) {
                 unban = player.getUUID();
             }
 
+            List<UUID> uuids = new ArrayList<>();
+
             // If we don't have them on this server...
             if (unban == null) {
                 // ...do we have them in the Hammer DB?
-                List<HammerPlayerInfo> players = conn.getPlayerHandler().getPlayersByName(playerName);
-                for (HammerPlayerInfo p : players) {
-                    uuids.add(p.getUUID());
-                }
+                uuids.addAll(hpi.stream().map(HammerPlayerInfo::getUUID).collect(Collectors.toList()));
             } else {
                 // Otherwise, we want them in the set.
                 uuids.add(unban);
             }
 
-            // No users, throw them out
-            if (uuids.isEmpty()) {
-                sendNoPlayerMessage(source, playerName);
-                return true;
-            }
-
-            // Check flags.
-            boolean allFlag = false;
-            boolean permFlag = false;
-            if (!copy.isEmpty()) {
-                for (String c : copy) {
-                    if (all.matcher(c).matches() && !allFlag) {
-                        // Check for permission
-                        if (source.hasPermission(HammerPermissions.globalUnban)) {
-                            allFlag = true;
-                        } else {
-                            sendNoPermsMessage(source);
-                            return true;
-                        }
-                    } else if (perm.matcher(c).matches() && !permFlag) {
-                        if (source.hasPermission(HammerPermissions.permUnban)) {
-                            permFlag = true;
-                        } else {
-                            sendNoPermsMessage(source);
-                            return true;
-                        }
-                    } else {
-                        sendUsageMessage(source);
-                        return true;
-                    }
-                }
+            Optional<List<UnbanFlagEnum>> flags = arguments.<List<UnbanFlagEnum>>getArgument("flags");
+            List<UnbanFlagEnum> flag;
+            if (flags.isPresent()) {
+                flag = flags.get();
+            } else {
+                flag = Collections.emptyList();
             }
 
             // If we have a ban...
@@ -128,12 +111,12 @@ public class UnbanCommandCore extends CommandCore {
                      sendTemplatedMessage(source, "hammer.unban.ambiguous", true, true, playerName);
                      return true;
                  } else {
-                     if (ban2.isPermBan() && !permFlag) {
+                     if (ban2.isPermBan() && !flag.contains(UnbanFlagEnum.PERM)) {
                          sendTemplatedMessage(source, "hammer.unban.permanent", true, true);
                          return true;
                      }
 
-                     if (ban2.getServerId() == null && !allFlag) {
+                     if (ban2.getServerId() == null && !flag.contains(UnbanFlagEnum.ALL_SERVER)) {
                          sendTemplatedMessage(source, "hammer.unban.allservers", true, true);
                          return true;
                      }
@@ -156,12 +139,12 @@ public class UnbanCommandCore extends CommandCore {
             }
 
             // Unban from all servers if that's needed.
-            if (allFlag) {
+            if (flag.contains(UnbanFlagEnum.ALL_SERVER)) {
                 conn.getBanHandler().unbanFromAllServers(bannee);
             }
 
             // Unbanned. Tell the notified.
-            sendUnbanMessage(playerName, source, allFlag);
+            sendUnbanMessage(playerName, source, flag.contains(UnbanFlagEnum.ALL_SERVER));
             return true;
         } catch (Exception ex) {
             throw new HammerException("Command failed to execute", ex);

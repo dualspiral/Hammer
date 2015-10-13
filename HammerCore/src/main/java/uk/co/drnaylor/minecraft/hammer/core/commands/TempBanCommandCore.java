@@ -1,14 +1,11 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -27,37 +24,19 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected int minArguments() {
-        return 2;
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("flags", new FlagParser<>(BanFlagEnum.class), true));
+        entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
+        entries.add(new ParserEntry("time", new TimespanParser(), false));
+        entries.add(new ParserEntry("reason", new StringParser(true), true));
+        return entries;
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator) {
-        // One argument, temp ban
-        String arg = argumentIterator.next();
-        Matcher m = timeFormat.matcher(arg);
-        if (!m.matches()) {
-            return false;
-        }
-
-        // Get the last character.
-        Integer number = Integer.parseInt(m.group(1));
-        String unit = m.group(2);
+    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
         Date until = new Date();
-
-        int u;
-        if (unit.equalsIgnoreCase("d")) {
-            u = Calendar.DATE;
-        } else if (unit.equalsIgnoreCase("h")) {
-            u = Calendar.HOUR;
-        } else if (unit.equalsIgnoreCase("m")) {
-            // It has to be minutes
-            u = Calendar.MINUTE;
-        } else {
-            return false;
-        }
-
-        until = add(until, u, number);
+        until = add(until, Calendar.SECOND, argumentMap.<Integer>getArgument("time").get());
         builder.setTemporary(until);
         return true;
     }
@@ -76,12 +55,13 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected String createReason(Iterator<String> argumentIterator, List<String> reasons) {
-        if (!argumentIterator.hasNext()) {
-            argumentIterator = Arrays.asList("Temporarily Banned.".split(" ")).iterator();
+    protected String createReason(ArgumentMap argumentMap, List<String> reasons) {
+        Optional<String> reason = argumentMap.getArgument("reason");
+        if (!reason.isPresent()) {
+            argumentMap.put("reason", "Temporarily Banned.");
         }
 
-        return super.createReason(argumentIterator, null);
+        return argumentMap.<String>getArgument("reason").get();
     }
 
     @Override

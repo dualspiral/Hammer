@@ -3,6 +3,9 @@ package uk.co.drnaylor.minecraft.hammer.core.commands;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -12,8 +15,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class KickCommandCore extends CommandCore {
 
@@ -21,6 +23,15 @@ public class KickCommandCore extends CommandCore {
         super(core);
 
         permissionNodes.add("hammer.kick");
+    }
+
+    @Override
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("flags", new FlagParser<>(KickFlagEnum.class), true));
+        entries.add(new ParserEntry("player", new OnlinePlayerParser(core), false));
+        entries.add(new ParserEntry("reason", new StringParser(true), true));
+        return entries;
     }
 
     @Override
@@ -38,64 +49,31 @@ public class KickCommandCore extends CommandCore {
      * @throws HammerException Thrown if an exception is thrown in the command core.
      */
     @Override
-    protected boolean executeCommand(WrappedCommandSource source, List<String> arguments, DatabaseConnection conn) throws HammerException {
+    protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         if (arguments.isEmpty()) {
             sendUsageMessage(source);
             return true;
         }
 
-        Iterator<String> str = arguments.iterator();
-        String arg = str.next();
-        boolean quietKick = false;
-        boolean noisyKick = false;
-
-        // Do we want a quiet kick?
-        if (arg.equalsIgnoreCase("-q") || arg.equalsIgnoreCase("-n")) {
-            if (arg.equalsIgnoreCase("-q")) {
-                quietKick = true;
-            } else {
-                noisyKick = true;
-            }
-
-            // No good being quiet if we don't have that person to kick!
-            if (!str.hasNext()) {
-                sendUsageMessage(source);
-                return true;
-            }
-
-            arg = str.next();
+        Optional<List<KickFlagEnum>> flags = arguments.<List<KickFlagEnum>>getArgument("flags");
+        List<KickFlagEnum> flag;
+        if (flags.isPresent()) {
+            flag = flags.get();
+        } else {
+            flag = Collections.emptyList();
         }
 
-        // First argument - name. Second argument+, reason.
-        // Get the player
-        WrappedPlayer pl = core.getWrappedServer().getPlayer(arg);
-        if (pl == null) {
-            sendTemplatedMessage(source, "hammer.player.notonline", true, true);
-            return true;
-        }
+        WrappedPlayer pl = arguments.<WrappedPlayer>getArgument("player").get();
 
-        // Now, do we have any more arguments?
-        String reason = "You have been kicked!";
-        if (str.hasNext()) {
-            // We do! Loop over, read the strings.
-            StringBuilder sb = new StringBuilder();
-            do {
-                if (sb.length() > 0) {
-                    sb.append(" ");
-                }
-
-                sb.append(str.next());
-            } while (str.hasNext());
-            reason = sb.toString();
-        }
-
+        Optional<String> reasonOptional = arguments.<String>getArgument("reason");
+        String reason = reasonOptional.isPresent() ? reasonOptional.get() : "You have been kicked!";
         pl.kick(reason);
 
         // Get the name of the person doing the kicking.
         String plName = source.getName();
 
         HammerText[] msg = createReasons(pl.getName(), plName, reason);
-        if (noisyKick || (!quietKick && core.getWrappedServer().getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
+        if (flag.contains(KickFlagEnum.NOISY) || (!flag.contains(KickFlagEnum.QUIET) && core.getWrappedServer().getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
             for (HammerText m : msg) {
                 core.getWrappedServer().sendMessageToServer(m);
             }

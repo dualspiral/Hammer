@@ -163,6 +163,11 @@ public final class BukkitWrappedPlayer implements WrappedPlayer {
     }
 
     @Override
+    public boolean isOnline() {
+        return player.isOnline();
+    }
+
+    @Override
     public HammerPlayerInfo getHammerPlayer() {
         if (player.isOnline()) {
             InetSocketAddress addr = player.getPlayer().getAddress();

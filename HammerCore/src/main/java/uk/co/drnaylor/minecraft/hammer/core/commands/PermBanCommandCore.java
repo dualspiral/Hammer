@@ -1,10 +1,14 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -23,12 +27,16 @@ public class PermBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected int minArguments() {
-        return 2;
+    protected List<ParserEntry> createArgumentParserList() {
+        List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("flags", new FlagParser<>(BanFlagEnum.class), true));
+        entries.add(new ParserEntry("player", new HammerPlayerParser(core), false));
+        entries.add(new ParserEntry("reason", new StringParser(true), false));
+        return entries;
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, Iterator<String> argumentIterator) {
+    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
         builder.setPerm(true);
         return true;
     }
