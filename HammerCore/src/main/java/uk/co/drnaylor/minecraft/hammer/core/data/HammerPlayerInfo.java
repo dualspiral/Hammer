@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.data;
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 
@@ -11,7 +12,7 @@ public class HammerPlayerInfo implements Comparable<HammerPlayerInfo> {
     private final UUID uuid;
     private final String name;
     private final String ip;
-    private final Time time;
+    private final Date time;
 
     /**
      * Creates the "Console" player.
@@ -42,7 +43,7 @@ public class HammerPlayerInfo implements Comparable<HammerPlayerInfo> {
      * @param name The last known name of the player
      * @param ip The IP address of the player.
      */
-    public HammerPlayerInfo(UUID uuid, String name, String ip, Time time) {
+    public HammerPlayerInfo(UUID uuid, String name, String ip, Date time) {
         this.uuid = uuid;
         this.name = name;
         this.ip = ip;
@@ -61,12 +62,12 @@ public class HammerPlayerInfo implements Comparable<HammerPlayerInfo> {
         return ip;
     }
 
-    public Time getTime() {
+    public Date getTime() {
         return time;
     }
 
     @Override
     public int compareTo(HammerPlayerInfo o) {
-        return time != null ? time.compareTo(o.getTime()) : 0;
+        return (time != null && o != null) ? time.compareTo(o.getTime()) : 0;
     }
 }

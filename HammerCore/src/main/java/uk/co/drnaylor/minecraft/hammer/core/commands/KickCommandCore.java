@@ -87,8 +87,8 @@ public class KickCommandCore extends CommandCore {
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/kick name reason", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "kick";
     }
 
     private HammerText[] createReasons(String playerKicked, String playerKicking, String reason) {

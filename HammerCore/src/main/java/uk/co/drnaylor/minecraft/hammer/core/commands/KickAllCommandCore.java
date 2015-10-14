@@ -52,7 +52,7 @@ public class KickAllCommandCore extends CommandCore {
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/kickall [reason]", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "kickall";
     }
 }

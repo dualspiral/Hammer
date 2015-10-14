@@ -90,8 +90,8 @@ public class CheckBanCommandCore extends CommandCore {
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/checkban <name>", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "checkban";
     }
 
     private void sendBanReason(HammerPlayerBan ban, WrappedCommandSource source) {

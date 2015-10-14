@@ -73,13 +73,8 @@ public class ImportPlayerCommand extends CommandCore {
         return true;
     }
 
-    /**
-     * Gets the usage of this command
-     *
-     * @return The {@link HammerText}
-     */
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/import [player]", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "importplayer";
     }
 }

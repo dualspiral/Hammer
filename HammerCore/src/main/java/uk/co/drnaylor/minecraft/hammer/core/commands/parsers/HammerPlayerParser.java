@@ -19,17 +19,20 @@ public class HammerPlayerParser implements IParser<List<HammerPlayerInfo>> {
     @Override
     public Optional<List<HammerPlayerInfo>> parseArgument(ListIterator<String> stringIterator) throws ArgumentParseException {
         if (!stringIterator.hasNext()) {
-            return Optional.empty();
+            throw new ArgumentParseException("No player was specified");
         }
 
         try (DatabaseConnection dg = core.getDatabaseConnection()) {
             String name = stringIterator.next();
             List<HammerPlayerInfo> hpi = dg.getPlayerHandler().getPlayersByName(name);
-            if (hpi == null) {
+            if (hpi == null || hpi.isEmpty()) {
                 throw new ArgumentParseException("The player " + name + " does not exist in Hammer.");
             }
 
             return Optional.of(hpi);
+        } catch (ArgumentParseException e) {
+            // Special case, re-throw this.
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();

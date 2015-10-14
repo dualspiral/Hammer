@@ -42,8 +42,7 @@ public class UnbanIPCommandCore extends CommandCore {
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/ipunban ip", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "unbanip";
     }
-
 }

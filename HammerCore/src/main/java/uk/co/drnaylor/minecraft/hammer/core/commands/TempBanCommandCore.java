@@ -32,16 +32,16 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
+    protected String commandName() {
+        return "tempban";
+    }
+
+    @Override
     protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
         Date until = new Date();
         until = add(until, Calendar.SECOND, argumentMap.<Integer>getArgument("time").get());
         builder.setTemporary(until);
         return true;
-    }
-
-    @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/tempban [-a -q] name (time)(d|h|m) reason", HammerTextColours.YELLOW).build();
     }
 
     private Date add(Date date, int unit, int span)

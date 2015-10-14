@@ -57,6 +57,7 @@ public class HammerSponge {
     private HammerCore core;
     private Task updateTask;
     private boolean isLoaded = false;
+    private HammerPlayerUpdateRunnable runnable = null;
 
     /**
      * Runs when the plugin is being initialised.
@@ -71,7 +72,7 @@ public class HammerSponge {
             logger.info("Hammer will now perform some startup tasks. Stand by...");
 
             createCore();
-            HammerPlayerUpdateRunnable runnable = new HammerPlayerUpdateRunnable(core);
+            runnable = new HammerPlayerUpdateRunnable(core);
 
             // TODO: Register the service.
 
@@ -161,7 +162,7 @@ public class HammerSponge {
         if (isLoaded) {
             // Server is stopping, stop the runnable, but run it (sync) one last time.
             updateTask.cancel();
-            updateTask.getRunnable().run();
+            runnable.run();
         }
     }
 

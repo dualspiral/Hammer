@@ -14,6 +14,10 @@ public class TimespanParser implements IParser<Integer> {
 
     @Override
     public Optional<Integer> parseArgument(ListIterator<String> stringIterator) throws ArgumentParseException {
+        if (!stringIterator.hasNext()) {
+            throw new ArgumentParseException("No time was specified");
+        }
+
         String s = stringIterator.next();
         Matcher m = timeString.matcher(s);
         if (m.matches()) {
@@ -27,7 +31,7 @@ public class TimespanParser implements IParser<Integer> {
             }
         }
 
-        return Optional.empty();
+        throw new ArgumentParseException("Could not parse " + s + " - must use w, d, h and/or m in that order.");
     }
 
     private int amount(String g, int multipler) {

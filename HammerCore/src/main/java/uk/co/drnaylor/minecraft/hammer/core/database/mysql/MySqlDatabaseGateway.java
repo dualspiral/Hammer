@@ -291,7 +291,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayerInfo(uuid, rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen"));
+                return new HammerPlayerInfo(uuid, rs.getString("last_name"), rs.getString("last_ip"), new Date(rs.getTimestamp("last_seen").getTime()));
             }
 
             return null;
@@ -307,7 +307,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         List<HammerPlayerInfo> player = new ArrayList<>();
         try (ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                player.add(new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen")));
+                player.add(new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), new Date(rs.getTimestamp("last_seen").getTime())));
             }
         }
 
@@ -322,7 +322,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), rs.getTime("last_seen"));
+                return new HammerPlayerInfo(UUID.fromString(rs.getString("uuid")), rs.getString("last_name"), rs.getString("last_ip"), new Date(rs.getTimestamp("last_seen").getTime()));
             }
         }
 

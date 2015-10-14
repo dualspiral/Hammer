@@ -9,6 +9,7 @@ import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentParseException;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.IParser;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -49,11 +50,11 @@ public abstract class CommandCore {
             try {
                 o = pe.parser.parseArgument(lis);
             } catch (ArgumentParseException ape) {
-                if (pe.isOptional) {
+                if (!ape.isDontSkip() && pe.isOptional) {
                     o = Optional.empty();
                 } else {
                     // Re-throw
-                    throw ape;
+                    throw new ArgumentParseException(pe.name, ape);
                 }
             }
 
@@ -85,12 +86,32 @@ public abstract class CommandCore {
      */
     protected abstract boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException;
 
+    protected abstract String commandName();
+
     /**
      * Gets the usage of this command
      *
      * @return The {@link HammerText}
      */
-    public abstract HammerText getUsageMessage();
+    public final HammerText getUsageMessage() {
+        // Get the command name.
+        StringBuilder args = new StringBuilder("/").append(commandName());
+        for (ParserEntry parserEntry : this.parsersList) {
+            args.append(" ");
+            String n = parserEntry.name;
+            if (parserEntry.parser instanceof FlagParser) {
+                n = ((FlagParser) parserEntry.parser).getFlagEntries();
+            }
+
+            if (parserEntry.isOptional) {
+                args.append("[").append(n).append("]");
+            } else {
+                args.append("<").append(n).append(">");
+            }
+        }
+
+        return new HammerTextBuilder().add(args.toString(), HammerTextColours.YELLOW).build();
+    }
 
     public final Collection<String> getRequiredPermissions() {
         return permissionNodes;
@@ -126,6 +147,7 @@ public abstract class CommandCore {
                     } catch (HammerException ex) {
                         throw ex;
                     } catch (Exception ex) {
+                        ex.printStackTrace();
                         throw new HammerException("An unspecified error occurred", ex);
                     }
                 } else {
@@ -136,7 +158,7 @@ public abstract class CommandCore {
             @Override
             public void run() {
                 try {
-                    Optional<ArgumentMap> arg = getArguments(arguments);
+                    Optional<ArgumentMap> arg = constructArgumentMap(source, arguments);
                     if (arg.isPresent()) {
                         runCommand(arg.get());
                     } else {
@@ -144,8 +166,6 @@ public abstract class CommandCore {
                     }
                 } catch (HammerException ex) {
                     source.sendMessage(ex.getMessage());
-                } catch (ArgumentParseException e) {
-                    source.sendMessage(e.getHammerTextMessage());
                 }
             }
         };
@@ -156,19 +176,28 @@ public abstract class CommandCore {
             return true;
         }
 
-        Optional<ArgumentMap> arg = null;
+        Optional<ArgumentMap> arg;
         try {
-            arg = getArguments(arguments);
+            arg = constructArgumentMap(source, arguments);
             if (arg.isPresent()) {
                 return r.runCommand(arg.get());
             } else {
                 sendUsageMessage(source);
                 return true;
             }
+        } catch (HammerException ex) {
+            source.sendMessage(ex.getMessage());
+        }
+
+        return true;
+    }
+
+    private Optional<ArgumentMap> constructArgumentMap(final WrappedCommandSource source, List<String> args) throws HammerException {
+        try {
+            return getArguments(args);
         } catch (ArgumentParseException e) {
-            e.printStackTrace();
-            source.sendMessage(e.getHammerTextMessage());
-            return true;
+            source.sendMessage(new HammerTextBuilder().add("[Hammer] ", HammerTextColours.RED).add(e.getHammerTextMessage()).build());
+            return Optional.empty();
         }
     }
 

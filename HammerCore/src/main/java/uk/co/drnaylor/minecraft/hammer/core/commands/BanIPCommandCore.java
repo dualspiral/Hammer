@@ -41,9 +41,8 @@ public class BanIPCommandCore extends CommandCore {
         return false;
     }
 
-
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/ipban IP reason", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "banip";
     }
 }

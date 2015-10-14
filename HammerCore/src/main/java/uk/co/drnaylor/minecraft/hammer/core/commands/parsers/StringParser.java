@@ -12,7 +12,7 @@ public class StringParser implements IParser<String> {
     @Override
     public Optional<String> parseArgument(ListIterator<String> stringIterator) throws ArgumentParseException {
         if (!stringIterator.hasNext()) {
-            return Optional.empty();
+            throw new ArgumentParseException("Not specified!");
         }
 
         if (!toEnd) {

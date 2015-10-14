@@ -36,14 +36,14 @@ public class PermBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
-        builder.setPerm(true);
-        return true;
+    protected String commandName() {
+        return "permban";
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/permban [-a -q] name reason", HammerTextColours.YELLOW).build();
+    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
+        builder.setPerm(true);
+        return true;
     }
 
     @Override

@@ -16,12 +16,12 @@ public class OnlinePlayerParser implements IParser<WrappedPlayer> {
     @Override
     public Optional<WrappedPlayer> parseArgument(ListIterator<String> stringIterator) throws ArgumentParseException {
         if (!stringIterator.hasNext()) {
-            return Optional.empty();
+            throw new ArgumentParseException("No player was specified");
         }
 
         String name = stringIterator.next();
         WrappedPlayer pl = core.getWrappedServer().getPlayer(name);
-        if (pl == null || pl.isOnline()) {
+        if (pl == null || !pl.isOnline()) {
             throw new ArgumentParseException("The player " + name + " is not online!");
         }
 

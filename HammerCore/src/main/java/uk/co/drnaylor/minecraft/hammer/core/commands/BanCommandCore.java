@@ -1,8 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
@@ -35,14 +33,14 @@ public class BanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
-        // Nothing
-        return true;
+    protected String commandName() {
+        return "ban";
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/ban [-a -q] name reason", HammerTextColours.YELLOW).build();
+    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
+        // Nothing
+        return true;
     }
 
     @Override

@@ -149,8 +149,8 @@ public class UnbanCommandCore extends CommandCore {
     }
 
     @Override
-    public HammerText getUsageMessage() {
-        return new HammerTextBuilder().add("/unban [-a] [-p] player", HammerTextColours.YELLOW).build();
+    protected String commandName() {
+        return "unban";
     }
 
     private void sendUnbanMessage(String playerName, WrappedCommandSource source, boolean allFlag) {
