@@ -78,6 +78,9 @@ public class KickCommandCore extends CommandCore {
                 core.getWrappedServer().sendMessageToServer(m);
             }
         } else {
+                core.getWrappedServer().sendMessageToPermissionGroup(
+                    new HammerTextBuilder().add("[Hammer] This kick is quiet. Only those with notify permissions will see this.", HammerTextColours.RED).build(),
+                    HammerPermissions.notify);
             for (HammerText m : msg) {
                 core.getWrappedServer().sendMessageToPermissionGroup(m, HammerPermissions.notify);
             }

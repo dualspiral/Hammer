@@ -120,6 +120,9 @@ public abstract class BaseBanCommandCore extends CommandCore {
                 server.sendMessageToServer(t);
             }
         } else {
+            server.sendMessageToPermissionGroup(
+                    new HammerTextBuilder().add("[Hammer] This ban is quiet. Only those with notify permissions will see this.", HammerTextColours.RED).build(),
+                    HammerPermissions.notify);
             for (HammerText t : msg) {
                 server.sendMessageToPermissionGroup(t, HammerPermissions.notify);
             }
