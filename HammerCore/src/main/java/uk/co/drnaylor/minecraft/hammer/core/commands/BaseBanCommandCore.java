@@ -63,6 +63,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
         // Start a transaction. We might need to delete some rows here.
         conn.startTransaction();
         BanInfo status = checkOtherBans(uuidToBan, conn, flag.contains(BanFlagEnum.ALL));
+
+        // Set global flag here, before the checks below.
+        builder.setAll(flag.contains(BanFlagEnum.ALL));
+
         if (status.status == BanStatus.NO_ACTION) {
             sendTemplatedMessage(source, "hammer.player.alreadyBanned", true, true);
             return true;
