@@ -1,5 +1,5 @@
 name: Hammer
-version: 0.3
+version: 0.3.2
 main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
 commands:
   ban:
@@ -22,6 +22,11 @@ commands:
     permission: hammer.ban.perm
     usage: "/permban [-a] <user> <reason>"
     aliases: [hpban, hammerpban]
+  toperm:
+    description: Upgrade a player to a permanent ban.
+    permission: hammer.ban.perm
+    usage: "/toperm <user>"
+    aliases: [hammertoperm]
   unban:
     description: Unban a player.
     permission: hammer.unban.normal

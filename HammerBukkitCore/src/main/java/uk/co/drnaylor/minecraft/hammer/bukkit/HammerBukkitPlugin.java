@@ -85,6 +85,9 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 // Import player
                 this.getCommand("importplayer").setExecutor(new BukkitCommand(new ImportPlayerCommand(core)));
 
+                // Upgrade to perm
+                this.getCommand("toperm").setExecutor(new BukkitCommand(new UpgradeToPermBanCommandCore(core)));
+
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");
                 this.getCommand("gban").setExecutor(new BukkitAlias(this, "ban", arguments));

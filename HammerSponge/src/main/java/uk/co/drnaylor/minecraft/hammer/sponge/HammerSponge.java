@@ -15,14 +15,7 @@ import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
-import uk.co.drnaylor.minecraft.hammer.core.commands.BanCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.CheckBanCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.ImportPlayerCommand;
-import uk.co.drnaylor.minecraft.hammer.core.commands.KickAllCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.KickCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.PermBanCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.TempBanCommandCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.UnbanCommandCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
@@ -46,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.3";
+    public static final String VERSION = "0.3.2";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -108,6 +101,9 @@ public class HammerSponge {
 
                 // Import Player command
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
+
+                // Upgrade to permban
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
 
                 logger.info("Registering Hammer events...");
 

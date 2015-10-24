@@ -66,6 +66,20 @@ public class BanHandler {
         }
     }
 
+    public boolean upgadeToPerm(UUID playerToBan, int serverId) throws HammerException {
+        try {
+            HammerPlayerBan hpb = dg.getPlayerBanForServer(playerToBan, serverId);
+            if (hpb.isPermBan()) {
+                dg.updateBanToPermanent(hpb);
+                return true;
+            }
+
+            return false;
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred getting and/or setting the player ban.", ex);
+        }
+    }
+
     public boolean isIpBanned(String ip) {
         return getIpBan(ip) != null;
     }

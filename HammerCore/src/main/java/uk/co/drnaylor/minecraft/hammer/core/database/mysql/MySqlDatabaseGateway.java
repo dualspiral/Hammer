@@ -354,6 +354,16 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         ps.executeUpdate();
     }
 
+    @Override
+    public void updateBanToPermanent(HammerPlayerBan ban) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "UPDATE player_bans SET is_permanent = 1 WHERE external_id = ?;"
+        )) {
+            ps.setString(1, ban.getExternalId());
+            ps.execute();
+        }
+    }
+
     /**
      * Closes the connection. Implements java.lang.AutoClosable.
      * @throws Exception 

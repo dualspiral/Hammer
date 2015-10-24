@@ -73,6 +73,8 @@ public interface IDatabaseGateway extends AutoCloseable {
 
     void updateServerName(int serverId, String serverName) throws SQLException;
 
+    void updateBanToPermanent(HammerPlayerBan ban) throws SQLException;
+
     void startTransaction() throws SQLException;
 
     void commitTransaction() throws SQLException;
