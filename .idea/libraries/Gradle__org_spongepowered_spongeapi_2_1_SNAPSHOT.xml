@@ -2,14 +2,14 @@
   <library name="Gradle: org.spongepowered:spongeapi:2.1-SNAPSHOT">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/a304041975178eb28a1504a4180ee62cfe5d548b/spongeapi-2.1-SNAPSHOT.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/d968f584cfc472ab69a54a25764660ccf7355356/spongeapi-2.1-SNAPSHOT.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/efccf131dbd41cfe79615b1b31104448dcf8992f/spongeapi-2.1-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/c4ed8500787364252b3f1df03e0fb8f9eb0e8acb/spongeapi-2.1-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/b5a9383967d6ecb0600258b4c7e5a99ba338a6ba/spongeapi-2.1-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/ca2f085c125f66cdc46240f1e7e8c48817c9659c/spongeapi-2.1-SNAPSHOT-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/db6793d6c50e89ff4fbb3c33a454352ef7402dfd/spongeapi-2.1-SNAPSHOT-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/68ee8444f6e1f8ca3730139474f77f6d11d3c32d/spongeapi-2.1-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/d8e2894df37b83ccc530b49f0e129e28bfc57560/spongeapi-2.1-SNAPSHOT-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.spongepowered/spongeapi/2.1-SNAPSHOT/ed59dcaa3079e4a585e05dc66737dfa3d6e19e5a/spongeapi-2.1-SNAPSHOT-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

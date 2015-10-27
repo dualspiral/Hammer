@@ -1,15 +1,17 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit;
 
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.yaml.snakeyaml.DumperOptions;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitAlias;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
-import org.bukkit.configuration.Configuration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
+import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
@@ -18,6 +20,8 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +29,7 @@ import java.util.logging.Level;
 @SuppressWarnings("WeakerAccess")
 public abstract class HammerBukkitPlugin extends JavaPlugin {
 
+    private static final String filePath = "plugins/Hammer/config.yml";
     private HammerCore core;
     private static HammerBukkitPlugin instance;
 
@@ -42,14 +47,15 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
         this.getLogger().log(Level.INFO, "Welcome to Hammer for Bukkit version {0}", this.getDescription().getVersion());
         this.getLogger().log(Level.INFO, "Hammer will now perform some startup tasks. Stand by...");
-        this.saveDefaultConfig();
-        this.reloadConfig();
 
         // Lots can go wrong here. If anything does go wrong, the
         // plugin heads straight for the disabled pile... once it's
         // exploded all over the console.
         try {
-            createCore();
+            this.getLogger().log(Level.INFO, "Loading Hammer configuration.");
+            HammerConfiguration config = this.getConfigurateConfig();
+
+            createCore(config);
             this.getLogger().log(Level.INFO, "Loading Hammer Core version {0}", core.getHammerCoreVersion());
 
             // Create the runnable now.
@@ -98,10 +104,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 this.getServer().getPluginManager().registerEvents(new PlayerConnectListener(this), this);
                 this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(new PlayerJoinListenerCore(runnable)), this);
 
-                // Register server
-                this.getLogger().log(Level.INFO, "Registering server ID group...");
-                conn.getServerHandler().updateServerNameForId(this.getConfig().getInt("server.id"), this.getConfig().getString("server.name"));
-
                 // Are players online? If so, we've gone mid run and need to save a load of players.
                 if (this.getOnlinePlayers().length > 0) {
                     this.getLogger().log(Level.INFO, "Players are currently online. Ensuring the players are registered in Hammer...");
@@ -144,18 +146,26 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         return core;
     }
 
+    private HammerConfiguration getConfigurateConfig() throws IOException {
+        File fp = new File(filePath);
+        if (!fp.exists()) {
+            fp.getParentFile().mkdirs();
+            fp.createNewFile();
+        }
+
+        YAMLConfigurationLoader.Builder cl = YAMLConfigurationLoader.builder().setIndent(4).setFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        cl.setFile(fp);
+        return new HammerConfiguration(cl.build());
+    }
+
     /**
      * Creates the {@link HammerCore} object.
-     * @throws ClassNotFoundException The MySQL JDBC drive isn't on the classpath.
+     * @param config the {@link HammerConfiguration} that contains the config.
+     * @throws ClassNotFoundException The database driver isn't on the classpath.
      */
-    private void createCore() throws ClassNotFoundException {
-        Configuration config = this.getConfig();
-        core = HammerCoreFactory.CreateHammerCoreWithMySQL(
+    private void createCore(HammerConfiguration config) throws ClassNotFoundException {
+        core = HammerCoreFactory.createHammerCore(
                 new BukkitWrappedServer(this, this.getServer()),
-                config.getString("mysql.host"),
-                config.getInt("mysql.port"),
-                config.getString("mysql.database"),
-                config.getString("mysql.username"),
-                config.getString("mysql.password"));
+                config);
     }
 }

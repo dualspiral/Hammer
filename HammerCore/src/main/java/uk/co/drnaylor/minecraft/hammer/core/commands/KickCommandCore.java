@@ -73,7 +73,7 @@ public class KickCommandCore extends CommandCore {
         String plName = source.getName();
 
         HammerText[] msg = createReasons(pl.getName(), plName, reason);
-        if (flag.contains(KickFlagEnum.NOISY) || (!flag.contains(KickFlagEnum.QUIET) && core.getWrappedServer().getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
+        if (flag.contains(KickFlagEnum.NOISY) || (!flag.contains(KickFlagEnum.QUIET) && core.getConfig().getConfig().getNode("notifyAllOnBan").getBoolean())) {
             for (HammerText m : msg) {
                 core.getWrappedServer().sendMessageToServer(m);
             }

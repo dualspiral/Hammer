@@ -23,13 +23,11 @@ public class SpongeWrappedServer implements WrappedServer {
 
     private final Game game;
     private final HammerSponge plugin;
-    private final SpongeWrappedConfiguration config;
     private final WrappedScheduler scheduler;
 
     public SpongeWrappedServer(HammerSponge plugin, Game game) {
         this.plugin = plugin;
         this.game = game;
-        this.config = new SpongeWrappedConfiguration(plugin, game);
         this.scheduler = new SpongeWrappedScheduler(plugin, game);
     }
 
@@ -136,16 +134,6 @@ public class SpongeWrappedServer implements WrappedServer {
 
             player.kick(HammerTextConverter.constructMessage(reason));
         }
-    }
-
-    /**
-     * Gets a object that contains methods for obtaining configuration notes.
-     *
-     * @return Gets a {@link WrappedConfiguration} object.
-     */
-    @Override
-    public WrappedConfiguration getConfiguration() {
-        return config;
     }
 
     @Override

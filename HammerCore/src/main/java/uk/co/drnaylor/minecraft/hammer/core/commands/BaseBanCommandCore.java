@@ -3,6 +3,7 @@ package uk.co.drnaylor.minecraft.hammer.core.commands;
 import java.text.MessageFormat;
 import java.util.*;
 
+import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
@@ -17,7 +18,6 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
@@ -47,8 +47,8 @@ public abstract class BaseBanCommandCore extends CommandCore {
     public final boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         WrappedServer server = core.getWrappedServer();
 
-        WrappedConfiguration cp = core.getWrappedServer().getConfiguration();
-        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cp.getConfigIntegerValue("server", "id"), cp.getConfigStringValue("server", "name"));
+        ConfigurationNode cn = core.getConfig().getConfig();
+        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cn.getNode("server", "id").getInt(), cn.getNode("server", "name").getString("Unknown"));
 
         // Next up, the player. Can we find them? Get the last player...
         UUID uuidToBan = arguments.<List<HammerPlayerInfo>>getArgument("player").get().stream().sorted(Collections.reverseOrder()).findFirst().get().getUUID();
@@ -119,7 +119,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         final HammerText[] msg = getBanMessage(ban.getBannedUUID(), ban.getStaffUUID(), ban.getReason(), ban.getTempBanExpiration() != null, ban.getServerId() == null, ban.isPermanent(), conn);
 
         // Do we tell the server, or just the notified?
-        if (flag.contains(BanFlagEnum.NOISY) || (!flag.contains(BanFlagEnum.QUIET) && server.getConfiguration().getConfigBooleanValue("notifyAllOnBan"))) {
+        if (flag.contains(BanFlagEnum.NOISY) || (!flag.contains(BanFlagEnum.QUIET) && cn.getNode("notifyAllOnBan").getBoolean())) {
             for (HammerText t : msg) {
                 server.sendMessageToServer(t);
             }

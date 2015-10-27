@@ -94,7 +94,7 @@ public class UnbanCommandCore extends CommandCore {
 
             // If we have a ban...
             UUID bannee = null;
-            int serverId =  core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id");
+            int serverId =  core.getConfig().getConfig().getNode("server", "id").getInt();
             boolean ban = false;
             for (UUID u : uuids) {
                  HammerPlayerBan ban2 = conn.getBanHandler().getPlayerBanForServer(u, serverId);

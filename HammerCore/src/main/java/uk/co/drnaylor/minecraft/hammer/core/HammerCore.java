@@ -1,7 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core;
 
-import uk.co.drnaylor.minecraft.hammer.core.handlers.HammerExternalIDGenerator;
-import java.sql.SQLException;
+import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -11,10 +10,11 @@ public class HammerCore {
 
     private final IDatabaseProvider provider;
     private final WrappedServer server;
-    private HammerExternalIDGenerator externalIdGenerator = null;
+    private final HammerConfiguration config;
 
-    HammerCore(WrappedServer server, IDatabaseProvider provider) {
+    HammerCore(WrappedServer server, HammerConfiguration config, IDatabaseProvider provider) {
         this.provider = provider;
+        this.config = config;
         this.server = server;
     }
 
@@ -23,7 +23,16 @@ public class HammerCore {
      * @return The version of the core.
      */
     public String getHammerCoreVersion() {
-        return "0.3.2";
+        return "0.3.3";
+    }
+
+    /**
+     * Gets the {@link HammerConfiguration} that contains the config file.
+     *
+     * @return The config file.
+     */
+    public HammerConfiguration getConfig() {
+        return config;
     }
 
     /**
@@ -53,7 +62,9 @@ public class HammerCore {
      */
     public boolean performStartupTasks(DatabaseConnection conn) {
         try {
+            ConfigurationNode cn = this.config.getConfig().getNode("server");
             conn.performStartupTasks();
+            conn.getServerHandler().updateServerNameForId(cn.getNode("id").getInt(), cn.getNode("name").getString("Unknown"));
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();

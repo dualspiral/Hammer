@@ -1,7 +1,9 @@
 package uk.co.drnaylor.minecraft.hammer.sponge;
 
 import com.google.inject.Inject;
+import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -13,6 +15,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
 import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.util.command.spec.CommandSpec;
+import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
@@ -39,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.3.2";
+    public static final String VERSION = "0.3.3";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -111,11 +114,6 @@ public class HammerSponge {
                 game.getEventManager().registerListeners(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
                 game.getEventManager().registerListeners(this, new PlayerJoinListener(game, new PlayerJoinListenerCore(runnable)));
 
-                // Register server
-                logger.info("Registering server ID group...");
-                CommentedConfigurationNode configNode = configurationManager.load();
-                conn.getServerHandler().updateServerNameForId(configNode.getNode("server", "id").getInt(), configNode.getNode("server", "name").getString("Unknown"));
-
                 // Register the runnable.
                 logger.info("Starting the async task...");
 
@@ -186,37 +184,9 @@ public class HammerSponge {
      * @throws IOException Configuration could not be loaded.
      */
     private void createCore() throws ClassNotFoundException, IOException {
-        // Create the path if it does not exist.
-        if (!defaultConfig.exists()) {
-            defaultConfig.getParentFile().mkdirs();
-            defaultConfig.createNewFile();
-        }
-
-        CommentedConfigurationNode configNode = configurationManager.load();
-        if (configNode.getChildrenMap().isEmpty()) {
-            createConfig(configNode);
-        }
-
-        CommentedConfigurationNode mySqlNode = configNode.getNode("mysql");
-        core = HammerCoreFactory.CreateHammerCoreWithMySQL(
+        core = HammerCoreFactory.createHammerCore(
                 new SpongeWrappedServer(this, game),
-                mySqlNode.getNode("host").getString(),
-                mySqlNode.getNode("port").getInt(),
-                mySqlNode.getNode("database").getString(),
-                mySqlNode.getNode("username").getString(),
-                mySqlNode.getNode("password").getString());
-    }
-
-    private void createConfig(CommentedConfigurationNode node) throws IOException {
-        node.getNode("mysql", "host").setValue("localhost").setComment("The location of the database");
-        node.getNode("mysql", "port").setValue(3306).setComment("The port for the database");
-        node.getNode("mysql", "database").setValue("hammer").setComment("The name of the database to connect to.");
-        node.getNode("mysql", "username").setValue("username").setComment("The username for the database connection");
-        node.getNode("mysql", "password").setValue("password").setComment("The password for the database connection");
-        node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
-        node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
-        node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
-        configurationManager.save(node);
+                new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));
     }
 
     public static HammerSponge getInstance() {

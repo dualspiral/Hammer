@@ -15,6 +15,9 @@ dependencies {
     compile project(':HammerCore')
     compile project(':HammerBukkitCore')
     compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
+
+    // For shadowing only.
+    compile group: 'com.google.guava', name: 'guava', version: '17.0'
 }
 
 sourceSets {
@@ -32,6 +35,14 @@ shadowJar  {
     dependencies {
         include(project(':HammerCore'))
         include(project(':HammerBukkitCore'))
+        include(dependency('com.google.guava:guava'))
+        include(dependency('ninja.leaping.configurate:configurate-yaml'))
+        include(dependency('ninja.leaping.configurate:configurate-core'))
     }
+
+    // Relocating in case of clashes on the classpath!
+    relocate 'ninja.leaping.configurate', 'uk.co.drnaylor.relocation.ninja.leaping.configurate'
+    relocate 'com.google.common', 'uk.co.drnaylor.relocation.com.google.common'
+    relocate 'com.google.thirdparty', 'uk.co.drnaylor.relocation.com.google.thirdparty'
 }
 build.dependsOn(shadowJar)

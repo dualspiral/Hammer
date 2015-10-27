@@ -41,7 +41,7 @@ public class UpgradeToPermBanCommandCore extends CommandCore {
         // Get the argument
         HammerPlayerInfo hpi = arguments.<HammerPlayerInfo>getArgument("player").get();
 
-        int serverid = core.getWrappedServer().getConfiguration().getConfigIntegerValue("server", "id");
+        int serverid = core.getConfig().getConfig().getNode("server", "id").getInt();
 
         // Should be there. Now, do they have a ban?
         if (core.getDatabaseConnection().getBanHandler().upgadeToPerm(hpi.getUUID(), serverid)) {

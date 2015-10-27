@@ -14,13 +14,11 @@ public class BukkitWrappedServer implements WrappedServer {
 
     private final Server server;
     private final HammerBukkitPlugin plugin;
-    private final WrappedConfiguration config;
     private final WrappedScheduler scheduler;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
-        this.config = new BukkitWrappedConfiguration(plugin);
         this.scheduler = new BukkitWrappedScheduler(plugin);
     }
 
@@ -106,16 +104,6 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public void kickAllPlayers(WrappedCommandSource source, HammerText reason) {
         kickAllPlayers(source, HammerTextConverter.constructMessage(reason));
-    }
-
-    /**
-     * Gets a object that contains methods for obtaining configuration notes.
-     *
-     * @return Gets a {@link WrappedConfiguration} object.
-     */
-    @Override
-    public WrappedConfiguration getConfiguration() {
-        return this.config;
     }
 
     @Override

@@ -1,0 +1,43 @@
+package uk.co.drnaylor.minecraft.hammer.core;
+
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
+import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
+
+import java.io.IOException;
+
+public class HammerConfiguration {
+
+    private final AbstractConfigurationLoader<? extends ConfigurationNode> configurationLoader;
+    private ConfigurationNode configNode;
+
+    public HammerConfiguration(AbstractConfigurationLoader<? extends ConfigurationNode> loader) throws IOException {
+        this.configurationLoader = loader;
+        reloadConfig();
+    }
+
+    public ConfigurationNode getConfig() {
+        return configNode;
+    }
+
+    public void reloadConfig() throws IOException {
+        ConfigurationNode cn = configurationLoader.load();
+        this.configNode = cn.mergeValuesFrom(getDefaultConfig());
+        configurationLoader.save(cn);
+    }
+
+    private ConfigurationNode getDefaultConfig() {
+        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        node.getNode("mysql", "host").setValue("localhost").setComment("The location of the database");
+        node.getNode("mysql", "port").setValue(3306).setComment("The port for the database");
+        node.getNode("mysql", "database").setValue("hammer").setComment("The name of the database to connect to.");
+        node.getNode("mysql", "username").setValue("username").setComment("The username for the database connection");
+        node.getNode("mysql", "password").setValue("password").setComment("The password for the database connection");
+        node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
+        node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
+        node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
+
+        return node;
+    }
+}

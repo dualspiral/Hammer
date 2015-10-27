@@ -61,13 +61,6 @@ public interface WrappedServer {
     void kickAllPlayers(WrappedCommandSource source, HammerText reason);
 
     /**
-     * Gets an object that contains methods for obtaining configuration notes.
-     *
-     * @return Gets a {@link WrappedConfiguration} object.
-     */
-    WrappedConfiguration getConfiguration();
-
-    /**
      * Gets an object that contains methods for running code on or off the main thread.
      *
      * @return The {@link WrappedScheduler}

@@ -3,6 +3,9 @@ package uk.co.drnaylor.minecraft.hammer.core.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
+import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
@@ -13,10 +16,6 @@ import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
-import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedConfiguration;
 
 public class PermBanCommandCore extends BaseBanCommandCore {
 
@@ -67,8 +66,8 @@ public class PermBanCommandCore extends BaseBanCommandCore {
             return new BanInfo(BanStatus.CONTINUE, reasons);
         }
 
-        WrappedConfiguration cp = core.getWrappedServer().getConfiguration();
-        int currentServerId = cp.getConfigIntegerValue("server", "id");
+        ConfigurationNode cn = core.getConfig().getConfig();
+        int currentServerId = cn.getNode("server", "id").getInt();
         for (HammerPlayerBan ban : bans) {
             Integer serverId = ban.getServerId();
             if (serverId == null) {
