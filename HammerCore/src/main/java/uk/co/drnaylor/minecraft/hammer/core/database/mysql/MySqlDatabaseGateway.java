@@ -5,10 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
@@ -155,22 +153,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         (ResultSet set = ps.executeQuery()) {
 
             while (set.next()) {
-                int serverValue = set.getInt("from_server");
-                String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
-                HammerPlayerBan pb = new HammerPlayerBan(
-                        set.getString("banned_name"), 
-                        UUID.fromString(set.getString("banned_uuid")),
-                        set.getBoolean("is_permanent"),
-                        UUID.fromString(set.getString("banning_uuid")),
-                        set.getString("banning_name"), 
-                        set.getString("reason"), 
-                        set.getTimestamp("banned"), 
-                        set.getTimestamp("banned_until"), 
-                        serverValue == 0 ? null : serverValue,
-                        serverName,
-                        set.getString("external_id"));
-
-                bans.add(pb);
+                bans.add(createHammerPlayerBan(set));
             }
         }
 
@@ -315,6 +298,39 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
+    public List<HammerPlayerBan> getServerBans(Set<UUID> players) throws SQLException {
+        // Create the string with the UUIDs in.
+        StringBuilder sb = new StringBuilder();
+        for (UUID player : players) {
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+
+            sb.append("'").append(player.toString()).append("'");
+        }
+
+        List<HammerPlayerBan> banList = new ArrayList<>();
+
+        // I hate dynamic SQL, but with UUIDs, I guess it's fine...
+        try (PreparedStatement ps = connection.prepareStatement("SELECT b.external_id, b.banned, b.banned_until, b.from_server, s.server_name, b.is_permanent, b.reason, \" +\n" +
+                "p.uuid as banned_uuid, p.last_name as banned_name," +
+                "pb.uuid as banning_uuid, pb.last_name as banning_name " +
+                "from player_bans b " +
+                "inner join player_data p on b.banned_player = p.player_id " +
+                "inner join player_data pb on b.banned_by = pb.player_id " +
+                "left outer join server_data s on b.from_server = s.server_id " +
+                "where p.uuid IN (" + sb.toString() + ") order by b.from_server IS NULL DESC;")) {
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    banList.add(createHammerPlayerBan(rs));
+                }
+            }
+        }
+
+        return banList;
+    }
+
+    @Override
     @Deprecated
     public HammerPlayerInfo getLastPlayerInfoFromName(String name) throws SQLException {
         PreparedStatement ps = connection.prepareStatement("SELECT uuid, last_name, last_ip, last_seen FROM player_data WHERE LOWER(last_name) = ? ORDER BY last_seen DESC LIMIT 1");
@@ -393,6 +409,24 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
 
         throw new HammerException("No player with that UUID exists.");
     }
+
+    private HammerPlayerBan createHammerPlayerBan(ResultSet set) throws SQLException {
+        int serverValue = set.getInt("from_server");
+        String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
+        return new HammerPlayerBan(
+                set.getString("banned_name"),
+                UUID.fromString(set.getString("banned_uuid")),
+                set.getBoolean("is_permanent"),
+                UUID.fromString(set.getString("banning_uuid")),
+                set.getString("banning_name"),
+                set.getString("reason"),
+                set.getTimestamp("banned"),
+                set.getTimestamp("banned_until"),
+                serverValue == 0 ? null : serverValue,
+                serverName,
+                set.getString("external_id"));
+    }
+
 
     @Override
     public void startTransaction() throws SQLException {

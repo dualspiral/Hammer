@@ -9,6 +9,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BukkitWrappedServer implements WrappedServer {
 
@@ -42,6 +43,11 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public WrappedPlayer getPlayer(String name) {
         return BukkitWrappedPlayer.ofOnlinePlayer(name);
+    }
+
+    @Override
+    public List<WrappedPlayer> getOnlinePlayers() {
+        return Arrays.asList(plugin.getOnlinePlayers()).stream().map(BukkitWrappedPlayer::new).collect(Collectors.toList());
     }
 
     /**

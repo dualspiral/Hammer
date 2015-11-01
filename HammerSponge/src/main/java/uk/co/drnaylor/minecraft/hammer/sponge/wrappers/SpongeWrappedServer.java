@@ -12,11 +12,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SpongeWrappedServer implements WrappedServer {
@@ -63,6 +59,11 @@ public class SpongeWrappedServer implements WrappedServer {
         }
 
         return null;
+    }
+
+    @Override
+    public List<WrappedPlayer> getOnlinePlayers() {
+        return game.getServer().getOnlinePlayers().stream().map(p -> new SpongeWrappedPlayer(game, p)).collect(Collectors.toList());
     }
 
     /**

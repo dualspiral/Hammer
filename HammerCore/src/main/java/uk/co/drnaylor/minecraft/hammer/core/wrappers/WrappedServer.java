@@ -2,6 +2,7 @@ package uk.co.drnaylor.minecraft.hammer.core.wrappers;
 
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface WrappedServer {
@@ -21,6 +22,13 @@ public interface WrappedServer {
      * @return The {@link WrappedPlayer} if it exists, otherwise <code>null</code>
      */
     WrappedPlayer getPlayer(String name);
+
+    /**
+     * Gets all players that are currently online.
+     *
+     * @return A {@link List} of online players.
+     */
+    List<WrappedPlayer> getOnlinePlayers();
 
     /**
      * Gets the console command sender.

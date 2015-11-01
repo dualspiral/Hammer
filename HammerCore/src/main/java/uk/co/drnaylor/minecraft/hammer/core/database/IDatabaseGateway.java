@@ -2,6 +2,7 @@ package uk.co.drnaylor.minecraft.hammer.core.database;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
@@ -70,6 +71,8 @@ public interface IDatabaseGateway extends AutoCloseable {
      * @throws SQLException Thrown if the DB finds an error.
      */
     List<HammerPlayerInfo> getPlayerInfoFromName(String name) throws SQLException;
+
+    List<HammerPlayerBan> getServerBans(Set<UUID> players) throws SQLException;
 
     void updateServerName(int serverId, String serverName) throws SQLException;
 

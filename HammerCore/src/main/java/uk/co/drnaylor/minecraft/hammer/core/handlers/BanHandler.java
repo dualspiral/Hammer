@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.handlers;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
@@ -34,6 +35,15 @@ public class BanHandler {
             return dg.getPlayerBans(player);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the player ban.", ex);
+        }
+    }
+
+    public List<HammerPlayerBan> getPlayerBansForServer(Set<UUID> players) throws HammerException {
+        try {
+            dg.removeExpiredPlayerBans(null);
+            return dg.getServerBans(players);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred getting the player bans.", ex);
         }
     }
 
