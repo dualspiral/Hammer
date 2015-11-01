@@ -53,7 +53,6 @@ public class HammerSponge {
     private HammerCore core;
     private Task updateTask;
     private boolean isLoaded = false;
-    private HammerPlayerUpdateRunnable runnable = null;
 
     /**
      * Runs when the plugin is being initialised.
@@ -68,7 +67,6 @@ public class HammerSponge {
             logger.info("Hammer will now perform some startup tasks. Stand by...");
 
             createCore();
-            runnable = new HammerPlayerUpdateRunnable(core);
 
             // TODO: Register the service.
 
@@ -112,12 +110,9 @@ public class HammerSponge {
 
                 // Register the events
                 game.getEventManager().registerListeners(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
-                game.getEventManager().registerListeners(this, new PlayerJoinListener(game, new PlayerJoinListenerCore(runnable)));
+                game.getEventManager().registerListeners(this, new PlayerJoinListener(game, core.getPlayerJoinListenerCore()));
 
-                // Register the runnable.
-                logger.info("Starting the async task...");
-
-                updateTask = game.getScheduler().createTaskBuilder().async().interval(10, TimeUnit.SECONDS).execute(runnable).submit(this);
+                core.postInit();
             }
         } catch (Exception ex) {
             logger.error("A fatal error has occurred. Hammer will now disable itself.");
@@ -155,8 +150,7 @@ public class HammerSponge {
     public void onServerStopping(GameStoppingServerEvent event) {
         if (isLoaded) {
             // Server is stopping, stop the runnable, but run it (sync) one last time.
-            updateTask.cancel();
-            runnable.run();
+            core.onStopping();
         }
     }
 
@@ -185,7 +179,7 @@ public class HammerSponge {
      */
     private void createCore() throws ClassNotFoundException, IOException {
         core = HammerCoreFactory.createHammerCore(
-                new SpongeWrappedServer(this, game),
+                new SpongeWrappedServer(this, game, logger),
                 new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));
     }
 

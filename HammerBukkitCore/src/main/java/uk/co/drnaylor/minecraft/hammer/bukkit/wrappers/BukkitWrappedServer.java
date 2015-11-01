@@ -16,11 +16,13 @@ public class BukkitWrappedServer implements WrappedServer {
     private final Server server;
     private final HammerBukkitPlugin plugin;
     private final WrappedScheduler scheduler;
+    private final BukkitWrappedLogger logger;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
         this.scheduler = new BukkitWrappedScheduler(plugin);
+        this.logger = new BukkitWrappedLogger(plugin.getLogger());
     }
 
     /**
@@ -93,10 +95,11 @@ public class BukkitWrappedServer implements WrappedServer {
 
         // Note that we are using an iterator here as we cannot guarantee that the player remains in the
         // list of online players.
+        String r = ChatColor.translateAlternateColorCodes('&', reason);
         while (iterator.hasNext()) {
             Player pl = iterator.next();
             if (pl.isOnline() && source.getUUID() != pl.getUniqueId()) {
-                pl.kickPlayer(ChatColor.translateAlternateColorCodes('&', reason));
+                pl.kickPlayer(r);
             }
         }
     }
@@ -115,5 +118,10 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public WrappedScheduler getScheduler() {
         return this.scheduler;
+    }
+
+    @Override
+    public WrappedLogger getLogger() {
+        return logger;
     }
 }

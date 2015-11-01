@@ -4,6 +4,9 @@ import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
+import uk.co.drnaylor.minecraft.hammer.core.runnables.BanCheckRunnable;
+import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
 public class HammerCore {
@@ -11,11 +14,13 @@ public class HammerCore {
     private final IDatabaseProvider provider;
     private final WrappedServer server;
     private final HammerConfiguration config;
+    private final PlayerJoinListenerCore playerJoinListenerCore;
 
     HammerCore(WrappedServer server, HammerConfiguration config, IDatabaseProvider provider) {
         this.provider = provider;
         this.config = config;
         this.server = server;
+        this.playerJoinListenerCore = new PlayerJoinListenerCore(new HammerPlayerUpdateRunnable(this));
     }
 
     /**
@@ -71,6 +76,25 @@ public class HammerCore {
         }
 
         return false;
+    }
+
+    public PlayerJoinListenerCore getPlayerJoinListenerCore() {
+        return playerJoinListenerCore;
+    }
+
+    public void postInit() {
+        // Start the scheduled task...
+        server.getLogger().info("Starting the async tasks...");
+
+        // Join listener
+        getWrappedServer().getScheduler().createAsyncRecurringTask(playerJoinListenerCore.getRunnable(), 20);
+
+        // Ban checking
+        getWrappedServer().getScheduler().createAsyncRecurringTask(new BanCheckRunnable(this), 60);
+    }
+
+    public void onStopping() {
+        playerJoinListenerCore.getRunnable().run();
     }
 
     public String createTimeStringFromOffset(long timeOffset) {

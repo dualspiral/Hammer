@@ -14,4 +14,8 @@ public class PlayerJoinListenerCore {
     public void handleEvent(WrappedPlayer pl) {
         runnable.addPlayer(pl);
     }
+
+    public HammerPlayerUpdateRunnable getRunnable() {
+        return runnable;
+    }
 }

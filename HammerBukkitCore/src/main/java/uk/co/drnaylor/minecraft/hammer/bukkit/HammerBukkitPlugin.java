@@ -102,7 +102,9 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
                 this.getLogger().log(Level.INFO, "Registering Hammer events...");
                 this.getServer().getPluginManager().registerEvents(new PlayerConnectListener(this), this);
-                this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(new PlayerJoinListenerCore(runnable)), this);
+
+                // TODO: Better registration.
+                this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(core.getPlayerJoinListenerCore()), this);
 
                 // Are players online? If so, we've gone mid run and need to save a load of players.
                 if (this.getOnlinePlayers().length > 0) {
@@ -117,9 +119,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 }
             }
 
-            // Start the scheduled task...
-            this.getLogger().info("Starting the async task...");
-            this.getServer().getScheduler().runTaskTimerAsynchronously(this, runnable, 600l, 600l);
+            core.postInit();
         } catch (Exception e) {
             this.getLogger().severe("A fatal error has occurred. Hammer will now disable itself.");
             this.getLogger().severe("Here. Have a stack trace to tell you why!");

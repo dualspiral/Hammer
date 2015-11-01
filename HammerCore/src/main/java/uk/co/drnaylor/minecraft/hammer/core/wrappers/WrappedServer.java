@@ -74,4 +74,11 @@ public interface WrappedServer {
      * @return The {@link WrappedScheduler}
      */
     WrappedScheduler getScheduler();
+
+    /**
+     * Gets an object that contains methods for sending messages to the logger.
+     *
+     * @return The {@link WrappedLogger}
+     */
+    WrappedLogger getLogger();
 }

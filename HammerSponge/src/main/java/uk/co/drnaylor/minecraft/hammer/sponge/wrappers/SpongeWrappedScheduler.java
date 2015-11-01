@@ -4,6 +4,8 @@ import org.spongepowered.api.Game;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedScheduler;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
+import java.util.concurrent.TimeUnit;
+
 public class SpongeWrappedScheduler implements WrappedScheduler {
     private final HammerSponge plugin;
     private final Game game;
@@ -21,5 +23,11 @@ public class SpongeWrappedScheduler implements WrappedScheduler {
     @Override
     public void runAsyncNow(Runnable runnable) {
         game.getScheduler().createTaskBuilder().async().execute(runnable).submit(plugin);
+    }
+
+    @Override
+    public void createAsyncRecurringTask(Runnable runnable, int seconds) {
+        game.getScheduler().createTaskBuilder().async().interval(seconds, TimeUnit.SECONDS)
+                .delay(seconds, TimeUnit.SECONDS).execute(runnable).submit(plugin);
     }
 }

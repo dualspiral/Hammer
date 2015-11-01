@@ -12,6 +12,7 @@ import org.spongepowered.api.util.ban.Bans;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
@@ -96,19 +97,9 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void ban(WrappedCommandSource source, HammerText reason) {
-        ban(source, reason.toString());
-    }
-
-    /**
-     * Bans the player with the specified reason
-     *
-     * @param reason The reason
-     */
-    @Override
-    public void ban(WrappedCommandSource source, String reason) {
         Optional<BanService> serviceOptional = getBanService();
         if (serviceOptional.isPresent()) {
-            BanBuilder builder = Bans.builder().reason(Texts.of(reason)).user(player).type(BanType.USER_BAN);
+            BanBuilder builder = Bans.builder().reason(HammerTextConverter.constructLiteral(reason)).user(player).type(BanType.USER_BAN);
             if (source instanceof SpongeWrappedPlayer) {
                 Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
                 if (sourceplayer.isPresent()) {
@@ -120,6 +111,18 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
 
             serviceOptional.get().ban(builder.build());
         }
+
+        kick(reason);
+    }
+
+    /**
+     * Bans the player with the specified reason
+     *
+     * @param reason The reason
+     */
+    @Override
+    public void ban(WrappedCommandSource source, String reason) {
+        ban(source, new HammerTextBuilder().add(reason).toString());
     }
 
     /**

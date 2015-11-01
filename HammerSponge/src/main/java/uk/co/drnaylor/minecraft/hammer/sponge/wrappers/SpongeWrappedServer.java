@@ -1,5 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
+import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
@@ -20,8 +21,10 @@ public class SpongeWrappedServer implements WrappedServer {
     private final Game game;
     private final HammerSponge plugin;
     private final WrappedScheduler scheduler;
+    private final WrappedLogger logger;
 
-    public SpongeWrappedServer(HammerSponge plugin, Game game) {
+    public SpongeWrappedServer(HammerSponge plugin, Game game, Logger logger) {
+        this.logger = new SpongeWrappedLogger(logger);
         this.plugin = plugin;
         this.game = game;
         this.scheduler = new SpongeWrappedScheduler(plugin, game);
@@ -140,5 +143,10 @@ public class SpongeWrappedServer implements WrappedServer {
     @Override
     public WrappedScheduler getScheduler() {
         return scheduler;
+    }
+
+    @Override
+    public WrappedLogger getLogger() {
+        return logger;
     }
 }
