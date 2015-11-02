@@ -14,7 +14,7 @@ repositories {
 dependencies {
     compile project(':HammerCore')
     compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
-    compile group: 'ninja.leaping.configurate', name: 'configurate-yaml', version: '2.0'
+    compile group: 'ninja.leaping.configurate', name: 'configurate-yaml', version: '3.0'
 }
 
 sourceSets {
