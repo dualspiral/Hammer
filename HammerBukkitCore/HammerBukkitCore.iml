@@ -16,9 +16,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="HammerCore" exported="" />
     <orderEntry type="library" exported="" name="Gradle: org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.yaml:snakeyaml:1.15" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.google.guava:guava:17.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-yaml:2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-yaml:3.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: ninja.leaping.configurate:configurate-core:3.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: org.yaml:snakeyaml:1.16" level="project" />
   </component>
 </module>

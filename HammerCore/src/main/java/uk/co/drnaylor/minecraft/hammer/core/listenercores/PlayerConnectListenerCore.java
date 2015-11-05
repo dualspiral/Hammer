@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core.listenercores;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.HammerUtility;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
@@ -81,7 +82,7 @@ public class PlayerConnectListenerCore {
         if (ban instanceof HammerPlayerBan) {
             if (ban.isTempBan()) {
                 sb.append("You have been temporarily banned. You may rejoin in ");
-                sb.append(core.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - new Date().getTime()));
+                sb.append(HammerUtility.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - new Date().getTime()));
             } else if (((HammerPlayerBan)ban).isPermBan()) {
                 sb.append("You have been banned with no right of appeal!");
             } else {

@@ -9,6 +9,8 @@ import uk.co.drnaylor.minecraft.hammer.core.runnables.BanCheckRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
+import java.util.logging.Level;
+
 public class HammerCore {
 
     private final IDatabaseProvider provider;
@@ -21,6 +23,8 @@ public class HammerCore {
         this.config = config;
         this.server = server;
         this.playerJoinListenerCore = new PlayerJoinListenerCore(new HammerPlayerUpdateRunnable(this));
+
+        this.server.getLogger().info("Loading Hammer Core version " + getHammerCoreVersion());
     }
 
     /**
@@ -67,14 +71,19 @@ public class HammerCore {
      */
     public boolean performStartupTasks(DatabaseConnection conn) {
         try {
+            server.getLogger().info("Establishing DB link and creating any missing tables...");
             ConfigurationNode cn = this.config.getConfig().getNode("server");
             conn.performStartupTasks();
             conn.getServerHandler().updateServerNameForId(cn.getNode("id").getInt(), cn.getNode("name").getString("Unknown"));
+
+            server.getLogger().info("Connection to DB was successful and all required tables were created.");
             return true;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
+        server.getLogger().error("Your DB credentials were rejected, or do not allow the required access to the database. Hammer will now disable itself.");
+        server.getLogger().error("-----------------------------------------------------------------");
         return false;
     }
 
@@ -91,49 +100,12 @@ public class HammerCore {
 
         // Ban checking
         getWrappedServer().getScheduler().createAsyncRecurringTask(new BanCheckRunnable(this), 60);
+
+        server.getLogger().info("Hammer has successfully initialised and is managing your bans.");
+        server.getLogger().info("-----------------------------------------------------------------");
     }
 
     public void onStopping() {
         playerJoinListenerCore.getRunnable().run();
-    }
-
-    public String createTimeStringFromOffset(long timeOffset) {
-        long time = timeOffset / 1000;
-        long sec = time % 60;
-        long min = (time / 60) % 60;
-        long hour = (time / 3600) % 24;
-        long day = time / 86400;
-
-        StringBuilder sb = new StringBuilder();
-        if (day > 0) {
-            sb.append(day).append(" days");
-        }
-
-        if (hour > 0) {
-            appendComma(sb);
-            sb.append(hour).append(" hours");
-        }
-
-        if (min > 0) {
-            appendComma(sb);
-            sb.append(min).append(" minutes");
-        }
-
-        if (sec > 0) {
-            appendComma(sb);
-            sb.append(sec).append(" seconds");
-        }
-
-        if (sb.length() > 0) {
-            return sb.toString();
-        } else {
-            return "unknown";
-        }
-    }
-
-    private void appendComma(StringBuilder sb) {
-        if (sb.length() > 0) {
-            sb.append(", ");
-        }
     }
 }

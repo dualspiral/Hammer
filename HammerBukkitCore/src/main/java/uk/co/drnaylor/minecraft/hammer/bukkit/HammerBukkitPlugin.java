@@ -53,25 +53,15 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         // exploded all over the console.
         try {
             this.getLogger().log(Level.INFO, "Loading Hammer configuration.");
-            HammerConfiguration config = this.getConfigurateConfig();
+            createCore(this.getConfigurateConfig());
 
-            createCore(config);
-            this.getLogger().log(Level.INFO, "Loading Hammer Core version {0}", core.getHammerCoreVersion());
-
-            // Create the runnable now.
-            HammerPlayerUpdateRunnable runnable = new HammerPlayerUpdateRunnable(this.getHammerCore());
-
-            this.getLogger().log(Level.INFO, "Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
                 // Special case. We want true/false, not an exception here.
                 if (!core.performStartupTasks(conn)) {
-                    this.getLogger().severe("Your DB credentials were rejected, or do not allow the required access to the database. Hammer will now disable itself.");
-                    this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
                     this.getPluginLoader().disablePlugin(this);
                     return;
                 }
 
-                this.getLogger().log(Level.INFO, "Connection to DB was successful and all required tables were created.");
                 this.getLogger().log(Level.INFO, "Registering Hammer commands...");
 
                 // Ban command
@@ -130,8 +120,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
         }
 
         instance = this;
-        this.getLogger().log(Level.INFO, "Hammer has successfully initialised and is managing your bans.");
-        this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
     }
 
     /**

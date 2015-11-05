@@ -70,16 +70,12 @@ public class HammerSponge {
 
             // TODO: Register the service.
 
-            logger.info("Establishing DB link and creating any missing tables...");
             try (DatabaseConnection conn = this.core.getDatabaseConnection()) {
                 // Special case. We want true/false, not an exception here.
                 if (!core.performStartupTasks(conn)) {
-                    logger.error("Your DB credentials were rejected, or do not allow the required access to the database. Hammer will now disable itself.");
-                    logger.error("-----------------------------------------------------------------");
                     return;
                 }
 
-                logger.info("Connection to DB was successful and all required tables were created.");
                 logger.info("Registering Hammer commands...");
 
                 CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this)).build();
@@ -124,8 +120,6 @@ public class HammerSponge {
 
         isLoaded = true;
         instance = this;
-        logger.info("Hammer has successfully initialised and is managing your bans.");
-        logger.info("-----------------------------------------------------------------");
     }
 
     /**

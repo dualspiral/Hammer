@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.HammerUtility;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
@@ -105,7 +106,7 @@ public class CheckBanCommandCore extends CommandCore {
             modifier = String.format(" %s ", messageBundle.getString("hammer.player.check.perm"));
         } else if (ban.isTempBan()) {
             modifier = String.format(" %s ", MessageFormat.format(messageBundle.getString("hammer.player.check.temp"),
-                    core.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - (new Date()).getTime())));
+                    HammerUtility.createTimeStringFromOffset(ban.getDateOfUnban().getTime() - (new Date()).getTime())));
         }
 
         sendTemplatedMessage(source, "hammer.player.check.from", false, false, server, modifier);
