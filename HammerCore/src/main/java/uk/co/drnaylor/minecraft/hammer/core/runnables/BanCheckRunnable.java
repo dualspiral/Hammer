@@ -3,6 +3,8 @@ package uk.co.drnaylor.minecraft.hammer.core.runnables;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
@@ -47,7 +49,14 @@ public class BanCheckRunnable implements Runnable {
         bans.forEach(b -> {
             WrappedPlayer wp = s.getPlayer(b.getBannedUUID());
             if (wp != null) {
-                wp.ban(s.getConsole(), b.getReason());
+                String name = wp.getName();
+
+                // Ban in sync!
+                s.getScheduler().runSyncNow(() -> wp.ban(s.getConsole(), b.getReason()));
+                s.sendMessageToPermissionGroup(new HammerTextBuilder().add("[Hammer] The player ", HammerTextColours.RED)
+                        .add(name, HammerTextColours.WHITE).add(" has been kicked as they have been banned from elsewhere.").build(), "hammer.notify");
+                s.sendMessageToPermissionGroup(new HammerTextBuilder().add("[Hammer] Reason: " + b.getReason(), HammerTextColours.RED).build(), "hammer.notify");
+
             }
         });
     }
