@@ -37,6 +37,7 @@ public class HammerConfiguration {
         node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
         node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
         node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
+        node.getNode("pollBans").setValue(true).setComment("If set to true, Hammer will check the database every minute to see if any online player have recieved a global ban and will ban them accordingly.");
 
         return node;
     }

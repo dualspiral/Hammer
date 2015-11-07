@@ -9,8 +9,6 @@ import uk.co.drnaylor.minecraft.hammer.core.runnables.BanCheckRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
 
-import java.util.logging.Level;
-
 public class HammerCore {
 
     private final IDatabaseProvider provider;
