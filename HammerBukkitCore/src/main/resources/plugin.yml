@@ -112,3 +112,5 @@ permissions:
     default: op
   hammer.importplayer:
     default: op
+  hammer.whitelist:
+    default: op

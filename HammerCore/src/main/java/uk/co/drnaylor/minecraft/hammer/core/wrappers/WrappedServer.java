@@ -69,6 +69,13 @@ public interface WrappedServer {
     void kickAllPlayers(WrappedCommandSource source, HammerText reason);
 
     /**
+     * Sets whether the whitelist is enabled or not.
+     *
+     * @param set <code>true</code> if so.
+     */
+    void setWhitelist(boolean set);
+
+    /**
      * Gets an object that contains methods for running code on or off the main thread.
      *
      * @return The {@link WrappedScheduler}

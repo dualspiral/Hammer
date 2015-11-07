@@ -141,6 +141,11 @@ public class SpongeWrappedServer implements WrappedServer {
     }
 
     @Override
+    public void setWhitelist(boolean set) {
+        game.getServer().setHasWhitelist(set);
+    }
+
+    @Override
     public WrappedScheduler getScheduler() {
         return scheduler;
     }

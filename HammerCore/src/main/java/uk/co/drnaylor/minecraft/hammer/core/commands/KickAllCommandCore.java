@@ -1,7 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickAllFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -25,6 +28,7 @@ public class KickAllCommandCore extends CommandCore {
     @Override
     protected List<ParserEntry> createArgumentParserList() {
         List<ParserEntry> entries = new ArrayList<>();
+        entries.add(new ParserEntry("kickall", new FlagParser<>(KickAllFlagEnum.class), true));
         entries.add(new ParserEntry("reason", new StringParser(true), true));
         return entries;
     }
@@ -45,6 +49,13 @@ public class KickAllCommandCore extends CommandCore {
      */
     @Override
     protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
+        Optional<List<KickAllFlagEnum>> flagOptional = arguments.<List<KickAllFlagEnum>>getArgument("kickall");
+        if (flagOptional.isPresent()) {
+            if (flagOptional.get().contains(KickAllFlagEnum.WHITELIST) && source.hasPermission("hammer.whitelist")) {
+                core.getWrappedServer().setWhitelist(true);
+            }
+        }
+
         Optional<String> reasonOptional = arguments.<String>getArgument("reason");
         core.getWrappedServer().kickAllPlayers(source, reasonOptional.isPresent() ? reasonOptional.get() : "You have all been kicked from the server.");
         sendTemplatedMessage(source, "hammer.kickall", false, true);

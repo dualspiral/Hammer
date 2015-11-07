@@ -116,6 +116,11 @@ public class BukkitWrappedServer implements WrappedServer {
     }
 
     @Override
+    public void setWhitelist(boolean set) {
+        server.setWhitelist(set);
+    }
+
+    @Override
     public WrappedScheduler getScheduler() {
         return this.scheduler;
     }
