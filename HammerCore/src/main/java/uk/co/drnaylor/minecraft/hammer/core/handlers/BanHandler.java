@@ -38,10 +38,10 @@ public class BanHandler {
         }
     }
 
-    public List<HammerPlayerBan> getPlayerBansForServer(Set<UUID> players) throws HammerException {
+    public List<HammerPlayerBan> getPlayerBansForServer(Set<UUID> players, int serverId) throws HammerException {
         try {
             dg.removeExpiredPlayerBans(null);
-            return dg.getServerBans(players);
+            return dg.getServerBans(players, serverId);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the player bans.", ex);
         }

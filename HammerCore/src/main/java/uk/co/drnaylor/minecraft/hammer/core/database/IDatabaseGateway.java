@@ -72,7 +72,7 @@ public interface IDatabaseGateway extends AutoCloseable {
      */
     List<HammerPlayerInfo> getPlayerInfoFromName(String name) throws SQLException;
 
-    List<HammerPlayerBan> getServerBans(Set<UUID> players) throws SQLException;
+    List<HammerPlayerBan> getServerBans(Set<UUID> players, int server) throws SQLException;
 
     void updateServerName(int serverId, String serverName) throws SQLException;
 

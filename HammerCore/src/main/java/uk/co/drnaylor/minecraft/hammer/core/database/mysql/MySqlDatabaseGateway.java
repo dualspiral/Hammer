@@ -298,7 +298,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public List<HammerPlayerBan> getServerBans(Set<UUID> players) throws SQLException {
+    public List<HammerPlayerBan> getServerBans(Set<UUID> players, int server) throws SQLException {
         // Create the string with the UUIDs in.
         StringBuilder sb = new StringBuilder();
         for (UUID player : players) {
@@ -312,14 +312,15 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
         List<HammerPlayerBan> banList = new ArrayList<>();
 
         // I hate dynamic SQL, but with UUIDs, I guess it's fine...
-        try (PreparedStatement ps = connection.prepareStatement("SELECT b.external_id, b.banned, b.banned_until, b.from_server, s.server_name, b.is_permanent, b.reason, \" +\n" +
+        try (PreparedStatement ps = connection.prepareStatement("SELECT b.external_id, b.banned, b.banned_until, b.from_server, s.server_name, b.is_permanent, b.reason," +
                 "p.uuid as banned_uuid, p.last_name as banned_name," +
                 "pb.uuid as banning_uuid, pb.last_name as banning_name " +
                 "from player_bans b " +
                 "inner join player_data p on b.banned_player = p.player_id " +
                 "inner join player_data pb on b.banned_by = pb.player_id " +
                 "left outer join server_data s on b.from_server = s.server_id " +
-                "where p.uuid IN (" + sb.toString() + ") order by b.from_server IS NULL DESC;")) {
+                "where p.uuid IN (" + sb.toString() + ") and (b.from_server = ? OR b.from_server IS NULL) order by b.from_server IS NULL DESC;")) {
+            ps.setInt(1, server);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     banList.add(createHammerPlayerBan(rs));
