@@ -35,7 +35,7 @@ public class HammerCore {
      * @return The version of the core.
      */
     public String getHammerCoreVersion() {
-        return "0.3.3";
+        return "0.4";
     }
 
     /**

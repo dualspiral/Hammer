@@ -42,7 +42,7 @@ import java.util.concurrent.TimeUnit;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.3.3";
+    public static final String VERSION = "0.4";
 
     @Inject private Game game;
     @Inject private Logger logger;
