@@ -78,7 +78,8 @@ public class HammerSponge {
 
                 logger.info("Registering Hammer commands...");
 
-                CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this)).build();
+                CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this))
+                        .child(new SpongeCommand(game, new ReloadCommandCore(core)), "reload").build();
                 game.getCommandDispatcher().register(this, spec, "hammer");
 
                 // Ban command
@@ -101,6 +102,7 @@ public class HammerSponge {
 
                 // Upgrade to permban
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new ReloadCommandCore(core)), "hammerreload");
 
                 logger.info("Registering Hammer events...");
 

@@ -25,6 +25,14 @@ public class HammerCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if (strings.length > 0) {
+            if (strings[0].equalsIgnoreCase("reload")) {
+                commandSender.getServer().dispatchCommand(commandSender, "hammerreload");
+                return true;
+            }
+        }
+
+
         String[] str = new String[2];
         str[0] = ChatColor.GREEN + "This server is running Hammer for Bukkit version " + plugin.getDescription().getVersion();
         str[1] = ChatColor.GREEN + "Using HammerCore version " + plugin.getHammerCore().getHammerCoreVersion();

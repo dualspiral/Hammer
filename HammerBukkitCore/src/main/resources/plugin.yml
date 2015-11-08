@@ -50,6 +50,9 @@ commands:
   hammer:
     description: Get information about Hammer.
     permission: hammer.about
+  hammerreload:
+    description: Reload the Hammer Config
+    permission: hammer.admin.reload
   importplayer:
     description: Adds a player to the Hammer database
     permission: hammer.importplayer
@@ -105,6 +108,8 @@ permissions:
   hammer.notify:
     default: op
   hammer.about:
+    default: op
+  hammer.admin.reload:
     default: op
   hammer.kick:
     default: op

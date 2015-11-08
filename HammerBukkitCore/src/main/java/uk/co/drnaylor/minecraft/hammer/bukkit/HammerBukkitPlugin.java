@@ -77,6 +77,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
                 // Hammer
                 this.getCommand("hammer").setExecutor(new HammerCommand(this));
+                this.getCommand("hammerreload").setExecutor(new BukkitCommand(new ReloadCommandCore(core)));
 
                 // Import player
                 this.getCommand("importplayer").setExecutor(new BukkitCommand(new ImportPlayerCommand(core)));
