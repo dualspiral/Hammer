@@ -21,9 +21,9 @@ public interface WrappedScheduler {
 
     /**
      * Sets up a recurring task that is asynchronus
-     *
-     * @param runnable The runnable.
+     *  @param runnable The runnable.
      * @param seconds Number of seconds between runs.
+     * @return The {@link WrappedSchedulerTask}
      */
-    void createAsyncRecurringTask(Runnable runnable, int seconds);
+    WrappedSchedulerTask createAsyncRecurringTask(Runnable runnable, int seconds);
 }

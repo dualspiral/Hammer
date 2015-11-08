@@ -51,8 +51,14 @@ public class KickAllCommandCore extends CommandCore {
     protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         Optional<List<KickAllFlagEnum>> flagOptional = arguments.<List<KickAllFlagEnum>>getArgument("kickall");
         if (flagOptional.isPresent()) {
-            if (flagOptional.get().contains(KickAllFlagEnum.WHITELIST) && source.hasPermission("hammer.whitelist")) {
-                core.getWrappedServer().setWhitelist(true);
+            if (flagOptional.get().contains(KickAllFlagEnum.WHITELIST)) {
+                if (source.hasPermission("hammer.whitelist")) {
+                    core.getWrappedServer().setWhitelist(true);
+                    sendTemplatedMessage(source, "hammer.kickall.whitelist", false, true);
+                } else {
+                    sendTemplatedMessage(source, "hammer.kickall.nowhitelist", true, true);
+                    return true;
+                }
             }
         }
 

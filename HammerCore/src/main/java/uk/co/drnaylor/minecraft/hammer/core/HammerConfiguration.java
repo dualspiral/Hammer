@@ -21,7 +21,7 @@ public class HammerConfiguration {
         return configNode;
     }
 
-    public void reloadConfig() throws IOException {
+    void reloadConfig() throws IOException {
         ConfigurationNode cn = configurationLoader.load();
         this.configNode = cn.mergeValuesFrom(getDefaultConfig());
         configurationLoader.save(cn);
@@ -37,7 +37,8 @@ public class HammerConfiguration {
         node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
         node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
         node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
-        node.getNode("pollBans").setValue(true).setComment("If set to true, Hammer will check the database every minute to see if any online player have recieved a global ban and will ban them accordingly.");
+        node.getNode("pollBans", "enable").setValue(true).setComment("If set to true, Hammer will check the database periodically to see if any online player have recieved a global ban and will ban them accordingly.");
+        node.getNode("pollBans", "period").setValue(60).setComment("How often, in seconds, Hammer will check the database for new bans");
 
         return node;
     }

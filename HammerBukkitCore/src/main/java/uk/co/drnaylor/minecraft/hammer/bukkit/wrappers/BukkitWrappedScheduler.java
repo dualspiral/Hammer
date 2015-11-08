@@ -1,8 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit.wrappers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 import uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkitPlugin;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedScheduler;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedSchedulerTask;
 
 public class BukkitWrappedScheduler implements WrappedScheduler {
 
@@ -23,7 +25,8 @@ public class BukkitWrappedScheduler implements WrappedScheduler {
     }
 
     @Override
-    public void createAsyncRecurringTask(Runnable runnable, int ticks) {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, ticks, ticks);
+    public WrappedSchedulerTask createAsyncRecurringTask(Runnable runnable, int ticks) {
+        BukkitTask bt = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, ticks, ticks);
+        return new BukkitWrappedSchedulerTask(bt, runnable);
     }
 }

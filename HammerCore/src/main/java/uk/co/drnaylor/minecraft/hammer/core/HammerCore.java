@@ -7,7 +7,10 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.BanCheckRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedSchedulerTask;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+
+import java.io.IOException;
 
 public class HammerCore {
 
@@ -15,6 +18,8 @@ public class HammerCore {
     private final WrappedServer server;
     private final HammerConfiguration config;
     private final PlayerJoinListenerCore playerJoinListenerCore;
+    private WrappedSchedulerTask banTask = null;
+    private WrappedSchedulerTask playerJoinListener = null;
 
     HammerCore(WrappedServer server, HammerConfiguration config, IDatabaseProvider provider) {
         this.provider = provider;
@@ -94,16 +99,40 @@ public class HammerCore {
         server.getLogger().info("Starting the async tasks...");
 
         // Join listener
-        getWrappedServer().getScheduler().createAsyncRecurringTask(playerJoinListenerCore.getRunnable(), 20);
-
-        // Ban checking
-        getWrappedServer().getScheduler().createAsyncRecurringTask(new BanCheckRunnable(this), 60);
+        playerJoinListener = getWrappedServer().getScheduler().createAsyncRecurringTask(playerJoinListenerCore.getRunnable(), 20);
+        setupBanTask();
 
         server.getLogger().info("Hammer has successfully initialised and is managing your bans.");
         server.getLogger().info("-----------------------------------------------------------------");
     }
 
+    /**
+     * Synchronised for ensuring that the ban task is not set off twice.
+     */
+    public synchronized void setupBanTask() {
+        if (banTask != null) {
+            banTask.cancelTask();
+        }
+
+        if (getConfig().getConfig().getNode("pollBans", "enable").getBoolean()) {
+            // Ban checking
+            banTask = getWrappedServer().getScheduler().createAsyncRecurringTask(new BanCheckRunnable(this), getConfig().getConfig().getNode("pollBans", "period").getInt());
+        } else {
+            banTask = null;
+        }
+    }
+
     public void onStopping() {
+        playerJoinListener.cancelTask();
+        if (banTask != null) {
+            banTask.cancelTask();
+        }
+
         playerJoinListenerCore.getRunnable().run();
+    }
+
+    public void reloadConfig() throws IOException {
+        config.reloadConfig();
+        setupBanTask();
     }
 }

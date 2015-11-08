@@ -33,7 +33,7 @@ Hammer is being designed for use with MySQL for both single servers and server n
 
 `/kick <name> <reason>` - Kicks a user. Requires the permission `hammer.kick.normal`.
 
-`/kickall <name> <reason>` - Kicks all users. Requires the permission `hammer.kick.all`.
+`/kickall [-w] <reason>` - Kicks all users. Requires the permission `hammer.kick.all`. Optionally add -w to enable the whitelist at the same time (requiring the permission `hammer.whitelist`).
 
 #### Other permissions
 
@@ -41,9 +41,12 @@ Hammer is being designed for use with MySQL for both single servers and server n
 
 #### Config file notes
 
-The `mysql` section of the config should be self explanitory.
+The `mysql` section of the config should be self explanatory.
 
 `notifyAllOnBan` determines whether the whole server is informed of a server ban by default, or not. Use the `-q` or `-n` flags to override this behaviour.
+
+`pollBans.enable` determines whether Hammer should poll the database periodically for new global bans for online player.
+`pollBans.period` determines, in seconds, how often the task polls.
 
 Currently, in the server section of the config, there are two options:
 
