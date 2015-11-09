@@ -115,6 +115,8 @@ permissions:
     default: op
   hammer.admin.reload:
     default: op
+  hammer.admin.updatebans:
+    default: op
   hammer.kick:
     default: op
   hammer.kickall:
