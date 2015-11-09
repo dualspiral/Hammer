@@ -51,7 +51,6 @@ public class HammerSponge {
 
     private static HammerSponge instance;
     private HammerCore core;
-    private Task updateTask;
     private boolean isLoaded = false;
 
     /**
@@ -103,6 +102,7 @@ public class HammerSponge {
                 // Upgrade to permban
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
                 game.getCommandDispatcher().register(this, new SpongeCommand(game, new ReloadCommandCore(core)), "hammerreload");
+                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpdateBansCommandCore(core)), "updatebans", "hupdatebans");
 
                 logger.info("Registering Hammer events...");
 

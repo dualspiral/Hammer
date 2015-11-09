@@ -84,6 +84,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
 
                 // Upgrade to perm
                 this.getCommand("toperm").setExecutor(new BukkitCommand(new UpgradeToPermBanCommandCore(core)));
+                this.getCommand("updatebans").setExecutor(new BukkitCommand(new UpdateBansCommandCore(core)));
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");

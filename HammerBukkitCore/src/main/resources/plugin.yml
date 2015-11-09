@@ -57,6 +57,10 @@ commands:
     description: Adds a player to the Hammer database
     permission: hammer.importplayer
     aliases: [himportplayer]
+  updatebans:
+    description: Updates the bans on the server
+    permission: hammer.admin.updatebans
+    aliases: [hupdatebans]
 #  banip:
 #    description: IP Ban a player.
 #    permission: hammer.banip
