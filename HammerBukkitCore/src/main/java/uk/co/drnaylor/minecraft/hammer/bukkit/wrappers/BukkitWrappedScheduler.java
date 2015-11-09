@@ -26,7 +26,7 @@ public class BukkitWrappedScheduler implements WrappedScheduler {
 
     @Override
     public WrappedSchedulerTask createAsyncRecurringTask(Runnable runnable, int ticks) {
-        BukkitTask bt = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, ticks, ticks);
+        BukkitTask bt = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, ticks * 20, ticks * 20);
         return new BukkitWrappedSchedulerTask(bt, runnable);
     }
 }

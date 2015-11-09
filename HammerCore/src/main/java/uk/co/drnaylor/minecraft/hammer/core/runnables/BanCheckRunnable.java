@@ -23,8 +23,14 @@ public class BanCheckRunnable implements Runnable {
 
     @Override
     public void run() {
+        // If we have no players, don't do a thing.
+        List<WrappedPlayer> lwp = core.getWrappedServer().getOnlinePlayers();
+        if (lwp.isEmpty()) {
+            return;
+        }
+
         // Get the server bans for any players currently online.
-        Set<UUID> players = core.getWrappedServer().getOnlinePlayers().stream().map(WrappedPlayer::getUUID).collect(Collectors.toSet());
+        Set<UUID> players = lwp.stream().map(WrappedPlayer::getUUID).collect(Collectors.toSet());
 
         List<HammerPlayerBan> bans;
         try (DatabaseConnection dg = core.getDatabaseConnection()){

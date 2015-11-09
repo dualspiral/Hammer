@@ -319,7 +319,7 @@ class MySqlDatabaseGateway implements IDatabaseGateway {
                 "inner join player_data p on b.banned_player = p.player_id " +
                 "inner join player_data pb on b.banned_by = pb.player_id " +
                 "left outer join server_data s on b.from_server = s.server_id " +
-                "where p.uuid IN (" + sb.toString() + ") and (b.from_server = ? OR b.from_server IS NULL) order by b.from_server IS NULL DESC;")) {
+                "where p.uuid IN (" + sb.toString() + ") and (b.from_server = ? OR b.from_server IS NULL);")) {
             ps.setInt(1, server);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

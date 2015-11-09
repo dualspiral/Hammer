@@ -1,5 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +40,10 @@ public class BanHandler {
     }
 
     public List<HammerPlayerBan> getPlayerBansForServer(Set<UUID> players, int serverId) throws HammerException {
+        if (players.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         try {
             dg.removeExpiredPlayerBans(null);
             return dg.getServerBans(players, serverId);

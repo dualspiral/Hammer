@@ -23,7 +23,7 @@ public class FlagParser<T extends Enum<T> & FlagEnum> implements IParser<List<T>
         enums.forEach(e -> s.addAll(e.getStrings()));
         s.forEach(c -> regex.append(c.toString().toLowerCase()));
         flagEntries = s.stream().sorted().map(Object::toString).collect(Collectors.joining(" "));
-        regex.deleteCharAt(regex.length() - 1).append("]+)$");
+        regex.append("]+)$");
         regexToMatch = Pattern.compile(regex.toString(), Pattern.CASE_INSENSITIVE);
         chars = "[-" + flagEntries.replaceAll(" ", "") + "]";
     }
