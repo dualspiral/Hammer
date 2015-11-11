@@ -27,13 +27,11 @@ Hammer is being designed for use with MySQL for both single servers and server n
 
 `/kick <player> [reason]` - Kicks the player with an optional reason.
 
-`/kickall [reason]` - Kicks all players from the server (except yourself if you run this from the server) with an optional reason.
+`/kickall [-w] [reason]` - Kicks all players from the server (except yourself if you run this from the server) with an optional reason. Optionally add -w to enable the whitelist at the same time (requiring the permission `hammer.whitelist`).
 
-##### Upcoming commands
+`/updatebans` checks the database for any new bans for the players on the system, and kicks anyone who has recieved a global ban from another server on the network. This usually does not need to be done if the `pollBans` task is enabled, see below. Requires `hammer.admin.updatebans`.
 
-`/kick <name> <reason>` - Kicks a user. Requires the permission `hammer.kick.normal`.
-
-`/kickall [-w] <reason>` - Kicks all users. Requires the permission `hammer.kick.all`. Optionally add -w to enable the whitelist at the same time (requiring the permission `hammer.whitelist`).
+`/hammer reload` reloads the config file. Requires `hammer.admin.reload`.
 
 #### Other permissions
 
@@ -57,6 +55,14 @@ Currently, in the server section of the config, there are two options:
 #### A note on bans.
 
 Bans in Hammer will also be stored on the vanilla server manager, so in case of uninstall or failure, bans will remain intact (though not yet on Sponge - waiting for the `BanService` to be implemented!)
+
+#### Jenkins builds
+
+http://jenkins.drnaylor.co.uk/job/Hammer/
+
+Note that any builds are provided without any warranty. You use them at your own risk.
+
+Use HammerBukkit for 1.7.10, HammerSpigot for 1.8.* Spigot servers, HammerSponge for Sponge.
 
 #### Contributions
 
