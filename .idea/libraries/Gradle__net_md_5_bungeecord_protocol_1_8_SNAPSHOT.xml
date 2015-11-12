@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: net.md-5:bungeecord-protocol:1.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.8-SNAPSHOT/4304b7f32605f0176cdb78c98e673b4a23796405/bungeecord-protocol-1.8-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-protocol/1.8-SNAPSHOT/ae52fac52f681f98ca88b947808ba01f8f0a6ba5/bungeecord-protocol-1.8-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

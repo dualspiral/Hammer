@@ -1,0 +1,4 @@
+name: HammerBungee
+main: uk.co.drnaylor.minecraft.hammer.bungee.HammerBungee
+version: 0.4
+author: dualspiral

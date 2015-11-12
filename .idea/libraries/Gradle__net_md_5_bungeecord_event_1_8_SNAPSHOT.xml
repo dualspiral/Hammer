@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: net.md-5:bungeecord-event:1.8-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.8-SNAPSHOT/64e784e9ebca08b93298a7af30acd8ef66fd006e/bungeecord-event-1.8-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.md-5/bungeecord-event/1.8-SNAPSHOT/c52e4c95fb17a614b653dd8e6207419cd16f75ca/bungeecord-event-1.8-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

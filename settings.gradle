@@ -10,3 +10,5 @@ include 'HammerSponge'
 
 include 'HammerBukkitCore'
 
+include 'HammerBungee'
+
