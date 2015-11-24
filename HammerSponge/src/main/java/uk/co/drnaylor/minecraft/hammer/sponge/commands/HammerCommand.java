@@ -25,7 +25,7 @@ public class HammerCommand implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        src.sendMessage(texts);
+        src.sendMessages(texts);
         return CommandResult.success();
     }
 }

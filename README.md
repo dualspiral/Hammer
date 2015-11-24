@@ -1,7 +1,7 @@
 Hammer - A Ban Management system for Bukkit and Sponge servers.
 ===============
 
-Travis status: ![build status](https://travis-ci.org/dualspiral/Hammer.svg)
+![build status](https://travis-ci.org/dualspiral/Hammer.svg)
 
 Hammer is an experimental ban management plugin designed for management of single servers and server networks alike.
 
