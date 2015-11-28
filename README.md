@@ -9,7 +9,7 @@ In development for Bukkit 1.7, Spigot 1.8+ and Sponge API servers.
 
 ### Quick guide
 
-Hammer is being designed for use with MySQL for both single servers and server networks. Other storage mechanisms will be considered should there be a desire for it.
+Hammer is being designed for use with MySQL, SQLite and flat-file H2 databases for both single servers and server networks. Other storage mechanisms will be considered should there be a desire for it (or are contributed!)
 
 #### Commands
 
@@ -33,7 +33,7 @@ Hammer is being designed for use with MySQL for both single servers and server n
 
 `/updatebans` checks the database for any new bans for the players on the system, and kicks anyone who has recieved a global ban from another server on the network. This usually does not need to be done if the `pollBans` task is enabled, see below. Requires `hammer.admin.updatebans`.
 
-`/hammer reload` reloads the config file. Requires `hammer.admin.reload`.
+`/hammer reload [-d]` reloads the config file, _optionally_ reloading the database config. Requires `hammer.admin.reload`.
 
 #### Other permissions
 
@@ -41,7 +41,10 @@ Hammer is being designed for use with MySQL for both single servers and server n
 
 #### Config file notes
 
-The `mysql` section of the config should be self explanatory.
+`database-engine` can currently be one of `sqlite`, `h2` or `mysql`. Defaults to `sqlite`. Make sure the JDBC driver is on the classpath for the
+engine you want to use! If you want a multi-server Hammer setup, you probably want `mysql`! 
+
+The `mysql` section of the config should be self explanatory, and is only required if you have chosen the `mysql` database engine.
 
 `notifyAllOnBan` determines whether the whole server is informed of a server ban by default, or not. Use the `-q` or `-n` flags to override this behaviour.
 
@@ -68,4 +71,4 @@ Use HammerBukkit for 1.7.10, HammerSpigot for 1.8.* Spigot servers, HammerSponge
 
 #### Contributions
 
-I welcome contributions from anyone wishing to contribute - though note while this is still in fairly early stages (though working) things may change.
+I welcome code contributions from anyone wishing to contribute. Send me an issue or a PR and we'll see what we can do! I tend to follow the standard Google codestyle.
