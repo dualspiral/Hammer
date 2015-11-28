@@ -8,7 +8,7 @@ import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 /**
  * An adapter to interact with a MySQL database.
  */
-public class MySqlDatabaseProvider implements IDatabaseProvider {
+public final class MySqlDatabaseProvider implements IDatabaseProvider {
 
     private final String username;
     private final String password;
