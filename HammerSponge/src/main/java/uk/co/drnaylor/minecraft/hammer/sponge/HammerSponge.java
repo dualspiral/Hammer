@@ -13,16 +13,13 @@ import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.service.config.DefaultConfig;
-import org.spongepowered.api.service.scheduler.Task;
 import org.spongepowered.api.util.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
-import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
-import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.HammerCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeAlias;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
@@ -34,7 +31,6 @@ import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Sponge plugin entrypoint
@@ -173,10 +169,14 @@ public class HammerSponge {
      * @throws ClassNotFoundException The MySQL JDBC driver isn't on the classpath.
      * @throws IOException Configuration could not be loaded.
      */
-    private void createCore() throws ClassNotFoundException, IOException {
-        core = HammerCoreFactory.createHammerCore(
+    private void createCore() throws ClassNotFoundException, IOException, HammerException {
+        core = new HammerCore(
                 new SpongeWrappedServer(this, game, logger),
                 new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));
+    }
+
+    public File getDefaultConfig() {
+        return defaultConfig;
     }
 
     public static HammerSponge getInstance() {

@@ -29,6 +29,8 @@ public class HammerConfiguration {
 
     private ConfigurationNode getDefaultConfig() {
         CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
+        node.getNode("database-engine").setValue("sqlite").setComment("The DB engine to use. Valid options are \"sqlite\", \"h2\" and \"mysql\". The required JDBC driver must be on the classpath.");
+        node.getNode("mysql").setComment("This section is only required if MySQL is selected for the database engine.");
         node.getNode("mysql", "host").setValue("localhost").setComment("The location of the database");
         node.getNode("mysql", "port").setValue(3306).setComment("The port for the database");
         node.getNode("mysql", "database").setValue("hammer").setComment("The name of the database to connect to.");

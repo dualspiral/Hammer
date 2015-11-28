@@ -13,12 +13,10 @@ import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.HammerCoreFactory;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
-import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -153,8 +151,8 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
      * @param config the {@link HammerConfiguration} that contains the config.
      * @throws ClassNotFoundException The database driver isn't on the classpath.
      */
-    private void createCore(HammerConfiguration config) throws ClassNotFoundException {
-        core = HammerCoreFactory.createHammerCore(
+    private void createCore(HammerConfiguration config) throws ClassNotFoundException, HammerException {
+        core = new HammerCore(
                 new BukkitWrappedServer(this, this.getServer()),
                 config);
     }

@@ -14,18 +14,19 @@ import java.io.IOException;
 
 public class HammerCore {
 
-    private final IDatabaseProvider provider;
+    private IDatabaseProvider provider;
     private final WrappedServer server;
     private final HammerConfiguration config;
     private final PlayerJoinListenerCore playerJoinListenerCore;
     private WrappedSchedulerTask banTask = null;
     private WrappedSchedulerTask playerJoinListener = null;
 
-    HammerCore(WrappedServer server, HammerConfiguration config, IDatabaseProvider provider) {
-        this.provider = provider;
+    public HammerCore(WrappedServer server, HammerConfiguration config) throws HammerException {
         this.config = config;
         this.server = server;
         this.playerJoinListenerCore = new PlayerJoinListenerCore(new HammerPlayerUpdateRunnable(this));
+
+        this.provider = HammerDatabaseProviderFactory.createDatabaseProvider(server, config);
 
         this.server.getLogger().info("Loading Hammer Core version " + getHammerCoreVersion());
     }
@@ -131,8 +132,24 @@ public class HammerCore {
         playerJoinListenerCore.getRunnable().run();
     }
 
-    public void reloadConfig() throws IOException {
+    @Deprecated
+    public void reloadConfig() throws IOException, HammerException {
+        reloadConfig(false);
+    }
+
+    /**
+     * Reloads the configuration.
+     *
+     * @param reloadDatabase <code>true</code> if the database should be reloaded.
+     * @throws IOException Thrown if the config file could not be read.
+     * @throws HammerException Thrown if the database could not be switched.
+     */
+    public void reloadConfig(boolean reloadDatabase) throws IOException, HammerException {
         config.reloadConfig();
         setupBanTask();
+        if (reloadDatabase) {
+            // Will throw if there is an issue.
+            this.provider = HammerDatabaseProviderFactory.createDatabaseProvider(server, config);
+        }
     }
 }

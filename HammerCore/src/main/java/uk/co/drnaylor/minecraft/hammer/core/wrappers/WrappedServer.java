@@ -2,6 +2,7 @@ package uk.co.drnaylor.minecraft.hammer.core.wrappers;
 
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -88,4 +89,11 @@ public interface WrappedServer {
      * @return The {@link WrappedLogger}
      */
     WrappedLogger getLogger();
+
+    /**
+     * Gets the data folder for Hammer.
+     *
+     * @return The data folder.
+     */
+    File getDataFolder();
 }

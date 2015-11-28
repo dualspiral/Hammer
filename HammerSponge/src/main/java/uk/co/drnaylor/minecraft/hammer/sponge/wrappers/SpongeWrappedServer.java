@@ -13,6 +13,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -153,5 +154,10 @@ public class SpongeWrappedServer implements WrappedServer {
     @Override
     public WrappedLogger getLogger() {
         return logger;
+    }
+
+    @Override
+    public File getDataFolder() {
+        return plugin.getDefaultConfig().getParentFile();
     }
 }
