@@ -1,5 +1,6 @@
 package uk.co.drnaylor.minecraft.hammer.core.database;
 
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
@@ -60,9 +61,24 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
                         "    reason varchar(200) not null\n" +
                         ");");
 
+        connection.createStatement().execute(
+                "CREATE TABLE IF NOT EXISTS audit (\n" +
+                        "    audit_id integer auto_increment primary key,\n" +
+                        "    date datetime not null,\n" +
+                        "    actor integer not null references player_data(player_id),\n" +
+                        "    target integer references player_data(player_id),\n" +
+                        "    server integer references server_data(server_id),\n" +
+                        "    action varchar(50) not null,\n" +
+                        "    event varchar(3000) not null" +
+                        ");");
+
         String[] catchableStatements = new String[] {
                 "CREATE UNIQUE INDEX idx_pl_ban_1 ON player_bans(banned_player, from_server);",
-                "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);"
+                "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);",
+                "CREATE INDEX idx_actor_1 ON audit(actor)",
+                "CREATE INDEX idx_target_1 ON audit(target)",
+                "CREATE INDEX idx_datetime_1 ON audit(datetime)",
+                "CREATE INDEX idx_action_1 ON audit(action)"
         };
 
         for (String c : catchableStatements) {
@@ -378,6 +394,25 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
         }
     }
 
+    @Override
+    public void insertAuditEntry(AuditEntry entry) throws SQLException, HammerException {
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO audit(date, actor, target, server, action, event) " +
+                "VALUES (?, ?, ?, ?, ?, ?)");
+
+        ps.setTimestamp(1, new Timestamp(new Date().getTime()));
+        ps.setInt(2, getIdForPlayerFromUUID(entry.getActor()));
+        if (entry.getTarget() == null) {
+            ps.setNull(3, Types.INTEGER);
+        } else {
+            ps.setInt(3, getIdForPlayerFromUUID(entry.getTarget()));
+        }
+
+        ps.setInt(4, entry.getServerId());
+        ps.setString(5, entry.getActionType().name());
+        ps.setString(6, entry.getEvent());
+        ps.execute();
+    }
+
     /**
      * Closes the connection. Implements java.lang.AutoClosable.
      * @throws Exception
@@ -424,7 +459,6 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
                 serverName,
                 set.getString("external_id"));
     }
-
 
     @Override
     public void startTransaction() throws SQLException {

@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
@@ -83,4 +85,6 @@ public interface IDatabaseGateway extends AutoCloseable {
     void commitTransaction() throws SQLException;
 
     void rollbackTransaction() throws SQLException;
+
+    void insertAuditEntry(AuditEntry entry) throws SQLException, HammerException;
 }

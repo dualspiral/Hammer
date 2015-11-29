@@ -52,9 +52,25 @@ final class SQLiteDatabaseGateway extends CommonDatabaseGateway {
                         "    reason varchar(200) not null\n" +
                         ");");
 
+        connection.createStatement().execute(
+                "CREATE TABLE IF NOT EXISTS audit (\n" +
+                        "    audit_id integer primary key AUTOINCREMENT,\n" +
+                        "    date datetime not null,\n" +
+                        "    actor integer not null references player_data(player_id),\n" +
+                        "    target integer references player_data(player_id),\n" +
+                        "    server integer references server_data(server_id),\n" +
+                        "    action varchar(50) not null,\n" +
+                        "    event varchar(3000) not null" +
+                        ");");
+
+
         String[] catchableStatements = new String[] {
                 "CREATE UNIQUE INDEX idx_pl_ban_1 ON player_bans(banned_player, from_server);",
-                "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);"
+                "CREATE UNIQUE INDEX idx_ip_ban_1 ON ip_bans(ip, from_server);",
+                "CREATE INDEX idx_actor_1 ON audit(actor)",
+                "CREATE INDEX idx_target_1 ON audit(target)",
+                "CREATE INDEX idx_datetime_1 ON audit(datetime)",
+                "CREATE INDEX idx_action_1 ON audit(action)"
         };
 
         for (String c : catchableStatements) {

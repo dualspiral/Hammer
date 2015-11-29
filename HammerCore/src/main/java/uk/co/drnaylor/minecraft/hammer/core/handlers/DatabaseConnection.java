@@ -1,6 +1,8 @@
 package uk.co.drnaylor.minecraft.hammer.core.handlers;
 
 import java.sql.SQLException;
+
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -21,6 +23,11 @@ public class DatabaseConnection implements AutoCloseable {
         } catch (SQLException ex) {
             throw new HammerException("Unable to create the tables", ex);
         }
+    }
+
+    public AuditHandler getAuditHandler() throws HammerException {
+        openConnectionIfNotOpen();
+        return new AuditHandler(gateway);
     }
 
     public BanHandler getBanHandler() throws HammerException {
