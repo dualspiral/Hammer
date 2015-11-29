@@ -1,8 +1,11 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
@@ -14,6 +17,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
+import java.nio.channels.AcceptPendingException;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -86,6 +90,11 @@ public class KickCommandCore extends CommandCore {
             }
         }
 
+        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
+        if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+            core.getWrappedServer().getScheduler().runAsyncNow(() -> createAuditEntry(source.getUUID(), pl.getUUID(), reason));
+        }
+
         return true;
     }
 
@@ -102,5 +111,24 @@ public class KickCommandCore extends CommandCore {
         t[1] = new HammerTextBuilder().add(HammerConstants.textTag + " ", HammerTextColours.RED).add(MessageFormat.format(messageBundle.getString("hammer.kick.reason"), reason)
                 , HammerTextColours.RED).build();
         return t;
+    }
+
+    private void createAuditEntry(UUID actor, UUID target, String reason) {
+        try {
+            DatabaseConnection conn = core.getDatabaseConnection();
+            String playerName = getName(target, conn);
+            String name;
+            if (actor.equals(HammerConstants.consoleUUID)) {
+                name = String.format("*%s*", messageBundle.getString("hammer.console"));
+            } else {
+                name = getName(actor, conn);
+            }
+
+            insertAuditEntry(new AuditEntry(actor, target, core.getConfig().getConfig().getNode("server", "id").getInt(),
+                    new Date(), ActionEnum.KICK, MessageFormat.format(messageBundle.getString("hammer.audit.kick"), playerName, name, reason)), conn);
+        } catch (Exception e) {
+            core.getWrappedServer().getLogger().warn("Unable to add to audit log.");
+            e.printStackTrace();
+        }
     }
 }

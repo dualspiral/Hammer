@@ -1,6 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import ninja.leaping.configurate.ConfigurationNode;
+import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickAllFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
@@ -13,9 +17,8 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.MessageFormat;
+import java.util.*;
 
 public class KickAllCommandCore extends CommandCore {
 
@@ -50,8 +53,9 @@ public class KickAllCommandCore extends CommandCore {
     @Override
     protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         Optional<List<KickAllFlagEnum>> flagOptional = arguments.<List<KickAllFlagEnum>>getArgument("kickall");
+        boolean whitelist = flagOptional.get().contains(KickAllFlagEnum.WHITELIST);
         if (flagOptional.isPresent()) {
-            if (flagOptional.get().contains(KickAllFlagEnum.WHITELIST)) {
+            if (whitelist) {
                 if (source.hasPermission("hammer.whitelist")) {
                     core.getWrappedServer().setWhitelist(true);
                     sendTemplatedMessage(source, "hammer.kickall.whitelist", false, true);
@@ -63,13 +67,42 @@ public class KickAllCommandCore extends CommandCore {
         }
 
         Optional<String> reasonOptional = arguments.<String>getArgument("reason");
-        core.getWrappedServer().kickAllPlayers(source, reasonOptional.isPresent() ? reasonOptional.get() : "You have all been kicked from the server.");
+        String reason = reasonOptional.isPresent() ? reasonOptional.get() : messageBundle.getString("hammer.kickall.defaultreason");
+        core.getWrappedServer().kickAllPlayers(source, reason);
         sendTemplatedMessage(source, "hammer.kickall", false, true);
+
+        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
+        if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+            core.getWrappedServer().getScheduler().runAsyncNow(() -> createAuditEntry(source.getUUID(), reason, whitelist));
+        }
         return true;
     }
 
     @Override
     protected String commandName() {
         return "kickall";
+    }
+
+    private void createAuditEntry(UUID actor, String reason, boolean isWhitelist) {
+        try {
+            DatabaseConnection conn = core.getDatabaseConnection();
+            String name;
+            if (actor.equals(HammerConstants.consoleUUID)) {
+                name = String.format("*%s*", messageBundle.getString("hammer.console"));
+            } else {
+                name = getName(actor, conn);
+            }
+
+            String r = MessageFormat.format(messageBundle.getString("hammer.audit.kickall"), name, reason);
+            if (isWhitelist) {
+                r += " " + messageBundle.getString("hammer.audit.whitelist");
+            }
+
+            insertAuditEntry(new AuditEntry(actor, null, core.getConfig().getConfig().getNode("server", "id").getInt(),
+                    new Date(), ActionEnum.KICKALL, r), conn);
+        } catch (Exception e) {
+            core.getWrappedServer().getLogger().warn("Unable to add to audit log.");
+            e.printStackTrace();
+        }
     }
 }

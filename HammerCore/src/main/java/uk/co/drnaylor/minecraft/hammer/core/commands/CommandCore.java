@@ -5,18 +5,22 @@ import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentParseException;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.IParser;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
+import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
 public abstract class CommandCore {
 
@@ -249,6 +253,39 @@ public abstract class CommandCore {
 
     final void sendNoPermsMessage(WrappedCommandSource target) {
         sendTemplatedMessage(target, "hammer.player.noperms", true, true);
+    }
+
+    protected final String getName(UUID name, DatabaseConnection conn) throws HammerException {
+        WrappedPlayer playerTarget = core.getWrappedServer().getPlayer(name);
+        String playerName;
+        if (playerTarget == null) {
+            // Do we have them in the Hammer DB?
+            HammerPlayerInfo p = conn.getPlayerHandler().getPlayer(name);
+            if (p == null) {
+                playerName = "Unknown Player";
+            } else {
+                playerName = p.getName();
+            }
+        } else {
+            playerName = playerTarget.getName();
+        }
+
+        return playerName;
+    }
+
+    protected final void insertAuditEntry(AuditEntry ae, DatabaseConnection conn) throws HammerException {
+        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
+        if (cn.getNode("database").getBoolean()) {
+            if (conn == null) {
+                throw new HammerException("No database connection!");
+            }
+
+            conn.getAuditHandler().insertAuditAction(ae);
+        }
+
+        if (cn.getNode("flatfile").getBoolean()) {
+            // TODO: Flatfile handler.
+        }
     }
 
     private HammerTextBuilder createErrorMessageStub() {

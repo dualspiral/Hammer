@@ -41,7 +41,9 @@ public class HammerConfiguration {
         node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
         node.getNode("pollBans", "enable").setValue(true).setComment("If set to true, Hammer will check the database periodically to see if any online player have recieved a global ban and will ban them accordingly.");
         node.getNode("pollBans", "period").setValue(60).setComment("How often, in seconds, Hammer will check the database for new bans");
-
+        node.getNode("audit").setComment("Whether or not an audit log should be kept.");
+        node.getNode("audit", "database").setComment("Keep an audit log in the database.").setValue(true);
+        node.getNode("audit", "flatfile").setComment("Keep an audit log in flat file.").setValue(false);
         return node;
     }
 }

@@ -1,6 +1,10 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import ninja.leaping.configurate.ConfigurationNode;
+import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
@@ -12,9 +16,8 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.MessageFormat;
+import java.util.*;
 
 @RunAsync
 public class UpgradeToPermBanCommandCore extends CommandCore {
@@ -47,6 +50,12 @@ public class UpgradeToPermBanCommandCore extends CommandCore {
         if (core.getDatabaseConnection().getBanHandler().upgadeToPerm(hpi.getUUID(), serverid)) {
             HammerText ht = new HammerTextBuilder().add("[Hammer] The ban for " + hpi.getName() + " has been upgraded to a permanent ban.", HammerTextColours.GREEN).build();
             source.sendMessage(ht);
+
+            ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
+            if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+                createAuditEntry(source.getUUID(), hpi.getUUID(), conn);
+            }
+
             return true;
         }
 
@@ -59,6 +68,25 @@ public class UpgradeToPermBanCommandCore extends CommandCore {
 
         source.sendMessage(ht);
         return true;
+    }
+
+    private void createAuditEntry(UUID source, UUID target, DatabaseConnection conn) {
+        try {
+            String playerName = getName(target, conn);
+            String name;
+            if (source.equals(HammerConstants.consoleUUID)) {
+                name = String.format("*%s*", messageBundle.getString("hammer.console"));
+            } else {
+                name = getName(source, conn);
+            }
+
+            AuditEntry ae = new AuditEntry(source, target, core.getConfig().getConfig().getNode("server", "id").getInt(), new Date(), ActionEnum.BAN,
+                MessageFormat.format(messageBundle.getString("hammer.audit.unban"), playerName, name));
+            insertAuditEntry(ae, conn);
+        } catch (HammerException e) {
+            core.getWrappedServer().getLogger().warn("Could not add audit entry.");
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -7,6 +7,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
@@ -132,6 +134,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
             }
         }
 
+        if (cn.getNode("audit", "database").getBoolean() || cn.getNode("audit", "flatfile").getBoolean()) {
+            createAuditLog(ban, conn);
+        }
+
         return true;
     }
 
@@ -163,6 +169,42 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
 
         return sb.toString();
+    }
+
+    private void createAuditLog(HammerCreatePlayerBan cpb, DatabaseConnection conn) {
+        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+
+        try {
+            AuditEntry ae = new AuditEntry(cpb.getStaffUUID(), cpb.getBannedUUID(), id, new Date(), ActionEnum.BAN, createAuditMessage(cpb, conn));
+            insertAuditEntry(ae, conn);
+        } catch (HammerException e) {
+            core.getWrappedServer().getLogger().warn("Could not add audit entry.");
+            e.printStackTrace();
+        }
+    }
+
+    private String createAuditMessage(HammerCreatePlayerBan cpb, DatabaseConnection conn) throws HammerException {
+        String playerName = getName(cpb.getBannedUUID(), conn);
+        String name;
+        if (cpb.getStaffUUID().equals(HammerConstants.consoleUUID)) {
+            name = String.format("*%s*", messageBundle.getString("hammer.console"));
+        } else {
+            name = getName(cpb.getStaffUUID(), conn);
+        }
+
+        String modifier = "";
+        if (cpb.getTempBanExpiration() != null) {
+            modifier = " " + MessageFormat.format(messageBundle.getString("hammer.audit.ban.temp"), dateFormatter.format(cpb.getTempBanExpiration()));
+        } else if (cpb.isPermanent()) {
+            modifier = " " + messageBundle.getString("hammer.permanently");
+        }
+
+        String fromAll = "";
+        if (cpb.getServerId() == null) {
+            fromAll = " " + messageBundle.getString("hammer.fromallservers");
+        }
+
+        return MessageFormat.format(messageBundle.getString("hammer.audit.ban"), playerName, modifier, name, fromAll, cpb.getReason());
     }
 
     private HammerText[] getBanMessage(UUID banned, UUID bannedBy, String reason, boolean isTemp, boolean isAll, boolean isPerm, DatabaseConnection conn) throws HammerException {
@@ -202,24 +244,6 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         messages[1] = htb.build();
         return messages;
-    }
-
-    private String getName(UUID name, DatabaseConnection conn) throws HammerException {
-        WrappedPlayer playerTarget = core.getWrappedServer().getPlayer(name);
-        String playerName;
-        if (playerTarget == null) {
-            // Do we have them in the Hammer DB?
-            HammerPlayerInfo p = conn.getPlayerHandler().getPlayer(name);
-            if (p == null) {
-                playerName = "Unknown Player";
-            } else {
-                playerName = p.getName();
-            }
-        } else {
-            playerName = playerTarget.getName();
-        }
-
-        return playerName;
     }
 
     protected enum BanStatus

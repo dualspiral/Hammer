@@ -399,7 +399,7 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO audit(date, actor, target, server, action, event) " +
                 "VALUES (?, ?, ?, ?, ?, ?)");
 
-        ps.setTimestamp(1, new Timestamp(new Date().getTime()));
+        ps.setTimestamp(1, new Timestamp(entry.getDate().getTime()));
         ps.setInt(2, getIdForPlayerFromUUID(entry.getActor()));
         if (entry.getTarget() == null) {
             ps.setNull(3, Types.INTEGER);

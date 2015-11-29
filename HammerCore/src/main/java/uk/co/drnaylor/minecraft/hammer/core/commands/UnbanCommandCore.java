@@ -1,11 +1,16 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import ninja.leaping.configurate.ConfigurationNode;
+import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.HammerPermissions;
+import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.UnbanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
@@ -14,6 +19,7 @@ import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -142,6 +148,12 @@ public class UnbanCommandCore extends CommandCore {
 
             // Unbanned. Tell the notified.
             sendUnbanMessage(playerName, source, flag.contains(UnbanFlagEnum.ALL_SERVER));
+
+            ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
+            if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+                createAuditLog(source, bannee, conn);
+            }
+
             return true;
         } catch (Exception ex) {
             throw new HammerException("Command failed to execute", ex);
@@ -151,6 +163,28 @@ public class UnbanCommandCore extends CommandCore {
     @Override
     protected String commandName() {
         return "unban";
+    }
+
+    private void createAuditLog(WrappedCommandSource source, UUID bannee, DatabaseConnection conn) {
+        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+
+        try {
+            String playerName = getName(bannee, conn);
+            String name;
+            if (source.getUUID().equals(HammerConstants.consoleUUID)) {
+                name = String.format("*%s*", messageBundle.getString("hammer.console"));
+            } else {
+                name = getName(source.getUUID(), conn);
+            }
+
+            AuditEntry ae = new AuditEntry(source.getUUID(), bannee, id, new Date(), ActionEnum.UNBAN,
+                    MessageFormat.format(messageBundle.getString("hammer.audit.unban"), playerName, name));
+
+            insertAuditEntry(ae, conn);
+        } catch (HammerException e) {
+            core.getWrappedServer().getLogger().warn("Could not add audit entry.");
+            e.printStackTrace();
+        }
     }
 
     private void sendUnbanMessage(String playerName, WrappedCommandSource source, boolean allFlag) {
