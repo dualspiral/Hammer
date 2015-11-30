@@ -1,5 +1,5 @@
 name: Hammer
-version: 0.4
+version: 0.5
 main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
 commands:
   ban:
