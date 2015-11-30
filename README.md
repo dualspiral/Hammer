@@ -41,8 +41,7 @@ Hammer is being designed for use with MySQL, SQLite and flat-file H2 databases f
 
 #### Config file notes
 
-`database-engine` can currently be one of `sqlite`, `h2` or `mysql`. Defaults to `sqlite`. Make sure the JDBC driver is on the classpath for the
-engine you want to use! If you want a multi-server Hammer setup, you probably want `mysql`! 
+`database-engine` can currently be one of `sqlite`, `h2` or `mysql`. Defaults to `sqlite`. Make sure the JDBC driver is on the classpath for the engine you want to use! If you want a multi-server Hammer setup, you probably want `mysql`! 
 
 The `mysql` section of the config should be self explanatory, and is only required if you have chosen the `mysql` database engine.
 
@@ -51,10 +50,9 @@ The `mysql` section of the config should be self explanatory, and is only requir
 `pollBans.enable` determines whether Hammer should poll the database periodically for new global bans for online player.
 `pollBans.period` determines, in seconds, how often the task polls.
 
-Currently, in the server section of the config, there are two options:
+`audit.database` and `audit.flatfile` determine whether Hammer will keep a log of ban/unban/kick actions. "database" will use an "audit" table in the database, "flatfile" will create a date-rotated log file in an appropriate place (`plugins/Hammer/logs` in Bukkit, `logs/Hammer` in Sponge)
 
 `server.id` - the ID of the server. Can be any positive number. Servers sharing this ID and database will share bans.
-
 `server.name` - the friendly name of the server. Will change the friendly name in the database to this on server startup, and displayed in `/checkban` commands.
 
 #### A note on bans.
