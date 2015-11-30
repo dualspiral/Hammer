@@ -96,4 +96,11 @@ public interface WrappedServer {
      * @return The data folder.
      */
     File getDataFolder();
+
+    /**
+     * Gets the folder in which Hammer should write flat-file logs.
+     *
+     * @return The log folder.
+     */
+    File getLogFolder();
 }

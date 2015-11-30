@@ -23,12 +23,15 @@ public class SpongeWrappedServer implements WrappedServer {
     private final HammerSponge plugin;
     private final WrappedScheduler scheduler;
     private final WrappedLogger logger;
+    private final File logFolder;
 
     public SpongeWrappedServer(HammerSponge plugin, Game game, Logger logger) {
         this.logger = new SpongeWrappedLogger(logger);
         this.plugin = plugin;
         this.game = game;
         this.scheduler = new SpongeWrappedScheduler(plugin, game);
+        this.logFolder = new File(plugin.getDefaultConfig().getParentFile().getParentFile() + File.separator + "logs" + File.separator + "Hammer");
+        this.logFolder.mkdirs();
     }
 
     /**
@@ -159,5 +162,10 @@ public class SpongeWrappedServer implements WrappedServer {
     @Override
     public File getDataFolder() {
         return plugin.getDefaultConfig().getParentFile();
+    }
+
+    @Override
+    public File getLogFolder() {
+        return logFolder;
     }
 }

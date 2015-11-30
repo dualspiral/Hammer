@@ -18,12 +18,15 @@ public class BukkitWrappedServer implements WrappedServer {
     private final HammerBukkitPlugin plugin;
     private final WrappedScheduler scheduler;
     private final BukkitWrappedLogger logger;
+    private final File logFolder;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
         this.scheduler = new BukkitWrappedScheduler(plugin);
         this.logger = new BukkitWrappedLogger(plugin.getLogger());
+        this.logFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "logs");
+        this.logFolder.mkdirs();
     }
 
     /**
@@ -134,5 +137,10 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public File getDataFolder() {
         return plugin.getDataFolder();
+    }
+
+    @Override
+    public File getLogFolder() {
+        return logFolder;
     }
 }

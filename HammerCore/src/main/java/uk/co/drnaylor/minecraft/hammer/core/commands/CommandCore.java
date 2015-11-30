@@ -273,19 +273,8 @@ public abstract class CommandCore {
         return playerName;
     }
 
-    protected final void insertAuditEntry(AuditEntry ae, DatabaseConnection conn) throws HammerException {
-        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-        if (cn.getNode("database").getBoolean()) {
-            if (conn == null) {
-                throw new HammerException("No database connection!");
-            }
-
-            conn.getAuditHandler().insertAuditAction(ae);
-        }
-
-        if (cn.getNode("flatfile").getBoolean()) {
-            // TODO: Flatfile handler.
-        }
+    protected final void insertAuditEntry(AuditEntry entry, DatabaseConnection conn) throws HammerException {
+        core.getAuditHelper().insertAuditEntry(entry, conn);
     }
 
     private HammerTextBuilder createErrorMessageStub() {

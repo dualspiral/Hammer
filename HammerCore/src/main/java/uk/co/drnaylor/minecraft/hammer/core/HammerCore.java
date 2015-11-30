@@ -1,6 +1,7 @@
 package uk.co.drnaylor.minecraft.hammer.core;
 
 import ninja.leaping.configurate.ConfigurationNode;
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditHelper;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -18,6 +19,7 @@ public class HammerCore {
     private final WrappedServer server;
     private final HammerConfiguration config;
     private final PlayerJoinListenerCore playerJoinListenerCore;
+    private final AuditHelper auditHelper;
     private WrappedSchedulerTask banTask = null;
     private WrappedSchedulerTask playerJoinListener = null;
 
@@ -29,6 +31,7 @@ public class HammerCore {
         this.provider = HammerDatabaseProviderFactory.createDatabaseProvider(server, config);
 
         this.server.getLogger().info("Loading Hammer Core version " + getHammerCoreVersion());
+        this.auditHelper = new AuditHelper(this);
     }
 
     /**
@@ -65,6 +68,15 @@ public class HammerCore {
      */
     public DatabaseConnection getDatabaseConnection() throws HammerException {
         return new DatabaseConnection(provider);
+    }
+
+    /**
+     * Gets the {@link AuditHelper} for auditing purposes.
+     *
+     * @return The {@link AuditHelper}
+     */
+    public AuditHelper getAuditHelper() {
+        return auditHelper;
     }
 
     /**
