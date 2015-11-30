@@ -19,8 +19,8 @@ final class HammerDatabaseProviderFactory {
     private final static Map<String, Factory> providerFactory = new HashMap<>();
 
     static {
-        providerFactory.put("sqlite", (s, c) -> new SQLiteDatabaseProvider(String.format("%1$s%2$sdata%2$ssqlite.db", s.getDataFolder(), File.pathSeparator)));
-        providerFactory.put("h2", (s, c) -> new H2FlatFileDatabaseProvider(String.format("%1$s%2$sdata%2$sh2.db", s.getDataFolder(), File.pathSeparator)));
+        providerFactory.put("sqlite", (s, c) -> new SQLiteDatabaseProvider(String.format("%1$s%2$sdata%2$ssqlite.db", s.getDataFolder(), File.separator)));
+        providerFactory.put("h2", (s, c) -> new H2FlatFileDatabaseProvider(String.format("%1$s%2$sdata%2$sh2.db", s.getDataFolder(), File.separator)));
         providerFactory.put("mysql", (s, c) -> {
             ConfigurationNode mysql = c.getConfig().getNode("mysql");
             return new MySqlDatabaseProvider(

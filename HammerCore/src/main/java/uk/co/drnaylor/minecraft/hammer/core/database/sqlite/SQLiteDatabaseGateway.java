@@ -16,7 +16,7 @@ final class SQLiteDatabaseGateway extends CommonDatabaseGateway {
     public void createTables() throws SQLException {
         connection.createStatement().execute(
                 "CREATE TABLE IF NOT EXISTS player_data (\n" +
-                        "player_id INTEGER AUTOINCREMENT PRIMARY KEY,\n" +
+                        "player_id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                         "uuid varchar(42) not null unique,\n" +
                         "    last_name varchar(20) not null,\n" +
                         "    last_seen datetime,\n" +
@@ -31,7 +31,7 @@ final class SQLiteDatabaseGateway extends CommonDatabaseGateway {
 
         connection.createStatement().execute(
                 "CREATE TABLE IF NOT EXISTS player_bans (\n" +
-                        "    ban_id INTEGER AUTOINCREMENT primary key,\n" +
+                        "    ban_id INTEGER primary key AUTOINCREMENT,\n" +
                         "    external_id varchar(20) unique not null,\n" +
                         "    banned datetime not null,\n" +
                         "    banned_player integer not null references player_data(player_id) on delete cascade,\n" +
@@ -44,7 +44,7 @@ final class SQLiteDatabaseGateway extends CommonDatabaseGateway {
 
         connection.createStatement().execute(
                 "CREATE TABLE IF NOT EXISTS ip_bans (\n" +
-                        "    ip_ban_id integer AUTOINCREMENT primary key,\n" +
+                        "    ip_ban_id integer primary key AUTOINCREMENT,\n" +
                         "    ip varchar(40) not null,\n" +
                         "    banned_by integer not null references player_data(player_id),\n" +
                         "    banned_until datetime,\n" +
