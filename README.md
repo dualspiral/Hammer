@@ -3,9 +3,11 @@ Hammer - A Ban Management system for Bukkit and Sponge servers.
 
 ![build status](https://travis-ci.org/dualspiral/Hammer.svg)
 
-Hammer is an experimental ban management plugin designed for management of single servers and server networks alike.
+Hammer is an experimental ban management plugin designed for management of single servers and server networks alike. Originally developed for the [InfinityMC network](http://infinitymc.us) as a ban system that works across networks and API implementations, Hammer has quickly grown to be a flexible ban management system that is open to Bukkit and Sponge servers alike.
 
-In development for Bukkit 1.7, Spigot 1.8+ and Sponge API servers.
+In development for Bukkit 1.7, Spigot 1.8+ and Sponge API servers. Requires Java 8 to run.
+
+Got an idea? Seen something is broken? File a GitHub issue and/or create a PR.
 
 ### Quick guide
 
@@ -70,3 +72,14 @@ Use HammerBukkit for 1.7.10, HammerSpigot for 1.8.* Spigot servers, HammerSponge
 #### Contributions
 
 I welcome code contributions from anyone wishing to contribute. Send me an issue or a PR and we'll see what we can do! I tend to follow the standard Google codestyle.
+
+I do not accept monetary contributions. If this has helped you, a thanks is all I need! :)
+
+#### Third-party software, a shoutout!
+
+Some versions of Hammer include third party dependencies shaded (with package relocations to avoid conflicts).
+
+* zml's [Configurate](https://github.com/zml2008/configurate) is included in all Bukkit versions of the software, for sane and unified configuration management.
+* Google's [Guava version 17](https://github.com/google/guava) is shaded in the Bukkit 1.7.10 version, as Bukkit 1.7 used older versions that Configurate cannot work with.
+ 
+These projects make Hammer much easier to develop once for all APIs. Thanks to the authors for open sourcing these libraries!
