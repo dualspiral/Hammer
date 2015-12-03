@@ -54,7 +54,7 @@ public class SpongeWrappedServer implements WrappedServer {
         this.plugin = plugin;
         this.game = game;
         this.scheduler = new SpongeWrappedScheduler(plugin, game);
-        this.logFolder = new File(plugin.getDefaultConfig().getParentFile().getParentFile() + File.separator + "logs" + File.separator + "Hammer");
+        this.logFolder = new File("logs" + File.separator + "Hammer");
         this.logFolder.mkdirs();
     }
 
@@ -185,7 +185,7 @@ public class SpongeWrappedServer implements WrappedServer {
 
     @Override
     public File getDataFolder() {
-        return plugin.getDefaultConfig().getParentFile().getParentFile();
+        return plugin.getDefaultConfig().getParentFile();
     }
 
     @Override
