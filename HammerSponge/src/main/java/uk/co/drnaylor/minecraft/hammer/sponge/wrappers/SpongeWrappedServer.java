@@ -185,7 +185,7 @@ public class SpongeWrappedServer implements WrappedServer {
 
     @Override
     public File getDataFolder() {
-        return plugin.getDefaultConfig().getParentFile();
+        return plugin.getDefaultConfig().getParentFile().getParentFile();
     }
 
     @Override
