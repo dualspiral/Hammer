@@ -146,7 +146,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void ban(WrappedCommandSource source, String reason) {
-        ban(source, new HammerTextBuilder().add(reason).toString());
+        ban(source, new HammerTextBuilder().add(reason).build());
     }
 
     /**

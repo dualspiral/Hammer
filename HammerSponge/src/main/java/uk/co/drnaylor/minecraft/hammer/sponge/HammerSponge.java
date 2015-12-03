@@ -62,7 +62,7 @@ import java.util.ArrayList;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.5";
+    public static final String VERSION = "0.5.1";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -194,6 +194,12 @@ public class HammerSponge {
      * @throws IOException Configuration could not be loaded.
      */
     private void createCore() throws ClassNotFoundException, IOException, HammerException {
+        // Temporary - configurate should automatically generate the config file, but a bug in the library that Sponge uses
+        // means it doesn't. We create it here instead.
+        if (!defaultConfig.exists()) {
+            defaultConfig.createNewFile();
+        }
+
         core = new HammerCore(
                 new SpongeWrappedServer(this, game, logger),
                 new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));
