@@ -36,8 +36,8 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.config.DefaultConfig;
-import org.spongepowered.api.util.command.spec.CommandSpec;
+import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.command.spec.CommandSpec;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
@@ -62,7 +62,7 @@ import java.util.ArrayList;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.5.1";
+    public static final String VERSION = "0.5.2";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -99,30 +99,30 @@ public class HammerSponge {
 
                 CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this))
                         .child(new SpongeCommand(game, new ReloadCommandCore(core)), "reload").build();
-                game.getCommandDispatcher().register(this, spec, "hammer");
+                game.getCommandManager().register(this, spec, "hammer");
 
                 // Ban command
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+                game.getCommandManager().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
+                game.getCommandManager().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
+                game.getCommandManager().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
+                game.getCommandManager().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
+                game.getCommandManager().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");
-                game.getCommandDispatcher().register(this, new SpongeAlias(game, "ban", arguments), "gban");
+                game.getCommandManager().register(this, new SpongeAlias(game, "ban", arguments), "gban");
 
                 // Kick commands
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+                game.getCommandManager().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
+                game.getCommandManager().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
 
                 // Import Player command
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
+                game.getCommandManager().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
 
                 // Upgrade to permban
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new ReloadCommandCore(core)), "hammerreload");
-                game.getCommandDispatcher().register(this, new SpongeCommand(game, new UpdateBansCommandCore(core)), "updatebans", "hupdatebans");
+                game.getCommandManager().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
+                game.getCommandManager().register(this, new SpongeCommand(game, new ReloadCommandCore(core)), "hammerreload");
+                game.getCommandManager().register(this, new SpongeCommand(game, new UpdateBansCommandCore(core)), "updatebans", "hupdatebans");
 
                 logger.info("Registering Hammer events...");
 

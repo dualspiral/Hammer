@@ -26,11 +26,11 @@ package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
-import org.spongepowered.api.service.user.UserStorage;
+import org.spongepowered.api.profile.GameProfile;
+import org.spongepowered.api.service.user.UserStorageService;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerConnectListenerCore;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -42,7 +42,7 @@ public class PlayerConnectListener {
     private final Game game;
     private final PlayerConnectListenerCore eventCore;
     private final Logger logger;
-    private UserStorage storageService = null;
+    private UserStorageService storageService = null;
 
     public PlayerConnectListener(Logger logger, Game game, PlayerConnectListenerCore eventCore) {
         this.logger = logger;
@@ -52,7 +52,7 @@ public class PlayerConnectListener {
 
     private void getServices() {
         if (storageService == null) {
-            storageService = game.getServiceManager().provide(UserStorage.class).get();
+            storageService = game.getServiceManager().provide(UserStorageService.class).get();
         }
     }
 

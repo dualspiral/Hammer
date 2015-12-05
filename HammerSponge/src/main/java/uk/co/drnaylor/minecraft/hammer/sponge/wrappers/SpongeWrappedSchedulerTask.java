@@ -24,7 +24,7 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
-import org.spongepowered.api.service.scheduler.Task;
+import org.spongepowered.api.scheduler.Task;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedSchedulerTask;
 
 public class SpongeWrappedSchedulerTask implements WrappedSchedulerTask {

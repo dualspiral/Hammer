@@ -30,9 +30,8 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.util.ban.BanBuilder;
+import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanType;
-import org.spongepowered.api.util.ban.Bans;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -123,7 +122,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     public void ban(WrappedCommandSource source, HammerText reason) {
         Optional<BanService> serviceOptional = getBanService();
         if (serviceOptional.isPresent()) {
-            BanBuilder builder = Bans.builder().reason(HammerTextConverter.constructLiteral(reason)).user(player).type(BanType.USER_BAN);
+            Ban.Builder builder = Ban.builder().reason(HammerTextConverter.constructLiteral(reason)).user(player).type(BanType.USER_BAN);
             if (source instanceof SpongeWrappedPlayer) {
                 Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
                 if (sourceplayer.isPresent()) {

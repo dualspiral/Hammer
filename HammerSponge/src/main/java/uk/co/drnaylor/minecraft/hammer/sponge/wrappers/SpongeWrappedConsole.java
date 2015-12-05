@@ -25,7 +25,7 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.source.ConsoleSource;
+import org.spongepowered.api.command.source.ConsoleSource;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;

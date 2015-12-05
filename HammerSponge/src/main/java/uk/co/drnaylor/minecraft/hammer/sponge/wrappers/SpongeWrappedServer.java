@@ -28,9 +28,9 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.service.user.UserStorage;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.sink.MessageSinks;
-import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.command.CommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
@@ -66,7 +66,7 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public WrappedPlayer getPlayer(UUID uuid) {
-        UserStorage service = game.getServiceManager().provide(UserStorage.class).get();
+        UserStorageService service = game.getServiceManager().provide(UserStorageService.class).get();
         Optional<User> player = service.get(uuid);
         if (player.isPresent()) {
             return new SpongeWrappedPlayer(game, player.get());
@@ -83,7 +83,7 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public WrappedPlayer getPlayer(String name) {
-        UserStorage service = game.getServiceManager().provide(UserStorage.class).get();
+        UserStorageService service = game.getServiceManager().provide(UserStorageService.class).get();
         Optional<User> player = service.get(name);
         if (player.isPresent()) {
             return new SpongeWrappedPlayer(game, player.get());
