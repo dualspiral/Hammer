@@ -68,6 +68,8 @@ public class HammerConfiguration {
         node.getNode("audit").setComment("Whether or not an audit log should be kept.");
         node.getNode("audit", "database").setComment("Keep an audit log in the database.").setValue(true);
         node.getNode("audit", "flatfile").setComment("Keep an audit log in flat file.").setValue(false);
+        node.getNode("appendBanReasons").setComment("If this is true, and a ban is applied on top of a previous (lesser) ban, the previous ban reason will be appeneded to the new one. " +
+                "Otherwise, ban reasons will be replaced.").setValue(true);
         return node;
     }
 }

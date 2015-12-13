@@ -204,6 +204,10 @@ public abstract class BaseBanCommandCore extends CommandCore {
             return null;
         }
 
+        if (!core.getConfig().getConfig().getNode("appendBanReasons").getBoolean(true)) {
+            return reas.get();
+        }
+
         StringBuilder sb = new StringBuilder(reas.get());
         if (otherReasons != null) {
             for (String reasons : otherReasons) {
