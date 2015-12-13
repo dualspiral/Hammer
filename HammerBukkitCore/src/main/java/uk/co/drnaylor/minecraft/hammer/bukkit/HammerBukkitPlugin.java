@@ -89,7 +89,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 // Ban command
                 this.getCommand("ban").setExecutor(new BukkitCommand(new BanCommandCore(core)));
                 this.getCommand("tempban").setExecutor(new BukkitCommand(new TempBanCommandCore(core)));
-                this.getCommand("permban").setExecutor(new BukkitCommand(new PermBanCommandCore(core)));
                 this.getCommand("unban").setExecutor(new BukkitCommand(new UnbanCommandCore(core)));
                 this.getCommand("checkban").setExecutor(new BukkitCommand(new CheckBanCommandCore(core)));
 
@@ -111,6 +110,10 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");
                 this.getCommand("gban").setExecutor(new BukkitAlias(this, "ban", arguments));
+
+                ArrayList<String> arguments1 = new ArrayList<>();
+                arguments1.add("-p");
+                this.getCommand("permban").setExecutor(new BukkitAlias(this, "ban", arguments1));
                 // this.getCommand("banip").setExecutor(new BukkitCommand(new BanIPCommandCore(core)));
                 // this.getCommand("unbanip").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
 

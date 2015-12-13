@@ -93,6 +93,14 @@ public class HammerCreatePlayerBanBuilder {
         return !(isPerm || isAll || temporary != null);
     }
 
+    public boolean isPerm() {
+        return isPerm;
+    }
+
+    public boolean isGlobal() {
+        return isAll;
+    }
+
     public HammerCreatePlayerBan build() throws HammerException {
         if (temporary != null && isPerm) {
             throw new HammerException("A temp ban cannot be set as permanent.");

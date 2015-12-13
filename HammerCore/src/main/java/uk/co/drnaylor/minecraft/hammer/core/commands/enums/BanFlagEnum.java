@@ -64,5 +64,17 @@ public enum BanFlagEnum implements FlagEnum {
 
             return strings;
         }
+    },
+    PERM {
+        Set<Character> strings = new HashSet<>();
+
+        @Override
+        public Set<Character> getStrings() {
+            if (strings.isEmpty()) {
+                strings.add('p');
+            }
+
+            return strings;
+        }
     }
 }

@@ -62,7 +62,7 @@ import java.util.ArrayList;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.5.2";
+    public static final String VERSION = "0.5.3";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -104,13 +104,16 @@ public class HammerSponge {
                 // Ban command
                 game.getCommandManager().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
                 game.getCommandManager().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
-                game.getCommandManager().register(this, new SpongeCommand(game, new PermBanCommandCore(core)), "permban", "hammerpban", "hpban", "pban");
                 game.getCommandManager().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
                 game.getCommandManager().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");
                 game.getCommandManager().register(this, new SpongeAlias(game, "ban", arguments), "gban");
+
+                ArrayList<String> arguments1 = new ArrayList<>();
+                arguments.add("-p");
+                game.getCommandManager().register(this, new SpongeAlias(game, "ban", arguments1), "permban", "hammerpban", "hpban", "pban");
 
                 // Kick commands
                 game.getCommandManager().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");

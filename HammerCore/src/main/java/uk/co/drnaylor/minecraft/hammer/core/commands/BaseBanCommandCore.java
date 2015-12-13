@@ -74,7 +74,8 @@ public abstract class BaseBanCommandCore extends CommandCore {
         WrappedServer server = core.getWrappedServer();
 
         ConfigurationNode cn = core.getConfig().getConfig();
-        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), cn.getNode("server", "id").getInt(), cn.getNode("server", "name").getString("Unknown"));
+        int serverId = cn.getNode("server", "id").getInt();
+        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), serverId, cn.getNode("server", "name").getString("Unknown"));
 
         // Next up, the player. Can we find them? Get the last player...
         UUID uuidToBan = arguments.<List<HammerPlayerInfo>>getArgument("player").get().stream().sorted(Collections.reverseOrder()).findFirst().get().getUUID();
@@ -86,12 +87,38 @@ public abstract class BaseBanCommandCore extends CommandCore {
             flag = Collections.emptyList();
         }
 
+        // Permission check
+        if (flag.contains(BanFlagEnum.PERM) && !source.hasPermission("hammer.ban.perm")) {
+            sendNoPermsMessage(source);
+            return true;
+        }
+
+        if (flag.contains(BanFlagEnum.ALL) && !source.hasPermission("hammer.ban.all")) {
+            sendNoPermsMessage(source);
+            return true;
+        }
+
         // Start a transaction. We might need to delete some rows here.
         conn.startTransaction();
-        BanInfo status = checkOtherBans(uuidToBan, conn, flag.contains(BanFlagEnum.ALL));
+
+        builder.setPlayerToBan(uuidToBan);
 
         // Set global flag here, before the checks below.
         builder.setAll(flag.contains(BanFlagEnum.ALL));
+
+        // Same with permanent ban flag
+        builder.setPerm(flag.contains(BanFlagEnum.PERM));
+        builder.setReason(arguments.<String>getArgument("reason").orElse(null));
+
+        if (!performSpecificActions(builder, arguments)) {
+            // Usage.
+            sendUsageMessage(source);
+            conn.rollbackTransaction();
+            return true;
+        }
+
+        // Check current ban status.
+        BanInfo status = checkOtherBans(uuidToBan, conn, builder);
 
         if (status.status == BanStatus.NO_ACTION) {
             sendTemplatedMessage(source, "hammer.player.alreadyBanned", true, true);
@@ -100,6 +127,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
             // Auto upgrade! If you get a global ban, and a permanent ban is already in force, the 
             // permanent ban takes effect everywhere.
             sendTemplatedMessage(source, "hammer.player.upgradeToPerm", false, false);
+            conn.getBanHandler().unbanFromServer(uuidToBan, serverId);
             builder.setPerm(true);
         } else if (status.status == BanStatus.TO_GLOBAL) {
             // Auto upgrade! If you get a perm ban, and a global ban is already in force, the 
@@ -107,15 +135,6 @@ public abstract class BaseBanCommandCore extends CommandCore {
             sendTemplatedMessage(source, "hammer.player.upgradeToAll", false, false);
             conn.getBanHandler().unbanFromAllServers(uuidToBan);
             builder.setAll(true);
-        }
-
-        builder.setPlayerToBan(uuidToBan);
-
-        if (!performSpecificActions(builder, arguments)) {
-            // Usage.
-            sendUsageMessage(source);
-            conn.rollbackTransaction();
-            return true;
         }
 
         String reason = createReason(arguments, status.reasons);
@@ -177,7 +196,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
      */
     protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap);
 
-    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException;
+    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreatePlayerBanBuilder pendingBan) throws HammerException;
 
     protected String createReason(ArgumentMap argumentMap, List<String> otherReasons) {
         Optional<String> reas = argumentMap.<String>getArgument("reason");

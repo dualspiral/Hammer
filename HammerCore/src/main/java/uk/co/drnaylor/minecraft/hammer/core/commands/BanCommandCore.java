@@ -25,10 +25,15 @@
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -68,39 +73,55 @@ public class BanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, boolean isGlobal) throws HammerException {
+    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreatePlayerBanBuilder proposedBan) throws HammerException {
         // Check if they are already banned.
         List<HammerPlayerBan> bans = conn.getBanHandler().getPlayerBans(bannedPlayer);
-        if (isGlobal) {
-            List<String> reasons = new ArrayList<>();
-            boolean isPerm = false;
-            for (HammerPlayerBan ban : bans) {
-                if (!ban.isTempBan()) {
-                    reasons.add(ban.getReason());
+        List<String> reasons = bans.stream().filter(b -> !b.isTempBan()).map(HammerBan::getReason).collect(Collectors.toList());
+
+        // If we are globalling banning...
+        if (proposedBan.isGlobal()) {
+            Stream<HammerPlayerBan> sp = bans.stream().filter(b -> b.getServerId() == null);
+            if (sp.count() != 0) {
+                // We have a global already.
+                if (sp.anyMatch(HammerPlayerBan::isPermBan) && !proposedBan.isPerm()) {
+                    // It's a permanent ban, upgrade.
+                    proposedBan.setPerm(true);
+                    return new BanInfo(BanStatus.TO_PERM, reasons);
                 }
 
-                if (ban.getServerId() == null) {
-                    return new BanInfo(BanStatus.NO_ACTION, null);
-                }
+                // It's not perm.
+                return new BanInfo(BanStatus.NO_ACTION, null);
+            }
 
-                if (ban.isPermBan()) {
-                    isPerm = true;
-                }
+            // No global ban exists, but are we going permanent?
+            boolean goingToPerm = !proposedBan.isPerm() && bans.stream().anyMatch(HammerPlayerBan::isPermBan);
+            if (goingToPerm) {
+                proposedBan.setPerm(true);
             }
 
             // If it's going global, then unban all current.
             conn.getBanHandler().unbanFromAllServers(bannedPlayer);
-            return new BanInfo(isPerm ? BanStatus.TO_PERM : BanStatus.CONTINUE, reasons);
+            return new BanInfo(goingToPerm ? BanStatus.TO_PERM : BanStatus.CONTINUE, reasons);
         }
 
-        for (HammerPlayerBan ban : bans) {
-            Integer serverId = ban.getServerId();
-            if (serverId == null || Objects.equals(serverId, core.getConfig().getConfig().getNode("server", "id").getInt())) {
-                // Banned. No further action.
-                return new BanInfo(BanStatus.NO_ACTION, null);
+        Collection<HammerPlayerBan> s = bans.stream().filter(b -> b.getServerId() == null || Objects.equals(b.getServerId(), core.getConfig().getConfig().getNode("server", "id").getInt()))
+                .collect(Collectors.toList());
+        if (s.isEmpty()) {
+            // Nothing to change, or we're upgrading to perm.
+            return new BanInfo(BanStatus.CONTINUE, reasons);
+        } else if (proposedBan.isPerm() && s.stream().noneMatch(HammerPlayerBan::isPermBan)) {
+
+            // Make it global if we already have a global ban.
+            if (s.stream().anyMatch(b -> b.getServerId() == null)) {
+                return new BanInfo(BanStatus.TO_GLOBAL, reasons);
             }
+
+            // We're upgrading to perm.
+            conn.getBanHandler().unbanFromServer(bannedPlayer, core.getConfig().getConfig().getNode("server", "id").getInt());
+            return new BanInfo(BanStatus.CONTINUE, reasons);
         }
 
-        return new BanInfo(BanStatus.CONTINUE, null);
+        // No action is needed.
+        return new BanInfo(BanStatus.NO_ACTION, null);
     }
 }
