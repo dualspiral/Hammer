@@ -25,14 +25,11 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.*;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.command.CommandCallable;
-import org.spongepowered.api.command.CommandException;
-import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import uk.co.drnaylor.minecraft.hammer.core.commands.CommandCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -60,6 +57,10 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
+        if (!testPermission(source)) {
+            throw new CommandPermissionException(Texts.of(TextColors.RED, "[Hammer] You do not have permission to do that."));
+        }
+
         try {
             List<String> a = Arrays.asList(arguments.split(" "));
             if (source instanceof Player) {
