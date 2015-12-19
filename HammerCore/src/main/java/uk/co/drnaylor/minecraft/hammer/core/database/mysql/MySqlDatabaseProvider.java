@@ -51,9 +51,20 @@ public final class MySqlDatabaseProvider implements IDatabaseProvider {
     public MySqlDatabaseProvider(String host, int port, String database, String username, String password) throws ClassNotFoundException {
         this.username = username;
         this.password = password;
-        this.connectionPath = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
 
-        Class.forName("com.mysql.jdbc.Driver");
+        String connPath;
+
+        // Use the MySQL driver if we have it, else use mariadb
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            connPath = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
+        } catch (ClassNotFoundException e) {
+            // MariaDB
+            Class.forName("org.mariadb.jdbc.Driver");
+            connPath = String.format("jdbc:mariadb://%s:%s/%s", host, port, database);
+        }
+
+        this.connectionPath = connPath;
     }
 
     @Override
