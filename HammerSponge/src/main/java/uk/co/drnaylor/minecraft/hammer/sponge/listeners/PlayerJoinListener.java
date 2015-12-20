@@ -48,7 +48,7 @@ public class PlayerJoinListener {
     public void onPlayerJoin(ClientConnectionEvent.Join event) {
         Optional<Player> pl = event.getTargetEntity().getPlayer();
         if (pl.isPresent()) {
-            core.handleEvent(new SpongeWrappedPlayer(game, pl.get()));
+            core.handleEvent(new SpongeWrappedPlayer(pl.get()));
         }
     }
 }

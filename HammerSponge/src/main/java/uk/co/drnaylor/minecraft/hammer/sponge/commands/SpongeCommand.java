@@ -64,7 +64,7 @@ public class SpongeCommand implements CommandCallable {
         try {
             List<String> a = Arrays.asList(arguments.split(" "));
             if (source instanceof Player) {
-                core.executeCommand(new SpongeWrappedPlayer(game, (Player)source), a);
+                core.executeCommand(new SpongeWrappedPlayer((Player)source), a);
             } else if (source instanceof ConsoleSource) {
                 core.executeCommand(new SpongeWrappedConsole((ConsoleSource)source), a);
             }

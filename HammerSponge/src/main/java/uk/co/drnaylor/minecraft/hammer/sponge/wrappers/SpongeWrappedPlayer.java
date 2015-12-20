@@ -25,13 +25,14 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.Ban;
-import org.spongepowered.api.util.ban.BanType;
+import org.spongepowered.api.util.ban.BanTypes;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -48,11 +49,14 @@ import java.util.UUID;
 public class SpongeWrappedPlayer implements WrappedPlayer {
 
     private final User player;
-    private final Game game;
 
+    @Deprecated
     public SpongeWrappedPlayer(Game game, User player) {
+        this(player);
+    }
+
+    public SpongeWrappedPlayer(User player) {
         this.player = player;
-        this.game = game;
     }
 
     /**
@@ -120,20 +124,17 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void ban(WrappedCommandSource source, HammerText reason) {
-        Optional<BanService> serviceOptional = getBanService();
-        if (serviceOptional.isPresent()) {
-            Ban.Builder builder = Ban.builder().reason(HammerTextConverter.constructLiteral(reason)).user(player).type(BanType.USER_BAN);
-            if (source instanceof SpongeWrappedPlayer) {
-                Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
-                if (sourceplayer.isPresent()) {
-                    builder.source(sourceplayer.get());
-                }
-            } else if (source instanceof SpongeWrappedConsole) {
-                builder.source(((SpongeWrappedConsole) source).getSpongeSource());
+        Ban.Builder builder = Ban.builder().reason(HammerTextConverter.constructLiteral(reason)).profile(player.getProfile()).type(BanTypes.PROFILE);
+        if (source instanceof SpongeWrappedPlayer) {
+            Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
+            if (sourceplayer.isPresent()) {
+                builder.source(sourceplayer.get());
             }
-
-            serviceOptional.get().ban(builder.build());
+        } else if (source instanceof SpongeWrappedConsole) {
+            builder.source(((SpongeWrappedConsole) source).getSpongeSource());
         }
+
+        getBanService().get().addBan(builder.build());
 
         kick(reason);
     }
@@ -153,9 +154,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void unban() {
-        Optional<BanService> serviceOptional = getBanService();
-        if (serviceOptional.isPresent()) {
-            serviceOptional.get().pardon(player);
+        BanService service = getBanService().get();
+        Optional<Ban.Profile> obp = service.getBanFor(player.getProfile());
+        if (obp.isPresent()) {
+            service.removeBan(obp.get());
         }
     }
 
@@ -166,13 +168,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean isBanned() {
-        Optional<BanService> serviceOptional = getBanService();
-        if (serviceOptional.isPresent()) {
-            return serviceOptional.get().isBanned(player);
-        } else {
-            // No ban service means that bans aren't likely to materialise...
-            return false;
-        }
+        return getBanService().get().isBanned(player.getProfile());
     }
 
     /**
@@ -230,7 +226,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      * @return The {@link BanService}
      */
     private Optional<BanService> getBanService() {
-        return game.getServiceManager().provide(BanService.class);
+        return Sponge.getGame().getServiceManager().provide(BanService.class);
     }
 
     /**

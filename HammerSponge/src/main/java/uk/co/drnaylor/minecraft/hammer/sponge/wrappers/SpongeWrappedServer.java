@@ -69,7 +69,7 @@ public class SpongeWrappedServer implements WrappedServer {
         UserStorageService service = game.getServiceManager().provide(UserStorageService.class).get();
         Optional<User> player = service.get(uuid);
         if (player.isPresent()) {
-            return new SpongeWrappedPlayer(game, player.get());
+            return new SpongeWrappedPlayer(player.get());
         }
 
         return null;
@@ -86,7 +86,7 @@ public class SpongeWrappedServer implements WrappedServer {
         UserStorageService service = game.getServiceManager().provide(UserStorageService.class).get();
         Optional<User> player = service.get(name);
         if (player.isPresent()) {
-            return new SpongeWrappedPlayer(game, player.get());
+            return new SpongeWrappedPlayer(player.get());
         }
 
         return null;
@@ -94,7 +94,7 @@ public class SpongeWrappedServer implements WrappedServer {
 
     @Override
     public List<WrappedPlayer> getOnlinePlayers() {
-        return game.getServer().getOnlinePlayers().stream().map(p -> new SpongeWrappedPlayer(game, p)).collect(Collectors.toList());
+        return game.getServer().getOnlinePlayers().stream().map(p -> new SpongeWrappedPlayer(p)).collect(Collectors.toList());
     }
 
     /**

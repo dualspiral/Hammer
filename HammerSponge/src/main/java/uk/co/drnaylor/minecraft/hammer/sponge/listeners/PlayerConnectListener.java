@@ -70,7 +70,7 @@ public class PlayerConnectListener {
 
             User user = storageService.getOrCreate(pl);
             HammerText text = eventCore.handleEvent(
-                    new SpongeWrappedPlayer(game, user),
+                    new SpongeWrappedPlayer(user),
                     host);
 
             if (text != null) {
