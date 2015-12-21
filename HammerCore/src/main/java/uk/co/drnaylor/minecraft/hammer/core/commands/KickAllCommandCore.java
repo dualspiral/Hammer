@@ -77,7 +77,7 @@ public class KickAllCommandCore extends CommandCore {
     @Override
     protected boolean executeCommand(WrappedCommandSource source, ArgumentMap arguments, DatabaseConnection conn) throws HammerException {
         Optional<List<KickAllFlagEnum>> flagOptional = arguments.<List<KickAllFlagEnum>>getArgument("kickall");
-        boolean whitelist = flagOptional.get().contains(KickAllFlagEnum.WHITELIST);
+        boolean whitelist = flagOptional.isPresent() && flagOptional.get().contains(KickAllFlagEnum.WHITELIST);
         if (flagOptional.isPresent()) {
             if (whitelist) {
                 if (source.hasPermission("hammer.whitelist")) {
