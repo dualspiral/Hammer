@@ -1,5 +1,5 @@
 name: Hammer
-version: 0.5.3
+version: 0.6
 main: uk.co.drnaylor.minecraft.hammer.bukkit.HammerBukkit
 commands:
   ban:
@@ -61,16 +61,21 @@ commands:
     description: Updates the bans on the server
     permission: hammer.admin.updatebans
     aliases: [hupdatebans]
-#  banip:
-#    description: IP Ban a player.
-#    permission: hammer.banip
-#    usage: "/ipban [-t time] <user|IP>"
-#    aliases: [hipban, hammeripban]
-#  unbanip:
-#    description: IP Unban.
-#    permission: hammer.unbanip
-#    usage: "/ipunban <ip>"
-#    aliases: [hipunban, hammeripunban]
+  banip:
+    description: IP Ban a player.
+    permission: hammer.banip.norm
+    usage: "/ipban <user|IP> reason"
+    aliases: [hipban, hammeripban]
+  tempbanip:
+    description: Temporarily IP Ban a player.
+    permission: hammer.banip.temp
+    usage: "/ipban <user|IP> <time> reason"
+    aliases: [hipban, hammeripban]
+  ipunban:
+    description: IP Unban.
+    permission: hammer.unbanip
+    usage: "/ipunban <ip>"
+    aliases: [unbanip, hipunban, hammeripunban]
 permissions:
   hammer.ban.normal:
     default: op

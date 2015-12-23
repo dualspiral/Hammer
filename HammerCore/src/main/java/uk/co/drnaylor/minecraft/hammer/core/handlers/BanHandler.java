@@ -24,15 +24,18 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.handlers;
 
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBan;
+import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
-import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+import java.util.stream.Collectors;
 
 public class BanHandler {
 
@@ -42,12 +45,37 @@ public class BanHandler {
         this.dg = dg;
     }
 
-    public void createServerBan(HammerCreatePlayerBan ban) throws HammerException {
+    public void createPlayerBan(HammerCreateBan.Player ban) throws HammerException {
         try {
             dg.insertPlayerBan(ban);
         } catch (Exception ex) {
             throw new HammerException("An error occurred setting the player ban.", ex);
         }
+    }
+
+    public void createIPBan(HammerCreateBan.IP ban) throws HammerException {
+        try {
+            dg.insertIPBan(ban);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred setting the IP ban.", ex);
+        }
+    }
+
+    public List<HammerIPBan> getIPBans(InetAddress addr) throws HammerException {
+        try {
+            return dg.getIPBans(addr);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred getting the IP bans.", ex);
+        }
+    }
+
+    public List<HammerIPBan> getIPBanForServer(InetAddress addr, int serverId) throws HammerException {
+        return getIPBans(addr).stream().filter(b -> b.getServerId() == null || b.getServerId() == serverId)
+                .collect(Collectors.toList());
+    }
+
+    public boolean isIPBannedFromServer(InetAddress addr, int serverId) throws HammerException {
+        return !getIPBanForServer(addr, serverId).isEmpty();
     }
 
     public boolean isBannedFromServer(UUID player, int serverId) throws HammerException {
@@ -85,10 +113,6 @@ public class BanHandler {
         }
     }
 
-   public HammerIPBan getIpBan(String ip) {
-        return null;
-    }
-
     public void unbanFromServer(UUID playerToBan, int serverId) throws HammerException {
         try {
             dg.removePlayerBan(playerToBan, serverId);
@@ -105,6 +129,22 @@ public class BanHandler {
         }
     }
 
+    public void unbanIpFromServer(InetAddress ip, int serverId) throws HammerException {
+        try {
+            dg.removeIPBan(ip, serverId);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred removing the IP ban.", ex);
+        }
+    }
+
+    public void unbanIpFromAllServers(InetAddress ip) throws HammerException {
+        try {
+            dg.removeAllIPBans(ip);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred removing the IP bans.", ex);
+        }
+    }
+
     public boolean upgadeToPerm(UUID playerToBan, int serverId) throws HammerException {
         try {
             HammerPlayerBan hpb = dg.getPlayerBanForServer(playerToBan, serverId);
@@ -117,18 +157,6 @@ public class BanHandler {
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting and/or setting the player ban.", ex);
         }
-    }
-
-    public boolean isIpBanned(String ip) {
-        return getIpBan(ip) != null;
-    }
-
-    public boolean createIpBan(HammerIPBan ban) {
-        return false;
-    }
-
-    public boolean unbanIp(String ip) {
-        return false;
     }
 
     public boolean isExternalIdUsed(String externalId) throws HammerException {

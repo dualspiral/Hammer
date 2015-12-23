@@ -31,13 +31,15 @@ import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.config.DefaultConfig;
-import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.service.ban.BanService;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.*;
@@ -55,6 +57,7 @@ import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Sponge plugin entrypoint
@@ -62,7 +65,7 @@ import java.util.ArrayList;
 @Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
 public class HammerSponge {
 
-    public static final String VERSION = "0.5.3";
+    public static final String VERSION = "0.6";
 
     @Inject private Game game;
     @Inject private Logger logger;
@@ -98,14 +101,14 @@ public class HammerSponge {
                 logger.info("Registering Hammer commands...");
 
                 CommandSpec spec = CommandSpec.builder().executor(new HammerCommand(this))
-                        .child(new SpongeCommand(game, new ReloadCommandCore(core)), "reload").build();
+                        .child(new SpongeCommand(new ReloadCommandCore(core)), "reload").build();
                 game.getCommandManager().register(this, spec, "hammer");
 
                 // Ban command
-                game.getCommandManager().register(this, new SpongeCommand(game, new BanCommandCore(core)), "ban", "hban", "hammerban");
-                game.getCommandManager().register(this, new SpongeCommand(game, new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
-                game.getCommandManager().register(this, new SpongeCommand(game, new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
-                game.getCommandManager().register(this, new SpongeCommand(game, new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
+                game.getCommandManager().register(this, new SpongeCommand(new BanCommandCore(core)), "ban", "hban", "hammerban");
+                game.getCommandManager().register(this, new SpongeCommand(new TempBanCommandCore(core)), "tempban", "tban", "htban", "hammertban");
+                game.getCommandManager().register(this, new SpongeCommand(new UnbanCommandCore(core)), "unban", "hunban", "hammerunban");
+                game.getCommandManager().register(this, new SpongeCommand(new CheckBanCommandCore(core)), "checkban", "hcheckban", "hammercheckban");
 
                 ArrayList<String> arguments = new ArrayList<>();
                 arguments.add("-a");
@@ -116,16 +119,21 @@ public class HammerSponge {
                 game.getCommandManager().register(this, new SpongeAlias(game, "ban", arguments1), "permban", "hammerpban", "hpban", "pban");
 
                 // Kick commands
-                game.getCommandManager().register(this, new SpongeCommand(game, new KickCommandCore(core)), "kick", "hkick", "hammerkick");
-                game.getCommandManager().register(this, new SpongeCommand(game, new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
+                game.getCommandManager().register(this, new SpongeCommand(new KickCommandCore(core)), "kick", "hkick", "hammerkick");
+                game.getCommandManager().register(this, new SpongeCommand(new KickAllCommandCore(core)), "kickall", "hkickall", "hammerkickall");
 
                 // Import Player command
-                game.getCommandManager().register(this, new SpongeCommand(game, new ImportPlayerCommand(core)), "importplayer", "himportplayer");
+                game.getCommandManager().register(this, new SpongeCommand(new ImportPlayerCommand(core)), "importplayer", "himportplayer");
 
                 // Upgrade to permban
-                game.getCommandManager().register(this, new SpongeCommand(game, new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
-                game.getCommandManager().register(this, new SpongeCommand(game, new ReloadCommandCore(core)), "hammerreload");
-                game.getCommandManager().register(this, new SpongeCommand(game, new UpdateBansCommandCore(core)), "updatebans", "hupdatebans");
+                game.getCommandManager().register(this, new SpongeCommand(new UpgradeToPermBanCommandCore(core)), "toperm", "hammertoperm");
+                game.getCommandManager().register(this, new SpongeCommand(new ReloadCommandCore(core)), "hammerreload");
+                game.getCommandManager().register(this, new SpongeCommand(new UpdateBansCommandCore(core)), "updatebans", "hupdatebans");
+
+                // IP Bans
+                game.getCommandManager().register(this, new SpongeCommand(new BanIPCommandCore(core)), "ipban", "banip", "hipban", "hammeripban");
+                game.getCommandManager().register(this, new SpongeCommand(new TempBanIPCommandCore(core)), "tempipban", "tempbanip", "htempipban", "hammertempipban");
+                game.getCommandManager().register(this, new SpongeCommand(new UnbanIPCommandCore(core)), "ipunban", "unbanip", "hipunban", "hammeripunban");
 
                 logger.info("Registering Hammer events...");
 
@@ -183,15 +191,6 @@ public class HammerSponge {
     }
 
     /**
-     * Gets the configuration manager for Hammer.
-     *
-     * @return The {@link ConfigurationLoader}
-     */
-    public ConfigurationLoader<CommentedConfigurationNode> getConfigurationManager() {
-        return this.configurationManager;
-    }
-
-    /**
      * Creates the {@link HammerCore} object.
      * @throws ClassNotFoundException The MySQL JDBC driver isn't on the classpath.
      * @throws IOException Configuration could not be loaded.
@@ -214,5 +213,14 @@ public class HammerSponge {
 
     public static HammerSponge getInstance() {
         return instance;
+    }
+
+    /**
+     * Gets the {@link BanService}
+     *
+     * @return The {@link BanService}
+     */
+    public static Optional<BanService> getBanService() {
+        return Sponge.getGame().getServiceManager().provide(BanService.class);
     }
 }

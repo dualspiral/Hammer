@@ -24,18 +24,14 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
+
+import java.util.*;
 
 public class TempBanCommandCore extends BaseBanCommandCore {
 
@@ -61,7 +57,7 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
+    protected boolean performSpecificActions(HammerCreateBanBuilder builder, ArgumentMap argumentMap) {
         Date until = new Date();
         until = add(until, Calendar.SECOND, argumentMap.<Integer>getArgument("time").get());
         builder.setTemporary(until);
@@ -87,7 +83,7 @@ public class TempBanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreatePlayerBanBuilder builder) throws HammerException {
+    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreateBanBuilder builder) throws HammerException {
         if (conn.getBanHandler().getPlayerBanForServer(bannedPlayer, core.getConfig().getConfig().getNode("server", "id").getInt()) != null) {
             return new BanInfo(BanStatus.NO_ACTION, null);
         }

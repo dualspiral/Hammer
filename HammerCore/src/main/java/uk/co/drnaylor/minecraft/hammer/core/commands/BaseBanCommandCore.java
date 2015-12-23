@@ -24,9 +24,6 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
-import java.text.MessageFormat;
-import java.util.*;
-
 import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
@@ -36,8 +33,8 @@ import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBanBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -46,6 +43,9 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedServer;
+
+import java.text.MessageFormat;
+import java.util.*;
 
 @RunAsync
 public abstract class BaseBanCommandCore extends CommandCore {
@@ -75,7 +75,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
 
         ConfigurationNode cn = core.getConfig().getConfig();
         int serverId = cn.getNode("server", "id").getInt();
-        HammerCreatePlayerBanBuilder builder = new HammerCreatePlayerBanBuilder(source.getUUID(), serverId, cn.getNode("server", "name").getString("Unknown"));
+        HammerCreateBanBuilder builder = new HammerCreateBanBuilder(source.getUUID(), serverId, cn.getNode("server", "name").getString("Unknown"));
 
         // Next up, the player. Can we find them? Get the last player...
         UUID uuidToBan = arguments.<List<HammerPlayerInfo>>getArgument("player").get().stream().sorted(Collections.reverseOrder()).findFirst().get().getUUID();
@@ -148,8 +148,13 @@ public abstract class BaseBanCommandCore extends CommandCore {
         builder.setReason(reason);
         builder.setExternalId(conn.getNewExternalID());
 
-        HammerCreatePlayerBan ban = builder.build();
-        conn.getBanHandler().createServerBan(ban);
+        HammerCreateBan builtban = builder.build();
+        if (!(builtban instanceof HammerCreateBan.Player)) {
+            throw new HammerException("Could not build a player ban");
+        }
+
+        HammerCreateBan.Player ban = (HammerCreateBan.Player)builtban;
+        conn.getBanHandler().createPlayerBan(ban);
 
         // Commit the transaction
         conn.commitTransaction();
@@ -170,7 +175,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
             }
         } else {
             server.sendMessageToPermissionGroup(
-                    new HammerTextBuilder().add("[Hammer] This ban is quiet. Only those with notify permissions will see this.", HammerTextColours.RED).build(),
+                    new HammerTextBuilder().add("[Hammer] " + messageBundle.getString("hammer.ban.quiet"), HammerTextColours.RED).build(),
                     HammerPermissions.notify);
             for (HammerText t : msg) {
                 server.sendMessageToPermissionGroup(t, HammerPermissions.notify);
@@ -190,13 +195,13 @@ public abstract class BaseBanCommandCore extends CommandCore {
      * Note that the provided iterator needs to have the next method called on it to get the first usable argument.
      * Do not advance the iterator at the end.
      *
-     * @param builder The {@link HammerCreatePlayerBanBuilder} to update.
+     * @param builder The {@link HammerCreateBanBuilder} to update.
      * @param argumentMap The arguments to pass to the method
      * @return <code>true</code> to signify success.
      */
-    protected abstract boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap);
+    protected abstract boolean performSpecificActions(HammerCreateBanBuilder builder, ArgumentMap argumentMap);
 
-    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreatePlayerBanBuilder pendingBan) throws HammerException;
+    protected abstract BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreateBanBuilder pendingBan) throws HammerException;
 
     protected String createReason(ArgumentMap argumentMap, List<String> otherReasons) {
         Optional<String> reas = argumentMap.<String>getArgument("reason");
@@ -218,7 +223,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         return sb.toString();
     }
 
-    private void createAuditLog(HammerCreatePlayerBan cpb, DatabaseConnection conn) {
+    private void createAuditLog(HammerCreateBan.Player cpb, DatabaseConnection conn) {
         int id = core.getConfig().getConfig().getNode("server", "id").getInt();
 
         try {
@@ -230,7 +235,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
         }
     }
 
-    private String createAuditMessage(HammerCreatePlayerBan cpb, DatabaseConnection conn) throws HammerException {
+    private String createAuditMessage(HammerCreateBan.Player cpb, DatabaseConnection conn) throws HammerException {
         String playerName = getName(cpb.getBannedUUID(), conn);
         String name;
         if (cpb.getStaffUUID().equals(HammerConstants.consoleUUID)) {

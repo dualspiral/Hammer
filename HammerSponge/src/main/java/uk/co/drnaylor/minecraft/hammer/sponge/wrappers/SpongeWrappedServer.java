@@ -26,11 +26,15 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
+import org.spongepowered.api.util.ban.Ban;
+import org.spongepowered.api.util.ban.BanTypes;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
@@ -38,6 +42,8 @@ import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -94,7 +100,7 @@ public class SpongeWrappedServer implements WrappedServer {
 
     @Override
     public List<WrappedPlayer> getOnlinePlayers() {
-        return game.getServer().getOnlinePlayers().stream().map(p -> new SpongeWrappedPlayer(p)).collect(Collectors.toList());
+        return game.getServer().getOnlinePlayers().stream().map(SpongeWrappedPlayer::new).collect(Collectors.toList());
     }
 
     /**
@@ -191,5 +197,46 @@ public class SpongeWrappedServer implements WrappedServer {
     @Override
     public File getLogFolder() {
         return logFolder;
+    }
+
+    /**
+     * Bans an IP address from the server.
+     *
+     * @param ip     The {@link InetAddress} to ban
+     * @param reason The reason for banning.
+     */
+    @Override
+    public void banIP(InetAddress ip, String reason) {
+        Game game = Sponge.getGame();
+
+        Ban ban = Ban.builder().type(BanTypes.IP).address(ip).reason(Text.of(reason)).source(game.getServer().getConsole())
+                .startDate(Instant.now()).build();
+        HammerSponge.getBanService().get().addBan(ban);
+        game.getServer().getOnlinePlayers().stream().filter(x -> x.getConnection().getAddress().getAddress().getHostAddress().equals(ip.getHostAddress()))
+                .forEach(p -> p.kick(HammerTextConverter.constructLiteral(new HammerTextBuilder().add(reason).build())));
+    }
+
+    /**
+     * Unbans an IP address from the server.
+     *
+     * @param ip The {@link InetAddress} to unban
+     */
+    @Override
+    public void unbanIP(InetAddress ip) {
+        Optional<Ban.Ip> ban = HammerSponge.getBanService().get().getBanFor(ip);
+        if (ban.isPresent()) {
+            HammerSponge.getBanService().get().pardon(ip);
+        }
+    }
+
+    /**
+     * Returns whether an IP is banned from the server.
+     *
+     * @param ip The IP to check.
+     * @return <code>true</code> if the IP has been banned, <code>false</code> otherwise.
+     */
+    @Override
+    public boolean isIPBanned(InetAddress ip) {
+        return HammerSponge.getBanService().get().getBanFor(ip).isPresent();
     }
 }

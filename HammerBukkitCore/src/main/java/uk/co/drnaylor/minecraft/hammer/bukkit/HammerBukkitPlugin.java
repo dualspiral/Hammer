@@ -25,14 +25,14 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit;
 
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.DumperOptions;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitAlias;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.HammerCommand;
-import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
+import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
@@ -114,8 +114,9 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 ArrayList<String> arguments1 = new ArrayList<>();
                 arguments1.add("-p");
                 this.getCommand("permban").setExecutor(new BukkitAlias(this, "ban", arguments1));
-                // this.getCommand("banip").setExecutor(new BukkitCommand(new BanIPCommandCore(core)));
-                // this.getCommand("unbanip").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
+                this.getCommand("banip").setExecutor(new BukkitCommand(new BanIPCommandCore(core)));
+                this.getCommand("tempbanip").setExecutor(new BukkitCommand(new TempBanIPCommandCore(core)));
+                this.getCommand("ipunban").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
 
                 this.getLogger().log(Level.INFO, "Registering Hammer events...");
                 this.getServer().getPluginManager().registerEvents(new PlayerConnectListener(this), this);

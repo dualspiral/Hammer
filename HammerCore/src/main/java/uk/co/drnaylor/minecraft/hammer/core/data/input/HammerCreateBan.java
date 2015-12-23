@@ -24,24 +24,23 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.data.input;
 
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.UUID;
 
-public class HammerCreatePlayerBan {
+public abstract class HammerCreateBan {
     private final String externalID;
     private final UUID bannedBy;
     private final boolean isPerm;
     private final String reason;
     private final Integer serverId;
-    private final UUID bannedUUID;
     private final Date tempBan;
 
-    HammerCreatePlayerBan(String externalId, UUID bannedBy,
-            boolean isPerm, String reason, Integer serverId,
-            UUID bannedUUID, Date tempBan) {
+    protected HammerCreateBan(String externalId, UUID bannedBy,
+                    boolean isPerm, String reason, Integer serverId,
+                    Date tempBan) {
         this.externalID = externalId;
         this.bannedBy = bannedBy;
-        this.bannedUUID = bannedUUID;
         this.isPerm = isPerm;
         this.reason = reason;
         this.serverId = serverId;
@@ -50,10 +49,6 @@ public class HammerCreatePlayerBan {
 
     public String getExternalID() {
         return externalID;
-    }
-
-    public UUID getBannedUUID() {
-        return bannedUUID;
     }
 
     public UUID getStaffUUID() {
@@ -74,5 +69,33 @@ public class HammerCreatePlayerBan {
 
     public Date getTempBanExpiration() {
         return tempBan;
+    }
+
+    public static final class Player extends HammerCreateBan {
+        private final UUID bannedUUID;
+
+        Player(String externalId, UUID bannedBy, boolean isPerm, String reason, Integer serverId,
+                        UUID bannedUUID, Date tempBan) {
+            super(externalId, bannedBy, isPerm, reason, serverId, tempBan);
+            this.bannedUUID = bannedUUID;
+        }
+
+        public UUID getBannedUUID() {
+            return bannedUUID;
+        }
+    }
+
+    public static final class IP extends HammerCreateBan {
+        private final InetAddress bannedIP;
+
+        IP(String externalId, UUID bannedBy, String reason, Integer serverId,
+               InetAddress bannedIP, Date tempBan) {
+            super(externalId, bannedBy, false, reason, serverId, tempBan);
+            this.bannedIP = bannedIP;
+        }
+
+        public InetAddress getBannedIP() {
+            return bannedIP;
+        }
     }
 }

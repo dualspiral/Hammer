@@ -69,12 +69,22 @@ public class HammerPermissions {
     /**
      * Permission to indicate whether the specified player has permission to ban IPs
      */
-    public final static String ipBan = "hammer.ipban";
+    public final static String ipBan = "hammer.ipban.norm";
+
+    /**
+     * Permission to indicate whether the specified player has permission to ban IPs globally
+     */
+    public final static String ipBanGlobal = "hammer.ipban.all";
 
     /**
      * Permission to indicate whether the specified player has permission to unban IPs
      */
-    public final static String ipUnban = "hammer.ipunban";
+    public final static String ipUnban = "hammer.ipunban.norm";
+
+    /**
+     * Permission to indicate whether the specified player has permission to unban IPs
+     */
+    public final static String ipUnbanGlobal = "hammer.ipunban.all";
 
     /**
      * Permission to indicate whether the specified player has permission to check bans
