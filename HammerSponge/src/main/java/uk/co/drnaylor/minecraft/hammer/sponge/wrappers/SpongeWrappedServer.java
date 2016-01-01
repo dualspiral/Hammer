@@ -26,11 +26,11 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.user.UserStorageService;
-import org.spongepowered.api.text.sink.MessageSinks;
-import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.channel.MessageChannel;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
@@ -113,7 +113,7 @@ public class SpongeWrappedServer implements WrappedServer {
      */
     @Override
     public void sendMessageToServer(HammerText message) {
-        game.getServer().getBroadcastSink().sendMessage(HammerTextConverter.constructMessage(message));
+        game.getServer().getBroadcastChannel().send(HammerTextConverter.constructMessage(message));
     }
 
     /**
@@ -131,7 +131,7 @@ public class SpongeWrappedServer implements WrappedServer {
         targets.add(game.getServer().getConsole());
 
         // Send
-        MessageSinks.to(targets).sendMessage(HammerTextConverter.constructMessage(message));
+        MessageChannel.fixed(targets).send(HammerTextConverter.constructMessage(message));
     }
 
     /**

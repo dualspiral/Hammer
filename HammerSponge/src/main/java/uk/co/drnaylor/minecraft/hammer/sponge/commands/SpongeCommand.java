@@ -26,11 +26,10 @@ package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.*;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.command.source.ConsoleSource;
 import uk.co.drnaylor.minecraft.hammer.core.commands.CommandCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
@@ -47,7 +46,7 @@ import java.util.Optional;
 public class SpongeCommand implements CommandCallable {
 
     private final CommandCore core;
-    private final Text error = Texts.of("[Hammer] An error occurred", TextColors.RED);
+    private final Text error = Text.of("[Hammer] An error occurred", TextColors.RED);
     private final Game game;
 
     public SpongeCommand(Game game, CommandCore core) {
@@ -58,7 +57,7 @@ public class SpongeCommand implements CommandCallable {
     @Override
     public CommandResult process(CommandSource source, String arguments) throws CommandException {
         if (!testPermission(source)) {
-            throw new CommandPermissionException(Texts.of(TextColors.RED, "[Hammer] You do not have permission to do that."));
+            throw new CommandPermissionException(Text.of(TextColors.RED, "[Hammer] You do not have permission to do that."));
         }
 
         try {

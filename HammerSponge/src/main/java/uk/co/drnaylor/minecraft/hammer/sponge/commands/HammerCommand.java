@@ -24,14 +24,13 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
 import java.util.ArrayList;
@@ -43,8 +42,8 @@ public class HammerCommand implements CommandExecutor {
 
     public HammerCommand(HammerSponge plugin) {
         texts = new ArrayList<>();
-        texts.add(Texts.of("This server is running Hammer for Sponge version " + HammerSponge.VERSION, TextColors.GREEN));
-        texts.add(Texts.of("Using HammerCore version " + plugin.getCore().getHammerCoreVersion(), TextColors.GREEN));
+        texts.add(Text.of("This server is running Hammer for Sponge version " + HammerSponge.VERSION, TextColors.GREEN));
+        texts.add(Text.of("Using HammerCore version " + plugin.getCore().getHammerCoreVersion(), TextColors.GREEN));
     }
 
     @Override

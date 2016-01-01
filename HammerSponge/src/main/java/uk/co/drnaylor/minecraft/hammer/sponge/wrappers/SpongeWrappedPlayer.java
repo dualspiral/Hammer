@@ -24,12 +24,11 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.service.ban.BanService;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.Ban;
 import org.spongepowered.api.util.ban.BanTypes;
@@ -49,11 +48,6 @@ import java.util.UUID;
 public class SpongeWrappedPlayer implements WrappedPlayer {
 
     private final User player;
-
-    @Deprecated
-    public SpongeWrappedPlayer(Game game, User player) {
-        this(player);
-    }
 
     public SpongeWrappedPlayer(User player) {
         this.player = player;
@@ -102,7 +96,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     public void sendMessage(String message) {
         Optional<Player> onlinePlayer = player.getPlayer();
         if (onlinePlayer.isPresent()) {
-            onlinePlayer.get().sendMessage(ChatTypes.SYSTEM, Texts.of(message));
+            onlinePlayer.get().sendMessage(ChatTypes.SYSTEM, Text.of(message));
         }
     }
 
@@ -193,7 +187,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     public void kick(String reason) {
         Optional<Player> onlinePlayer = player.getPlayer();
         if (onlinePlayer.isPresent()) {
-            onlinePlayer.get().kick(Texts.of(reason));
+            onlinePlayer.get().kick(Text.of(reason));
         }
     }
 

@@ -24,9 +24,8 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.text;
 
+import org.spongepowered.api.text.LiteralText;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextBuilder;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextStyle;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -44,9 +43,9 @@ public final class HammerTextConverter {
      * but without any styling.
      *
      * @param message The {@link HammerText} messages.
-     * @return The completed {@link org.spongepowered.api.text.Text.Literal}
+     * @return The completed {@link org.spongepowered.api.text.LiteralText}
      */
-    public static Text.Literal constructLiteral(HammerText message) {
+    public static LiteralText constructLiteral(HammerText message) {
         // Get the message, and just parse the actual text.
         StringBuilder sb = new StringBuilder();
         for (HammerText.Element e : message.getElements()) {
@@ -57,7 +56,7 @@ public final class HammerTextConverter {
             sb.append(e.message);
         }
 
-        return Texts.builder(sb.toString()).build();
+        return Text.builder(sb.toString()).build();
     }
 
     /**
@@ -67,12 +66,12 @@ public final class HammerTextConverter {
      * @return The completed message.
      */
     public static Text constructMessage(HammerText message) {
-        TextBuilder builder = Texts.builder();
+        Text.Builder builder = Text.builder();
 
         // For each HammerText element...
         for (HammerText.Element e : message.getElements()) {
             // Message
-            TextBuilder inner = Texts.builder(e.message);
+            Text.Builder inner = Text.builder(e.message);
 
             // Colour?
             if (e.colour != null) {

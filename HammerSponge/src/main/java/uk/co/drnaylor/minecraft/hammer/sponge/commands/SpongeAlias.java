@@ -25,12 +25,11 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
 import org.spongepowered.api.Game;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,6 +142,6 @@ public class SpongeAlias implements CommandCallable {
      */
     @Override
     public Text getUsage(CommandSource source) {
-        return Texts.of();
+        return Text.of();
     }
 }

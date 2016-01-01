@@ -24,8 +24,8 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.text.Text;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedCommandSource;
@@ -79,7 +79,7 @@ public class SpongeWrappedConsole implements WrappedCommandSource {
      */
     @Override
     public void sendMessage(String message) {
-        console.sendMessage(Texts.of(message));
+        console.sendMessage(Text.of(message));
     }
 
     /**
