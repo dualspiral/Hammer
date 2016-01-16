@@ -24,6 +24,7 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.commands.parsers;
 
+import com.google.common.collect.Lists;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -31,10 +32,13 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class HammerPlayerParser implements IParser<List<HammerPlayerInfo>> {
 
     private final HammerCore core;
+    private final Pattern uuid = Pattern.compile("^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$");
 
     public HammerPlayerParser(HammerCore core) {
         this.core = core;
@@ -48,7 +52,20 @@ public class HammerPlayerParser implements IParser<List<HammerPlayerInfo>> {
 
         try (DatabaseConnection dg = core.getDatabaseConnection()) {
             String name = stringIterator.next();
-            List<HammerPlayerInfo> hpi = dg.getPlayerHandler().getPlayersByName(name);
+            List<HammerPlayerInfo> hpi;
+
+            // We have a UUID
+            if (uuid.matcher(name).matches()) {
+                UUID uuid = UUID.fromString(name);
+                HammerPlayerInfo h = dg.getPlayerHandler().getPlayer(uuid);
+                if (h != null) {
+                    return Optional.of(Lists.newArrayList(h));
+                }
+
+                return Optional.empty();
+            }
+
+            hpi = dg.getPlayerHandler().getPlayersByName(name);
             if (hpi == null || hpi.isEmpty()) {
                 throw new ArgumentParseException("The player " + name + " does not exist in Hammer.");
             }
