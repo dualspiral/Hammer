@@ -38,6 +38,8 @@ buildscript {
     }
 }
 
+group = 'uk.co.drnaylor.minecraft'
+
 defaultTasks 'build'
 
 apply plugin: 'java'
