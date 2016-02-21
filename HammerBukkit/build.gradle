@@ -70,3 +70,12 @@ shadowJar  {
     relocate 'com.google.thirdparty', 'uk.co.drnaylor.relocation.com.google.thirdparty'
 }
 build.dependsOn(shadowJar)
+
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            from components.java
+            artifact shadowJar
+        }
+    }
+}

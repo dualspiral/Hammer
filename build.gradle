@@ -38,7 +38,11 @@ buildscript {
     }
 }
 
-group = 'uk.co.drnaylor.minecraft'
+allprojects {
+    apply plugin: 'maven-publish'
+
+    group = 'uk.co.drnaylor.minecraft'
+}
 
 defaultTasks 'build'
 

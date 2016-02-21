@@ -67,3 +67,12 @@ shadowJar {
     relocate 'ninja.leaping.configurate', 'uk.co.drnaylor.relocation.ninja.leaping.configurate'
 }
 build.dependsOn(shadowJar)
+
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            from components.java
+            artifact shadowJar
+        }
+    }
+}
