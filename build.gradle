@@ -41,6 +41,7 @@ buildscript {
 allprojects {
     apply plugin: 'maven-publish'
 
+    version = '0.5.4-SNAPSHOT'
     group = 'uk.co.drnaylor.minecraft'
 }
 
