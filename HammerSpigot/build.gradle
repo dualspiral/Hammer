@@ -28,8 +28,9 @@ apply plugin: 'idea'
 sourceCompatibility = 1.8
 
 repositories {
+    jcenter()
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots'
     }
 	maven {
 		url 'https://oss.sonatype.org/content/repositories/snapshots'
@@ -40,7 +41,7 @@ dependencies {
     compile project(':HammerCore')
     compile project(':HammerBukkitCore')
     testCompile group: 'junit', name: 'junit', version: '4.11'
-    compile group: 'org.bukkit', name: 'bukkit', version: '1.8-R0.1-SNAPSHOT'
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.8.8-R0.1-SNAPSHOT'
 }
 
 sourceSets {

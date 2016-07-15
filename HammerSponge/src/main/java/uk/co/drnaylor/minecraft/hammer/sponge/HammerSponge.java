@@ -59,9 +59,10 @@ import java.util.ArrayList;
 /**
  * Sponge plugin entrypoint
  */
-@Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION)
+@Plugin(id = "hammer", name = "Hammer for Sponge", version = HammerSponge.VERSION, description = HammerSponge.DESCRIPTION)
 public class HammerSponge {
 
+    public static final String DESCRIPTION = "Ban Management for Server Networks";
     public static final String VERSION = "0.5.3";
 
     @Inject private Game game;
