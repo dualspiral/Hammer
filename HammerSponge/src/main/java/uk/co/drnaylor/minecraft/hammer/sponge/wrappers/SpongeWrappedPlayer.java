@@ -128,7 +128,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
             builder.source(((SpongeWrappedConsole) source).getSpongeSource());
         }
 
-        getBanService().get().addBan(builder.build());
+        HammerSponge.getBanService().get().addBan(builder.build());
 
         kick(reason);
     }
@@ -148,7 +148,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void unban() {
-        BanService service = getBanService().get();
+        BanService service = HammerSponge.getBanService().get();
         Optional<Ban.Profile> obp = service.getBanFor(player.getProfile());
         if (obp.isPresent()) {
             service.removeBan(obp.get());
@@ -162,7 +162,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean isBanned() {
-        return getBanService().get().isBanned(player.getProfile());
+        return HammerSponge.getBanService().get().isBanned(player.getProfile());
     }
 
     /**
@@ -212,15 +212,6 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
         }
 
         return null;
-    }
-
-    /**
-     * Gets the {@link BanService}
-     *
-     * @return The {@link BanService}
-     */
-    private Optional<BanService> getBanService() {
-        return Sponge.getGame().getServiceManager().provide(BanService.class);
     }
 
     /**

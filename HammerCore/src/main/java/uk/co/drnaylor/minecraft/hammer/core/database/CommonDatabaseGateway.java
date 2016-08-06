@@ -25,11 +25,13 @@
 package uk.co.drnaylor.minecraft.hammer.core.database;
 
 import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
+import java.net.InetAddress;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -79,6 +81,7 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
                 "CREATE TABLE IF NOT EXISTS ip_bans (\n" +
                         "    ip_ban_id integer auto_increment primary key,\n" +
                         "    ip varchar(40) not null,\n" +
+                        "    banned datetime not null,\n" +
                         "    banned_by integer not null references player_data(player_id),\n" +
                         "    banned_until datetime,\n" +
                         "    from_server integer references server_data(server_id),\n" +
@@ -102,7 +105,8 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
                 "CREATE INDEX idx_actor_1 ON audit(actor)",
                 "CREATE INDEX idx_target_1 ON audit(target)",
                 "CREATE INDEX idx_datetime_1 ON audit(datetime)",
-                "CREATE INDEX idx_action_1 ON audit(action)"
+                "CREATE INDEX idx_action_1 ON audit(action)",
+                "ALTER TABLE ip_bans ADD banned datetime NOT NULL"
         };
 
         for (String c : catchableStatements) {
@@ -227,7 +231,7 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
     }
 
     @Override
-    public void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException, HammerException {
+    public void insertPlayerBan(HammerCreateBan.Player ban) throws SQLException, HammerException {
         PreparedStatement ps = connection.prepareStatement("INSERT INTO player_bans("
                 + "external_id, banned_player, banned, banned_until, banned_by, from_server, is_permanent, reason) "
                 + "VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
@@ -291,6 +295,80 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
             ps.setInt(2, serverId);
         }
 
+        ps.executeUpdate();
+    }
+
+    @Override
+    public List<HammerIPBan> getIPBans(InetAddress address) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(
+                "SELECT b.ip, b.banned_by, pb.uuid, pb.last_name, b.banned, b.banned_until, b.from_server, s.server_name, b.reason " +
+                "FROM ip_bans b " +
+                "inner join player_data pb on b.banned_by = pb.player_id " +
+                "left outer join server_data s on b.from_server = s.server_id " +
+                "WHERE ip = ?;"
+        );
+
+        ps.setString(1, address.getHostAddress());
+        List<HammerIPBan> bans = new ArrayList<>();
+        try (ResultSet set = ps.executeQuery()) {
+            while (set.next()) {
+                bans.add(createHammerIPBan(set));
+            }
+        }
+
+        return bans;
+    }
+
+    @Override
+    public void insertIPBan(HammerCreateBan.IP ban) throws SQLException, HammerException {
+        PreparedStatement ps = connection.prepareStatement("INSERT INTO ip_bans("
+            + "ip, banned_by, banned, banned_until, from_server, reason) "
+            + "VALUES(?, ?, ?, ?, ?, ?);");
+
+        ps.setString(1, ban.getBannedIP().getHostAddress());
+        ps.setInt(2, getIdForPlayerFromUUID(ban.getStaffUUID()));
+        ps.setTimestamp(3, getCurrentDate());
+        if (ban.getTempBanExpiration() != null) {
+            ps.setTimestamp(4, new java.sql.Timestamp(ban.getTempBanExpiration().getTime()));
+        } else {
+            ps.setNull(4, Types.DATE);
+        }
+
+        if (ban.getServerId() == null) {
+            ps.setNull(5, Types.INTEGER);
+        } else {
+            ps.setInt(5, ban.getServerId());
+        }
+
+        ps.setString(6, ban.getReason());
+        ps.executeUpdate();
+    }
+
+    @Override
+    public void removeIPBan(InetAddress address, Integer serverId) throws SQLException {
+        PreparedStatement ps;
+        if (serverId == null) {
+            ps = connection.prepareStatement(
+                    "DELETE FROM ip_bans WHERE ip = ? AND server_id IS NULL;"
+            );
+        } else {
+            ps = connection.prepareStatement(
+                    "DELETE FROM ip_bans WHERE ip = ? AND server_id = ?;"
+            );
+            ps.setInt(2, serverId);
+        }
+
+        ps.setString(1, address.getHostAddress());
+        ps.executeUpdate();
+    }
+
+    @Override
+    public void removeAllIPBans(InetAddress address) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM ip_bans WHERE ip = ?;"
+        );
+
+        ps.setString(1, address.getHostAddress());
         ps.executeUpdate();
     }
 
@@ -482,6 +560,20 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
                 serverValue == 0 ? null : serverValue,
                 serverName,
                 set.getString("external_id"));
+    }
+
+    private HammerIPBan createHammerIPBan(ResultSet set) throws SQLException {
+        int serverValue = set.getInt("from_server");
+        String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
+        return new HammerIPBan(
+                UUID.fromString(set.getString("banned_by")),
+                set.getString("last_name"),
+                set.getString("reason"),
+                set.getTimestamp("banned"),
+                set.getTimestamp("banned_until"),
+                serverValue == 0 ? null : serverValue,
+                serverName
+        );
     }
 
     @Override

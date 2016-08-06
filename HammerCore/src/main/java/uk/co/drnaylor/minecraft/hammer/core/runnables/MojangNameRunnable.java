@@ -24,6 +24,7 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.runnables;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConstants;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
@@ -51,6 +52,10 @@ public class MojangNameRunnable implements Runnable {
     private final HammerCore core;
     private final String playerName;
 
+    MojangNameRunnable(WrappedCommandSource source, HammerCore core) {
+        this(source, core, null);
+    }
+
     public MojangNameRunnable(WrappedCommandSource source, HammerCore core, String playerName) {
         this.source = source;
         this.core = core;
@@ -59,26 +64,38 @@ public class MojangNameRunnable implements Runnable {
 
     @Override
     public void run() {
-        String json = getJsonResponse();
-        if (json == null) {
+        Preconditions.checkNotNull(playerName);
+
+        try (DatabaseConnection conn = core.getDatabaseConnection()) {
+            if (addPlayer(playerName, conn)) {
+                // And that's all there is to it! We just have to tell the user.
+                added();
+            } else {
+                noAdditions();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             noAdditions();
-            return;
+        }
+    }
+
+    public boolean addPlayer(String pl, DatabaseConnection conn) {
+        String json = getJsonResponse(pl);
+        if (json == null) {
+            return false;
         }
 
         Gson gson = new Gson();
         PlayerData pd = gson.fromJson(json, PlayerData.class);
 
         // Got the data, now shove it into the system.
-        try (DatabaseConnection conn = core.getDatabaseConnection()) {
+        try {
             conn.getPlayerHandler().updatePlayer(pd.getID(), pd.name, "0.0.0.0");
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            noAdditions();
-            return;
+            return false;
         }
-
-        // And that's all there is to it! We just have to tell the user.
-        added();
     }
 
     private void noAdditions() {
@@ -93,8 +110,8 @@ public class MojangNameRunnable implements Runnable {
         core.getWrappedServer().getScheduler().runSyncNow(new MessageSenderRunnable(source, ht1));
     }
 
-    private String getJsonResponse() {
-        String target = String.format("https://api.mojang.com/users/profiles/minecraft/%s", playerName);
+    private String getJsonResponse(String plName) {
+        String target = String.format("https://api.mojang.com/users/profiles/minecraft/%s", plName);
         String r = null;
 
         // I have no idea what I would do without Stack Overflow.
@@ -147,7 +164,7 @@ public class MojangNameRunnable implements Runnable {
         public String id;
         public String name;
 
-        public UUID getID() {
+        UUID getID() {
             Matcher m = uuidRegex.matcher(id);
             if (m.matches()) {
                 StringBuilder sb = new StringBuilder();

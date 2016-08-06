@@ -36,7 +36,10 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -52,9 +55,20 @@ public class PlayerConnectListenerCore {
 
     public HammerText handleEvent(WrappedPlayer player, String hostAddress) throws HammerException {
         HammerBan ban = getBan(player.getUUID(), hostAddress);
+        InetAddress addr = null;
+        try {
+            addr = InetAddress.getByName(hostAddress);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
         if (ban == null) {
             if (player.isBanned()) {
                 player.unban();
+            }
+
+            if (addr != null && core.getWrappedServer().isIPBanned(addr)) {
+                core.getWrappedServer().unbanIP(addr);
             }
 
             return null;
@@ -65,6 +79,12 @@ public class PlayerConnectListenerCore {
             player.ban(core.getWrappedServer().getConsole(), ban.getReason());
         } else if (ban instanceof HammerIPBan && player.isBanned()) {
             player.unban();
+        }
+
+        if (ban instanceof HammerIPBan) {
+            if (addr != null && !core.getWrappedServer().isIPBanned(addr)) {
+                core.getWrappedServer().banIP(addr, ban.getReason());
+            }
         }
 
         return constructBanMessage(ban);
@@ -87,8 +107,12 @@ public class PlayerConnectListenerCore {
                 return ban;
             }
 
-            HammerIPBan ipban = conn.getBanHandler().getIpBan(hostAddress);
-            return ipban;
+            List<HammerIPBan> ipban = conn.getBanHandler().getIPBanForServer(InetAddress.getByName(hostAddress), serverId);
+            if (ipban.isEmpty()) {
+                return null;
+            }
+
+            return ipban.get(0);
         } catch (Exception ex) {
             throw new HammerException("Connection to the MySQL database failed. Falling back to the Minecraft ban list.", ex);
         }

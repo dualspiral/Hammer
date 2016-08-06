@@ -24,16 +24,18 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.database;
 
+import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBan;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+
+import java.net.InetAddress;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
 public interface IDatabaseGateway extends AutoCloseable {
 
@@ -58,13 +60,21 @@ public interface IDatabaseGateway extends AutoCloseable {
 
     void updatePlayer(UUID player, String lastName, String ip) throws SQLException;
 
-    void insertPlayerBan(HammerCreatePlayerBan ban) throws SQLException, HammerException;
+    void insertPlayerBan(HammerCreateBan.Player ban) throws SQLException, HammerException;
 
     void removePlayerBan(UUID player, Integer serverId) throws SQLException;
 
     void removeAllPlayerBans(UUID player) throws SQLException;
 
     void removeExpiredPlayerBans(Integer serverId) throws SQLException;
+
+    List<HammerIPBan> getIPBans(InetAddress address) throws SQLException;
+
+    void insertIPBan(HammerCreateBan.IP ban) throws SQLException, HammerException;
+
+    void removeIPBan(InetAddress address, Integer serverId) throws SQLException;
+
+    void removeAllIPBans(InetAddress address) throws SQLException;
 
     /**
      * Gets a value indicating whether the specified external ID exists.

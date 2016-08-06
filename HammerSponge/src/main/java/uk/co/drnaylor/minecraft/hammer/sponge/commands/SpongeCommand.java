@@ -24,7 +24,6 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.commands;
 
-import org.spongepowered.api.Game;
 import org.spongepowered.api.command.*;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -47,10 +46,8 @@ public class SpongeCommand implements CommandCallable {
 
     private final CommandCore core;
     private final Text error = Text.of("[Hammer] An error occurred", TextColors.RED);
-    private final Game game;
 
-    public SpongeCommand(Game game, CommandCore core) {
-        this.game = game;
+    public SpongeCommand(CommandCore core) {
         this.core = core;
     }
 
@@ -83,13 +80,7 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        for (String p : core.getRequiredPermissions()) {
-            if (source.hasPermission(p)) {
-                return true;
-            }
-        }
-
-        return false;
+        return core.getRequiredPermissions().isEmpty() || core.getRequiredPermissions().stream().anyMatch(source::hasPermission);
     }
 
     @Override

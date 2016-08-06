@@ -24,22 +24,21 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.commands;
 
+import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
+import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreateBanBuilder;
+import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
-import uk.co.drnaylor.minecraft.hammer.core.commands.enums.BanFlagEnum;
-import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.*;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBan;
-import uk.co.drnaylor.minecraft.hammer.core.data.input.HammerCreatePlayerBanBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
-import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextBuilder;
-import uk.co.drnaylor.minecraft.hammer.core.text.HammerTextColours;
 
 /**
  * Provides the core Ban Command, based on the player and arguments sent down.
@@ -67,13 +66,13 @@ public class BanCommandCore extends BaseBanCommandCore {
     }
 
     @Override
-    protected boolean performSpecificActions(HammerCreatePlayerBanBuilder builder, ArgumentMap argumentMap) {
+    protected boolean performSpecificActions(HammerCreateBanBuilder builder, ArgumentMap argumentMap) {
         // Nothing
         return true;
     }
 
     @Override
-    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreatePlayerBanBuilder proposedBan) throws HammerException {
+    protected BanInfo checkOtherBans(UUID bannedPlayer, DatabaseConnection conn, HammerCreateBanBuilder proposedBan) throws HammerException {
         // Check if they are already banned.
         List<HammerPlayerBan> bans = conn.getBanHandler().getPlayerBans(bannedPlayer);
         List<String> reasons = bans.stream().filter(b -> !b.isTempBan()).map(HammerBan::getReason).collect(Collectors.toList());

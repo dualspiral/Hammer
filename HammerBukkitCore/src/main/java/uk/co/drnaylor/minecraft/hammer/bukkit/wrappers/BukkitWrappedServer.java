@@ -33,7 +33,11 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 
 import java.io.File;
-import java.util.*;
+import java.net.InetAddress;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class BukkitWrappedServer implements WrappedServer {
@@ -77,7 +81,7 @@ public class BukkitWrappedServer implements WrappedServer {
 
     @Override
     public List<WrappedPlayer> getOnlinePlayers() {
-        return Arrays.asList(plugin.getOnlinePlayers()).stream().map(BukkitWrappedPlayer::new).collect(Collectors.toList());
+        return plugin.getOnlinePlayers().stream().map(BukkitWrappedPlayer::new).collect(Collectors.toList());
     }
 
     /**
@@ -118,8 +122,7 @@ public class BukkitWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, String reason) {
-        List<Player> lpl = Arrays.asList(plugin.getOnlinePlayers());
-        Iterator<Player> iterator = lpl.iterator();
+        Iterator<? extends Player> iterator = plugin.getOnlinePlayers().iterator();
 
         // Note that we are using an iterator here as we cannot guarantee that the player remains in the
         // list of online players.
@@ -166,5 +169,40 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public File getLogFolder() {
         return logFolder;
+    }
+
+    /**
+     * Bans an IP address from the server.
+     *
+     * @param ip     The {@link InetAddress} to ban
+     * @param reason The reason for banning.
+     */
+    @Override
+    public void banIP(InetAddress ip, String reason) {
+        server.banIP(ip.getHostAddress());
+        HammerBukkitPlugin.getPlugin().getOnlinePlayers().stream()
+                .filter(p -> p.getAddress().getAddress().getHostAddress().equals(ip.getHostAddress()))
+                .forEach(player -> player.kickPlayer(reason));
+    }
+
+    /**
+     * Unbans an IP address from the server.
+     *
+     * @param ip The {@link InetAddress} to unban
+     */
+    @Override
+    public void unbanIP(InetAddress ip) {
+        server.unbanIP(ip.getHostAddress());
+    }
+
+    /**
+     * Returns whether an IP is banned from the server.
+     *
+     * @param ip The IP to check.
+     * @return <code>true</code> if the IP has been banned, <code>false</code> otherwise.
+     */
+    @Override
+    public boolean isIPBanned(InetAddress ip) {
+        return server.getIPBans().contains(ip.getHostAddress());
     }
 }

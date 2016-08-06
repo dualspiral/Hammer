@@ -162,7 +162,7 @@ public abstract class CommandCore {
             }
         }
 
-        /**
+        /*
          * This runner allows us to run commands async, if the class is marked with the {@link RunAsync} annotation
          */
         CommandRunner r = new CommandRunner() {

@@ -24,17 +24,18 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core.data.input;
 
-import java.util.Date;
-import java.util.UUID;
-
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+
+import java.net.InetAddress;
+import java.util.Date;
+import java.util.UUID;
 
 /**
  * A builder class that helps create a {@link HammerPlayerBan} object safely.
  */
 @SuppressWarnings("UnusedReturnValue")
-public class HammerCreatePlayerBanBuilder {
+public class HammerCreateBanBuilder {
 
     private Date temporary = null;
     private boolean isAll = false;
@@ -45,8 +46,9 @@ public class HammerCreatePlayerBanBuilder {
     private final int serverId;
     private final String serverName;
     private String externalId;
+    private InetAddress ipAddress;
 
-    public HammerCreatePlayerBanBuilder(UUID staff, int serverId, String serverName) {
+    public HammerCreateBanBuilder(UUID staff, int serverId, String serverName) {
         this.staff = staff;
         this.serverId = serverId;
 
@@ -54,38 +56,43 @@ public class HammerCreatePlayerBanBuilder {
         this.serverName = serverName;
     }
 
-    public HammerCreatePlayerBanBuilder setTemporary(Date temporary) {
+    public HammerCreateBanBuilder setTemporary(Date temporary) {
         this.temporary = temporary;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder clearTemporary() {
+    public HammerCreateBanBuilder clearTemporary() {
         this.temporary = null;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder setAll(boolean isAll) {
+    public HammerCreateBanBuilder setAll(boolean isAll) {
         this.isAll = isAll;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder setPerm(boolean isPerm) {
+    public HammerCreateBanBuilder setPerm(boolean isPerm) {
         this.isPerm = isPerm;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder setPlayerToBan(UUID playerToBan) {
+    public HammerCreateBanBuilder setPlayerToBan(UUID playerToBan) {
         this.banned = playerToBan;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder setReason(String reason) {
+    public HammerCreateBanBuilder setReason(String reason) {
         this.reason = reason;
         return this;
     }
 
-    public HammerCreatePlayerBanBuilder setExternalId(String externalID) {
+    public HammerCreateBanBuilder setExternalId(String externalID) {
         this.externalId = externalID;
+        return this;
+    }
+
+    public HammerCreateBanBuilder setIPAddress(InetAddress address) {
+        this.ipAddress = address;
         return this;
     }
 
@@ -101,23 +108,27 @@ public class HammerCreatePlayerBanBuilder {
         return isAll;
     }
 
-    public HammerCreatePlayerBan build() throws HammerException {
+    public HammerCreateBan build() throws HammerException {
         if (temporary != null && isPerm) {
             throw new HammerException("A temp ban cannot be set as permanent.");
-        }
-
-        if (banned == null) {
-            throw new HammerException("A target is needed to ban!");
         }
 
         if (reason == null) {
             throw new HammerException("A reason is needed to ban!");
         }
 
-        if (externalId == null) {
-            throw new HammerException("A new External ID is needed to ban!");
+        if (banned == null && ipAddress == null) {
+            throw new HammerException("A target is needed to ban!");
         }
 
-        return new HammerCreatePlayerBan(externalId, staff, isPerm, reason, isAll ? null : serverId, banned, temporary);
+        if (banned != null) {
+            if (externalId == null) {
+                throw new HammerException("A new External ID is needed to ban!");
+            }
+
+            return new HammerCreateBan.Player(externalId, staff, isPerm, reason, isAll ? null : serverId, banned, temporary);
+        }
+
+        return new HammerCreateBan.IP(externalId, staff, reason, isAll ? null : serverId, ipAddress, temporary);
     }
 }

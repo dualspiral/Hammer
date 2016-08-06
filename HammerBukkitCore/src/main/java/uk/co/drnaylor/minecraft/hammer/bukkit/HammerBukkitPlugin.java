@@ -25,14 +25,14 @@
 package uk.co.drnaylor.minecraft.hammer.bukkit;
 
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.DumperOptions;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitAlias;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.BukkitCommand;
 import uk.co.drnaylor.minecraft.hammer.bukkit.commands.HammerCommand;
-import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerConnectListener;
+import uk.co.drnaylor.minecraft.hammer.bukkit.listeners.PlayerJoinListener;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedPlayer;
 import uk.co.drnaylor.minecraft.hammer.bukkit.wrappers.BukkitWrappedServer;
 import uk.co.drnaylor.minecraft.hammer.core.HammerConfiguration;
@@ -45,17 +45,21 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("WeakerAccess")
-public abstract class HammerBukkitPlugin extends JavaPlugin {
+public class HammerBukkitPlugin extends JavaPlugin {
 
     private static final String filePath = "plugins/Hammer/config.yml";
     private HammerCore core;
     private static HammerBukkitPlugin instance;
 
-    public abstract Player[] getOnlinePlayers();
+    public Collection<? extends Player> getOnlinePlayers() {
+        return this.getServer().getOnlinePlayers();
+    }
 
     public static HammerBukkitPlugin getPlugin() {
         return instance;
@@ -66,6 +70,7 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        instance = this;
         this.getLogger().log(Level.INFO, "-----------------------------------------------------------------");
         this.getLogger().log(Level.INFO, "Welcome to Hammer for Bukkit version {0}", this.getDescription().getVersion());
         this.getLogger().log(Level.INFO, "Hammer will now perform some startup tasks. Stand by...");
@@ -114,8 +119,13 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 ArrayList<String> arguments1 = new ArrayList<>();
                 arguments1.add("-p");
                 this.getCommand("permban").setExecutor(new BukkitAlias(this, "ban", arguments1));
-                // this.getCommand("banip").setExecutor(new BukkitCommand(new BanIPCommandCore(core)));
-                // this.getCommand("unbanip").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
+                this.getCommand("banip").setExecutor(new BukkitCommand(new BanIPCommandCore(core)));
+                this.getCommand("tempbanip").setExecutor(new BukkitCommand(new TempBanIPCommandCore(core)));
+                this.getCommand("ipunban").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
+
+                this.getCommand("ipunban").setExecutor(new BukkitCommand(new UnbanIPCommandCore(core)));
+
+                this.getCommand("importserverbans").setExecutor(new BukkitCommand(new ImportServerBansCommandCore(core)));
 
                 this.getLogger().log(Level.INFO, "Registering Hammer events...");
                 this.getServer().getPluginManager().registerEvents(new PlayerConnectListener(this), this);
@@ -124,14 +134,10 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
                 this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(core.getPlayerJoinListenerCore()), this);
 
                 // Are players online? If so, we've gone mid run and need to save a load of players.
-                if (this.getOnlinePlayers().length > 0) {
+                if (!this.getOnlinePlayers().isEmpty()) {
                     this.getLogger().log(Level.INFO, "Players are currently online. Ensuring the players are registered in Hammer...");
 
-                    List<HammerPlayerInfo> i = new ArrayList<>();
-                    for (Player player : getOnlinePlayers()) {
-                        i.add(new BukkitWrappedPlayer(player).getHammerPlayer());
-                    }
-
+                    List<HammerPlayerInfo> i = getOnlinePlayers().stream().map(player -> new BukkitWrappedPlayer(player).getHammerPlayer()).collect(Collectors.toList());
                     conn.getPlayerHandler().updatePlayers(i);
                 }
             }
@@ -145,8 +151,6 @@ public abstract class HammerBukkitPlugin extends JavaPlugin {
             this.getPluginLoader().disablePlugin(this);
             return;
         }
-
-        instance = this;
     }
 
     /**

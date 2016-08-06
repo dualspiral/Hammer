@@ -27,6 +27,7 @@ package uk.co.drnaylor.minecraft.hammer.core.wrappers;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
 import java.io.File;
+import java.net.InetAddress;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,4 +128,34 @@ public interface WrappedServer {
      * @return The log folder.
      */
     File getLogFolder();
+
+    /**
+     * Gets the {@link File} that represents the banned players.
+     *
+     * @return The file.
+     */
+    default File getBannedPlayersFile() {
+        return new File("banned-players.json");
+    }
+
+    /**
+     * Bans an IP address from the server.
+     * @param ip The {@link InetAddress} to ban
+     * @param reason The reason for banning.
+     */
+    void banIP(InetAddress ip, String reason);
+
+    /**
+     * Unbans an IP address from the server.
+     * @param ip The {@link InetAddress} to unban
+     */
+    void unbanIP(InetAddress ip);
+
+    /**
+     * Returns whether an IP is banned from the server.
+     *
+     * @param ip The IP to check.
+     * @return <code>true</code> if the IP has been banned, <code>false</code> otherwise.
+     */
+    boolean isIPBanned(InetAddress ip);
 }
