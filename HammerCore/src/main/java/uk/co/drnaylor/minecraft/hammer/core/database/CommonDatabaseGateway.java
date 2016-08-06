@@ -301,7 +301,7 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
     @Override
     public List<HammerIPBan> getIPBans(InetAddress address) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(
-                "SELECT b.ip, b,banned_by, pb.uuid, pb.last_name, b.banned, b.banned_until, b.from_server, s.server_name, b.reason " +
+                "SELECT b.ip, b.banned_by, pb.uuid, pb.last_name, b.banned, b.banned_until, b.from_server, s.server_name, b.reason " +
                 "FROM ip_bans b " +
                 "inner join player_data pb on b.banned_by = pb.player_id " +
                 "left outer join server_data s on b.from_server = s.server_id " +

@@ -29,16 +29,17 @@ sourceCompatibility = 1.8
 version = '0.6'
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven {
-        url 'http://repo.md-5.net/content/repositories/repobo-snap/'
+        name 'Spigot'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
 }
 
 dependencies {
     compile project(':HammerCore')
-    compile group: 'org.bukkit', name: 'bukkit', version: '1.7.9-R0.1-SNAPSHOT'
-    compile group: 'ninja.leaping.configurate', name: 'configurate-yaml', version: '3.0'
+    compile group: 'org.bukkit', name: 'bukkit', version: '1.8.8-R0.1-SNAPSHOT'
+    compile group: 'ninja.leaping.configurate', name: 'configurate-yaml', version: '3.1'
 }
 
 sourceSets {
@@ -52,9 +53,20 @@ sourceSets {
     }
 }
 
-shadowJar  {
+shadowJar {
     dependencies {
         include(project(':HammerCore'))
+        include(dependency('ninja.leaping.configurate:configurate-yaml'))
+        include(dependency('ninja.leaping.configurate:configurate-core'))
+        include(dependency('ninja.leaping.configurate:configurate-gson'))
     }
+
+    // Relocating in case of clashes on the classpath!
+    relocate 'ninja.leaping.configurate', 'uk.co.drnaylor.relocation.ninja.leaping.configurate'
 }
 build.dependsOn(shadowJar)
+
+artifacts {
+    archives shadowJar
+}
+install.dependsOn(shadowJar)

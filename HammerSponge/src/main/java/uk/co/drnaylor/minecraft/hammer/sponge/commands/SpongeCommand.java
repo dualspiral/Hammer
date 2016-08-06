@@ -80,13 +80,7 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public boolean testPermission(CommandSource source) {
-        for (String p : core.getRequiredPermissions()) {
-            if (source.hasPermission(p)) {
-                return true;
-            }
-        }
-
-        return false;
+        return core.getRequiredPermissions().isEmpty() || core.getRequiredPermissions().stream().anyMatch(source::hasPermission);
     }
 
     @Override

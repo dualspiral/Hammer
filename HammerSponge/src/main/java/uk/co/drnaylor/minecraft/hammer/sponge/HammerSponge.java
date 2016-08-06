@@ -135,6 +135,8 @@ public class HammerSponge {
                 game.getCommandManager().register(this, new SpongeCommand(new TempBanIPCommandCore(core)), "tempipban", "tempbanip", "htempipban", "hammertempipban");
                 game.getCommandManager().register(this, new SpongeCommand(new UnbanIPCommandCore(core)), "ipunban", "unbanip", "hipunban", "hammeripunban");
 
+                game.getCommandManager().register(this, new SpongeCommand(new ImportServerBansCommandCore(core)), "importserverbans");
+
                 logger.info("Registering Hammer events...");
 
                 // Register the events

@@ -26,7 +26,6 @@
 // Gradle repositories and dependencies
 buildscript {
     repositories {
-        mavenCentral()
         maven {
             name = 'sonatype-nexus-public'
             url = 'https://oss.sonatype.org/content/repositories/public/'
@@ -34,7 +33,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
     }
 }
 

@@ -81,7 +81,7 @@ public class BukkitWrappedServer implements WrappedServer {
 
     @Override
     public List<WrappedPlayer> getOnlinePlayers() {
-        return Arrays.asList(plugin.getOnlinePlayers()).stream().map(BukkitWrappedPlayer::new).collect(Collectors.toList());
+        return plugin.getOnlinePlayers().stream().map(BukkitWrappedPlayer::new).collect(Collectors.toList());
     }
 
     /**
@@ -122,8 +122,7 @@ public class BukkitWrappedServer implements WrappedServer {
      */
     @Override
     public void kickAllPlayers(WrappedCommandSource source, String reason) {
-        List<Player> lpl = Arrays.asList(plugin.getOnlinePlayers());
-        Iterator<Player> iterator = lpl.iterator();
+        Iterator<? extends Player> iterator = plugin.getOnlinePlayers().iterator();
 
         // Note that we are using an iterator here as we cannot guarantee that the player remains in the
         // list of online players.
@@ -181,8 +180,8 @@ public class BukkitWrappedServer implements WrappedServer {
     @Override
     public void banIP(InetAddress ip, String reason) {
         server.banIP(ip.getHostAddress());
-        Arrays.asList(HammerBukkitPlugin.getPlugin().getOnlinePlayers())
-                .stream().filter(p -> p.getAddress().getAddress().getHostAddress().equals(ip.getHostAddress()))
+        HammerBukkitPlugin.getPlugin().getOnlinePlayers().stream()
+                .filter(p -> p.getAddress().getAddress().getHostAddress().equals(ip.getHostAddress()))
                 .forEach(player -> player.kickPlayer(reason));
     }
 

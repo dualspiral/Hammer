@@ -35,7 +35,8 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
-    compile group: 'ninja.leaping.configurate', name: 'configurate-core', version: '3.0'
+    compile group: 'ninja.leaping.configurate', name: 'configurate-core', version: '3.1'
+    compile group: 'ninja.leaping.configurate', name: 'configurate-gson', version: '3.1'
 }
 
 sourceSets {

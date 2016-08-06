@@ -130,6 +130,15 @@ public interface WrappedServer {
     File getLogFolder();
 
     /**
+     * Gets the {@link File} that represents the banned players.
+     *
+     * @return The file.
+     */
+    default File getBannedPlayersFile() {
+        return new File("banned-players.json");
+    }
+
+    /**
      * Bans an IP address from the server.
      * @param ip The {@link InetAddress} to ban
      * @param reason The reason for banning.

@@ -22,18 +22,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package uk.co.drnaylor.minecraft.hammer.bukkit;
+package uk.co.drnaylor.minecraft.hammer.core.data.config;
 
-import com.google.common.collect.ImmutableList;
-import org.bukkit.entity.Player;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
-import java.util.Collection;
+import java.util.UUID;
 
-public class HammerBukkit extends HammerBukkitPlugin {
+@ConfigSerializable
+public class BannedPlayers {
 
-    @Override
-    public Player[] getOnlinePlayers() {
-        Collection<Player> pl = ImmutableList.copyOf(this.getServer().getOnlinePlayers());
-        return pl.toArray(new Player[pl.size()]);
+    @Setting
+    private UUID uuid;
+
+    @Setting
+    private String name;
+
+    @Setting
+    private String reason;
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getReason() {
+        return reason;
     }
 }
