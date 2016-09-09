@@ -34,10 +34,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 
 import java.io.File;
 import java.net.InetAddress;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BukkitWrappedServer implements WrappedServer {
@@ -121,18 +118,13 @@ public class BukkitWrappedServer implements WrappedServer {
      * @param reason The reason for the kick.
      */
     @Override
-    public void kickAllPlayers(WrappedCommandSource source, String reason) {
-        Iterator<? extends Player> iterator = plugin.getOnlinePlayers().iterator();
-
-        // Note that we are using an iterator here as we cannot guarantee that the player remains in the
-        // list of online players.
-        String r = ChatColor.translateAlternateColorCodes('&', reason);
-        while (iterator.hasNext()) {
-            Player pl = iterator.next();
+    public void kickAllPlayers(final WrappedCommandSource source, String reason) {
+        final String r = ChatColor.translateAlternateColorCodes('&', reason);
+        new ArrayList<>(plugin.getOnlinePlayers()).forEach(pl ->{
             if (pl.isOnline() && source.getUUID() != pl.getUniqueId()) {
                 pl.kickPlayer(r);
             }
-        }
+        });
     }
 
     /**
