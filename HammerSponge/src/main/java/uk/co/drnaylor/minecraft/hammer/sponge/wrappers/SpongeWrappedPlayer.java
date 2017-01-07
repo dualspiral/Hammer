@@ -118,7 +118,8 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void ban(WrappedCommandSource source, HammerText reason) {
-        Ban.Builder builder = Ban.builder().reason(HammerTextConverter.constructLiteral(reason)).profile(player.getProfile()).type(BanTypes.PROFILE);
+        Ban.Builder builder = Ban.builder().type(BanTypes.PROFILE)
+                .reason(HammerTextConverter.constructLiteral(reason)).profile(player.getProfile());
         if (source instanceof SpongeWrappedPlayer) {
             Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
             if (sourceplayer.isPresent()) {

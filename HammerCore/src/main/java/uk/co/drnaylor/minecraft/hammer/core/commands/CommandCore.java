@@ -49,7 +49,7 @@ import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedPlayer;
 public abstract class CommandCore {
 
     static final Format dateFormatter;
-    static final ResourceBundle messageBundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+    static final ResourceBundle messageBundle = ResourceBundle.getBundle("assets.hammer.messages", Locale.getDefault());
 
     Collection<String> permissionNodes = new ArrayList<>();
     private final boolean isAsync;

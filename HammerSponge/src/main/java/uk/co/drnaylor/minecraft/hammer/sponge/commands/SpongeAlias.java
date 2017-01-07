@@ -30,10 +30,14 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 public class SpongeAlias implements CommandCallable {
 
@@ -71,12 +75,13 @@ public class SpongeAlias implements CommandCallable {
      *
      * @param source    The command source
      * @param arguments The arguments entered up to this point
+     * @param targetPosition The location of the player
      * @return A list of suggestions
      * @throws CommandException Thrown if there was a parsing error
      */
-    @Override
-    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return new ArrayList<>();
+    @Override public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition)
+            throws CommandException {
+        return  new ArrayList<>();
     }
 
     /**
@@ -105,7 +110,7 @@ public class SpongeAlias implements CommandCallable {
      * @return A description
      */
     @Override
-    public Optional<? extends Text> getShortDescription(CommandSource source) {
+    public Optional<Text> getShortDescription(CommandSource source) {
         return Optional.empty();
     }
 
@@ -125,7 +130,7 @@ public class SpongeAlias implements CommandCallable {
      * @return A help text
      */
     @Override
-    public Optional<? extends Text> getHelp(CommandSource source) {
+    public Optional<Text> getHelp(CommandSource source) {
         return Optional.empty();
     }
 

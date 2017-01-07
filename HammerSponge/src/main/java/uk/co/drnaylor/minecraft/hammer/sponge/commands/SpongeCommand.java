@@ -29,15 +29,20 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 import uk.co.drnaylor.minecraft.hammer.core.commands.CommandCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedConsole;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedPlayer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 /**
  * Executes a Sponge Command
@@ -73,9 +78,9 @@ public class SpongeCommand implements CommandCallable {
 
     }
 
-    @Override
-    public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
-        return null;
+    @Override public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition)
+            throws CommandException {
+        return new ArrayList<>();
     }
 
     @Override
