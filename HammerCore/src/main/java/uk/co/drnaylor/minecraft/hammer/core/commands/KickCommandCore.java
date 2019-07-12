@@ -114,8 +114,8 @@ public class KickCommandCore extends CommandCore {
             }
         }
 
-        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-        if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+        HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+        if (cn.isAuditActive()) {
             core.getWrappedServer().getScheduler().runAsyncNow(() -> createAuditEntry(source.getUUID(), pl.getUUID(), reason));
         }
 
@@ -148,7 +148,7 @@ public class KickCommandCore extends CommandCore {
                 name = getName(actor, conn);
             }
 
-            insertAuditEntry(new AuditEntry(actor, target, core.getConfig().getConfig().getNode("server", "id").getInt(),
+            insertAuditEntry(new AuditEntry(actor, target, core.getServerId(),
                     new Date(), ActionEnum.KICK, MessageFormat.format(messageBundle.getString("hammer.audit.kick"), playerName, name, reason)), conn);
         } catch (Exception e) {
             core.getWrappedServer().getLogger().warn("Unable to add to audit log.");

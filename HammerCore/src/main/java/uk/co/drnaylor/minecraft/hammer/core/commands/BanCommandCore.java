@@ -103,7 +103,7 @@ public class BanCommandCore extends BaseBanCommandCore {
             return new BanInfo(goingToPerm ? BanStatus.TO_PERM : BanStatus.CONTINUE, reasons);
         }
 
-        Collection<HammerPlayerBan> s = bans.stream().filter(b -> b.getServerId() == null || Objects.equals(b.getServerId(), core.getConfig().getConfig().getNode("server", "id").getInt()))
+        Collection<HammerPlayerBan> s = bans.stream().filter(b -> b.getServerId() == null || Objects.equals(b.getServerId(), core.getServerId()))
                 .collect(Collectors.toList());
         if (s.isEmpty()) {
             // Nothing to change, or we're upgrading to perm.
@@ -116,7 +116,7 @@ public class BanCommandCore extends BaseBanCommandCore {
             }
 
             // We're upgrading to perm.
-            conn.getBanHandler().unbanFromServer(bannedPlayer, core.getConfig().getConfig().getNode("server", "id").getInt());
+            conn.getBanHandler().unbanFromServer(bannedPlayer, core.getServerId());
             return new BanInfo(BanStatus.CONTINUE, reasons);
         }
 

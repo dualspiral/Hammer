@@ -24,52 +24,38 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core;
 
+import com.google.common.reflect.TypeToken;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.commented.SimpleCommentedConfigurationNode;
 import ninja.leaping.configurate.loader.AbstractConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMapper;
+import ninja.leaping.configurate.objectmapping.ObjectMapperFactory;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 
 import java.io.IOException;
 
 public class HammerConfiguration {
 
+    private final TypeToken<HammerConfig> typeToken = TypeToken.of(HammerConfig.class);
     private final AbstractConfigurationLoader<? extends ConfigurationNode> configurationLoader;
-    private ConfigurationNode configNode;
+    private final ObjectMapper<HammerConfig>.BoundInstance config;
 
-    public HammerConfiguration(AbstractConfigurationLoader<? extends ConfigurationNode> loader) throws IOException {
+    public HammerConfiguration(AbstractConfigurationLoader<? extends ConfigurationNode> loader) throws Exception {
         this.configurationLoader = loader;
+        this.config = ObjectMapper.forObject(new HammerConfig());
         reloadConfig();
     }
 
-    public ConfigurationNode getConfig() {
-        return configNode;
+    public HammerConfig getConfig() {
+        return this.config.getInstance();
     }
 
-    void reloadConfig() throws IOException {
+    void reloadConfig() throws IOException, ObjectMappingException {
         ConfigurationNode cn = configurationLoader.load();
-        this.configNode = cn.mergeValuesFrom(getDefaultConfig());
+        this.config.populate(cn);
         configurationLoader.save(cn);
     }
 
-    private ConfigurationNode getDefaultConfig() {
-        CommentedConfigurationNode node = SimpleCommentedConfigurationNode.root();
-        node.getNode("database-engine").setValue("sqlite").setComment("The DB engine to use. Valid options are \"sqlite\", \"h2\" and \"mysql\". The required JDBC driver must be on the classpath.");
-        node.getNode("mysql").setComment("This section is only required if MySQL is selected for the database engine.");
-        node.getNode("mysql", "host").setValue("localhost").setComment("The location of the database");
-        node.getNode("mysql", "port").setValue(3306).setComment("The port for the database");
-        node.getNode("mysql", "database").setValue("hammer").setComment("The name of the database to connect to.");
-        node.getNode("mysql", "username").setValue("username").setComment("The username for the database connection");
-        node.getNode("mysql", "password").setValue("password").setComment("The password for the database connection");
-        node.getNode("server", "id").setValue(1).setComment("A unique integer id to represent this server");
-        node.getNode("server", "name").setValue("New Server").setComment("A display name for this server when using Hammer");
-        node.getNode("notifyAllOnBan").setValue(true).setComment("If set to false, only those with the 'hammer.notify' permission will be notified when someone is banned.");
-        node.getNode("pollBans", "enable").setValue(true).setComment("If set to true, Hammer will check the database periodically to see if any online player have recieved a global ban and will ban them accordingly.");
-        node.getNode("pollBans", "period").setValue(60).setComment("How often, in seconds, Hammer will check the database for new bans");
-        node.getNode("audit").setComment("Whether or not an audit log should be kept.");
-        node.getNode("audit", "database").setComment("Keep an audit log in the database.").setValue(true);
-        node.getNode("audit", "flatfile").setComment("Keep an audit log in flat file.").setValue(false);
-        node.getNode("appendBanReasons").setComment("If this is true, and a ban is applied on top of a previous (lesser) ban, the previous ban reason will be appeneded to the new one. " +
-                "Otherwise, ban reasons will be replaced.").setValue(true);
-        return node;
-    }
 }

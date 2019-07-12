@@ -44,6 +44,9 @@ import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -166,14 +169,13 @@ public class HammerBukkitPlugin extends JavaPlugin {
     }
 
     private HammerConfiguration getConfigurateConfig() throws IOException {
-        File fp = new File(filePath);
-        if (!fp.exists()) {
-            fp.getParentFile().mkdirs();
-            fp.createNewFile();
+        Path fp = Paths.get(filePath);
+        if (!Files.exists(fp)) {
+            Files.createDirectories(fp);
         }
 
         YAMLConfigurationLoader.Builder cl = YAMLConfigurationLoader.builder().setIndent(4).setFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        cl.setFile(fp);
+        cl.setPath(fp);
         return new HammerConfiguration(cl.build());
     }
 

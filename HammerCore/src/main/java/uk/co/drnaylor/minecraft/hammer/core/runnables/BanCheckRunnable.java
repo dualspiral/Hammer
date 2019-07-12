@@ -58,7 +58,7 @@ public class BanCheckRunnable implements Runnable {
 
         List<HammerPlayerBan> bans;
         try (DatabaseConnection dg = core.getDatabaseConnection()){
-            bans = dg.getBanHandler().getPlayerBansForServer(players, core.getConfig().getConfig().getNode("server", "id").getInt(1));
+            bans = dg.getBanHandler().getPlayerBansForServer(players, core.getConfig().getConfig().getServer().getId());
         } catch (Exception e) {
             // Let's not worry too much
             core.getWrappedServer().getLogger().warn("There was an error running the ban check task. It will be retried later.");

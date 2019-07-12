@@ -1,0 +1,10 @@
+mysql:
+    host: localhost
+    port: 3306
+    database: hammer
+    username: hammeruser
+    password: password
+server:
+    id: 1
+    name: test
+notifyAllOnBan: true

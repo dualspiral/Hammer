@@ -24,7 +24,6 @@
  */
 package uk.co.drnaylor.minecraft.hammer.sponge.listeners;
 
-import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
@@ -35,14 +34,11 @@ import java.util.Optional;
 
 public class PlayerJoinListener {
 
-    private final Game game;
     private final PlayerJoinListenerCore core;
 
-    public PlayerJoinListener(Game game, PlayerJoinListenerCore core) {
-        this.game = game;
+    public PlayerJoinListener(PlayerJoinListenerCore core) {
         this.core = core;
     }
-
 
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join event) {

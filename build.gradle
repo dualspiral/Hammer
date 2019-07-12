@@ -24,23 +24,14 @@
  */
 
 // Gradle repositories and dependencies
-buildscript {
-    repositories {
-        maven {
-            name = 'sonatype-nexus-public'
-            url = 'https://oss.sonatype.org/content/repositories/public/'
-        }
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
-    }
+plugins {
+    id "com.github.johnrengelman.shadow" version "5.1.0"
 }
 
 allprojects {
     apply plugin: 'maven-publish'
 
-    version = '0.5.4-SNAPSHOT'
+    version = '0.7.0-SNAPSHOT'
     group = 'uk.co.drnaylor.minecraft'
 }
 
@@ -58,9 +49,9 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
-    compile project('HammerCore')
-    compile project('HammerBukkit')
-	compile project('HammerSpigot')
+    compile project(':HammerCore')
+    compile project(':HammerBukkitCore')
+    compile project(':HammerSponge')
 }
 
 subprojects {

@@ -34,6 +34,7 @@ import uk.co.drnaylor.minecraft.hammer.core.commands.enums.KickFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.StringParser;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
@@ -89,12 +90,11 @@ public class KickAllCommandCore extends CommandCore {
         }
 
         Optional<String> reasonOptional = arguments.<String>getArgument("reason");
-        String reason = reasonOptional.isPresent() ? reasonOptional.get() : messageBundle.getString("hammer.kickall.defaultreason");
+        String reason = reasonOptional.orElseGet(() -> messageBundle.getString("hammer.kickall.defaultreason"));
         core.getWrappedServer().kickAllPlayers(source, reason);
         sendTemplatedMessage(source, "hammer.kickall", false, true);
-
-        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-        if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+        HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+        if (cn.isAuditActive()) {
             core.getWrappedServer().getScheduler().runAsyncNow(() -> createAuditEntry(source.getUUID(), reason, whitelist));
         }
         return true;
@@ -120,7 +120,7 @@ public class KickAllCommandCore extends CommandCore {
                 r += " " + messageBundle.getString("hammer.audit.whitelist");
             }
 
-            insertAuditEntry(new AuditEntry(actor, null, core.getConfig().getConfig().getNode("server", "id").getInt(),
+            insertAuditEntry(new AuditEntry(actor, null, core.getServerId(),
                     new Date(), ActionEnum.KICKALL, r), conn);
         } catch (Exception e) {
             core.getWrappedServer().getLogger().warn("Unable to add to audit log.");

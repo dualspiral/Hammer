@@ -42,6 +42,22 @@ public interface IDatabaseGateway extends AutoCloseable {
     void createTables() throws SQLException;
 
     /**
+     * Gets all Player bans for a specific server.
+     *
+     * @param serverID The ID of the server
+     * @return The bans
+     */
+    List<HammerPlayerBan> getPlayerBansForServer(int serverID) throws SQLException;
+
+    /**
+     * Gets all IP bans for a specific server.
+     *
+     * @param serverID The ID of the server
+     * @return The bans
+     */
+    List<HammerIPBan> getIPBansForServer(int serverID) throws SQLException;
+
+    /**
      * Gets a player's ban record for a server.
      * @param playerUUID The UUID of the player to inspect.
      * @param serverId The Id of the server to get information for.

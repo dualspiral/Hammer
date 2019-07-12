@@ -92,7 +92,7 @@ public class ImportServerBansCommandCore extends CommandCore {
             }
 
             // Ban them all.
-            int serverID = core.getConfig().getConfig().getNode("server", "id").getInt();
+            int serverID = core.getServerId();
             String serverName = core.getConfig().getConfig().getNode("server", "name").getString();
             for (BannedPlayers player : lbp) {
                 try {

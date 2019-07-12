@@ -35,6 +35,7 @@ import uk.co.drnaylor.minecraft.hammer.core.commands.enums.UnbanIPFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.IP4Parser;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerIPBan;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -85,7 +86,7 @@ public class UnbanIPCommandCore extends CommandCore {
             return true;
         }
 
-        int serverId = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int serverId = core.getServerId();
 
         InetAddress ip = arguments.<InetAddress>getArgument("ip").get();
         List<HammerIPBan> listipbans = conn.getBanHandler().getIPBanForServer(ip, serverId);
@@ -114,8 +115,8 @@ public class UnbanIPCommandCore extends CommandCore {
         conn.commitTransaction();
         core.getWrappedServer().unbanIP(ip);
         core.getWrappedServer().sendMessageToPermissionGroup(htb.build(), HammerPermissions.notify);
-        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-        if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+        HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+        if (cn.isAuditActive()) {
             createAuditLog(source, ip, conn);
         }
 
@@ -128,7 +129,7 @@ public class UnbanIPCommandCore extends CommandCore {
     }
 
     private void createAuditLog(WrappedCommandSource source, InetAddress ip, DatabaseConnection conn) {
-        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int id = core.getServerId();
 
         try {
             String ipaddr = ip.getHostAddress();

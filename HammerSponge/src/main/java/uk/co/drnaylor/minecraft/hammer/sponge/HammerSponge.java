@@ -51,11 +51,14 @@ import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeAlias;
 import uk.co.drnaylor.minecraft.hammer.sponge.commands.SpongeCommand;
 import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerConnectListener;
 import uk.co.drnaylor.minecraft.hammer.sponge.listeners.PlayerJoinListener;
+import uk.co.drnaylor.minecraft.hammer.sponge.service.HammerBanService;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextToTextColorCoverter;
 import uk.co.drnaylor.minecraft.hammer.sponge.wrappers.SpongeWrappedServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -66,12 +69,24 @@ import java.util.Optional;
 public class HammerSponge {
 
     public static final String DESCRIPTION = "Ban Management for Server Networks";
-    public static final String VERSION = "0.6";
+    public static final String VERSION = "0.7";
 
-    @Inject private Game game;
-    @Inject private Logger logger;
-    @Inject @DefaultConfig(sharedRoot = false) private File defaultConfig;
-    @Inject @DefaultConfig(sharedRoot = false) private ConfigurationLoader<CommentedConfigurationNode> configurationManager;
+    private final Game game;
+    private final Logger logger;
+    private final Path defaultConfig;
+    private final ConfigurationLoader<CommentedConfigurationNode> configurationManager;
+
+    @Inject
+    public HammerSponge(
+            Game game,
+            Logger logger,
+            @DefaultConfig(sharedRoot = false) Path defaultConfig,
+            @DefaultConfig(sharedRoot = false)  ConfigurationLoader<CommentedConfigurationNode> configurationManager) {
+        this.game = game;
+        this.logger = logger;
+        this.defaultConfig = defaultConfig;
+        this.configurationManager = configurationManager;
+    }
 
     private static HammerSponge instance;
     private HammerCore core;
@@ -142,9 +157,12 @@ public class HammerSponge {
 
                 // Register the events
                 game.getEventManager().registerListeners(this, new PlayerConnectListener(logger, game, new PlayerConnectListenerCore(core)));
-                game.getEventManager().registerListeners(this, new PlayerJoinListener(game, core.getPlayerJoinListenerCore()));
+                game.getEventManager().registerListeners(this, new PlayerJoinListener(core.getPlayerJoinListenerCore()));
 
                 core.postInit();
+
+                // Replace Ban Service
+                game.getServiceManager().setProvider(this, BanService.class, new HammerBanService(core));
             }
         } catch (Exception ex) {
             logger.error("A fatal error has occurred. Hammer will now disable itself.");
@@ -199,18 +217,12 @@ public class HammerSponge {
      * @throws IOException Configuration could not be loaded.
      */
     private void createCore() throws ClassNotFoundException, IOException, HammerException {
-        // Temporary - configurate should automatically generate the config file, but a bug in the library that Sponge uses
-        // means it doesn't. We create it here instead.
-        if (!defaultConfig.exists()) {
-            defaultConfig.createNewFile();
-        }
-
-        core = new HammerCore(
+        this.core = new HammerCore(
                 new SpongeWrappedServer(this, game, logger),
                 new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));
     }
 
-    public File getDefaultConfig() {
+    public Path getDefaultConfig() {
         return defaultConfig;
     }
 

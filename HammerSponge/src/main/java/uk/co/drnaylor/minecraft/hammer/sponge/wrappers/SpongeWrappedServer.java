@@ -42,7 +42,11 @@ import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 import uk.co.drnaylor.minecraft.hammer.sponge.text.HammerTextConverter;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,15 +57,19 @@ public class SpongeWrappedServer implements WrappedServer {
     private final HammerSponge plugin;
     private final WrappedScheduler scheduler;
     private final WrappedLogger logger;
-    private final File logFolder;
+    private final Path logFolder;
 
     public SpongeWrappedServer(HammerSponge plugin, Game game, Logger logger) {
         this.logger = new SpongeWrappedLogger(logger);
         this.plugin = plugin;
         this.game = game;
         this.scheduler = new SpongeWrappedScheduler(plugin, game);
-        this.logFolder = new File("logs" + File.separator + "Hammer");
-        this.logFolder.mkdirs();
+        this.logFolder = Paths.get("logs", "Hammer");
+        try {
+            Files.createDirectories(this.logFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -190,12 +198,12 @@ public class SpongeWrappedServer implements WrappedServer {
     }
 
     @Override
-    public File getDataFolder() {
-        return plugin.getDefaultConfig().getParentFile();
+    public Path getDataFolder() {
+        return plugin.getDefaultConfig().getParent();
     }
 
     @Override
-    public File getLogFolder() {
+    public Path getLogFolder() {
         return logFolder;
     }
 

@@ -99,7 +99,7 @@ public class PlayerConnectListenerCore {
      */
     public HammerBan getBan(UUID player, String hostAddress) throws HammerException {
         // Get the server ID.
-        int serverId = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int serverId = core.getConfig().getConfig().getServer().getId();
 
         try (DatabaseConnection conn = core.getDatabaseConnection()) {
             HammerPlayerBan ban = conn.getBanHandler().getPlayerBanForServer(player, serverId);

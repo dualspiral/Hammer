@@ -25,6 +25,7 @@
 package uk.co.drnaylor.minecraft.hammer.core;
 
 import ninja.leaping.configurate.ConfigurationNode;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.database.h2.H2FlatFileDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.database.mysql.MySqlDatabaseProvider;
@@ -46,19 +47,19 @@ final class HammerDatabaseProviderFactory {
         providerFactory.put("sqlite", (s, c) -> new SQLiteDatabaseProvider(String.format("%1$s%2$sdata%2$ssqlite.db", s.getDataFolder(), File.separator)));
         providerFactory.put("h2", (s, c) -> new H2FlatFileDatabaseProvider(String.format("%1$s%2$sdata%2$sh2.db", s.getDataFolder(), File.separator)));
         providerFactory.put("mysql", (s, c) -> {
-            ConfigurationNode mysql = c.getConfig().getNode("mysql");
+            HammerConfig.MySql mysql = c.getConfig().getMySql();
             return new MySqlDatabaseProvider(
-                    mysql.getNode("host").getString(),
-                    mysql.getNode("port").getInt(3306),
-                    mysql.getNode("database").getString(),
-                    mysql.getNode("username").getString(),
-                    mysql.getNode("password").getString());
+                    mysql.getHost(),
+                    mysql.getPort(),
+                    mysql.getDatabase(),
+                    mysql.getUsername(),
+                    mysql.getPassword());
         });
     }
 
     static IDatabaseProvider createDatabaseProvider(WrappedServer server, HammerConfiguration config) throws HammerException {
-        ConfigurationNode root = config.getConfig();
-        String type = root.getNode("database-engine").getString("sqlite");
+        HammerConfig root = config.getConfig();
+        String type = root.getEngine();
         Factory f = providerFactory.get(type.toLowerCase());
         if (f == null) {
             throw new HammerException("No database provider for type " + type);

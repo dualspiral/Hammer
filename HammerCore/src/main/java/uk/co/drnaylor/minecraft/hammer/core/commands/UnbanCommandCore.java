@@ -34,6 +34,7 @@ import uk.co.drnaylor.minecraft.hammer.core.commands.enums.UnbanFlagEnum;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.FlagParser;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerBan;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
@@ -119,7 +120,7 @@ public class UnbanCommandCore extends CommandCore {
 
             // If we have a ban...
             UUID bannee = null;
-            int serverId =  core.getConfig().getConfig().getNode("server", "id").getInt();
+            int serverId =  core.getServerId();
             boolean ban = false;
             for (UUID u : uuids) {
                  HammerPlayerBan ban2 = conn.getBanHandler().getPlayerBanForServer(u, serverId);
@@ -168,8 +169,8 @@ public class UnbanCommandCore extends CommandCore {
             // Unbanned. Tell the notified.
             sendUnbanMessage(playerName, source, flag.contains(UnbanFlagEnum.ALL_SERVER));
 
-            ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-            if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+            HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+            if (cn.isAuditActive()) {
                 createAuditLog(source, bannee, conn);
             }
 
@@ -185,7 +186,7 @@ public class UnbanCommandCore extends CommandCore {
     }
 
     private void createAuditLog(WrappedCommandSource source, UUID bannee, DatabaseConnection conn) {
-        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int id = core.getServerId();
 
         try {
             String playerName = getName(bannee, conn);

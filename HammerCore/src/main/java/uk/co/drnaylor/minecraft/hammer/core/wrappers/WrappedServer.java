@@ -28,6 +28,7 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,14 +121,14 @@ public interface WrappedServer {
      *
      * @return The data folder.
      */
-    File getDataFolder();
+    Path getDataFolder();
 
     /**
      * Gets the folder in which Hammer should write flat-file logs.
      *
      * @return The log folder.
      */
-    File getLogFolder();
+    Path getLogFolder();
 
     /**
      * Gets the {@link File} that represents the banned players.

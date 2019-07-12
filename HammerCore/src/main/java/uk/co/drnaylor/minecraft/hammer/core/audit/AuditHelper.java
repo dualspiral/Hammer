@@ -26,6 +26,7 @@ package uk.co.drnaylor.minecraft.hammer.core.audit;
 
 import ninja.leaping.configurate.ConfigurationNode;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 
@@ -58,8 +59,8 @@ public final class AuditHelper {
      * @throws HammerException Thrown if an error logging occurs. As this is auditing, this can be treated as non-fatal.
      */
     public void insertAuditEntry(AuditEntry ae, DatabaseConnection conn) throws HammerException {
-        ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-        if (cn.getNode("database").getBoolean()) {
+        HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+        if (cn.isDatabase()) {
             if (conn == null) {
                 try (DatabaseConnection c = core.getDatabaseConnection()) {
                     c.getAuditHandler().insertAuditAction(ae);
@@ -71,7 +72,7 @@ public final class AuditHelper {
             }
         }
 
-        if (cn.getNode("flatfile").getBoolean()) {
+        if (cn.isFlatfile()) {
             addFlatFileAuditEntry(ae);
         }
     }

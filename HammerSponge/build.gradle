@@ -32,7 +32,7 @@ repositories {
     mavenCentral()
     maven {
         name 'Sponge maven repo'
-        url 'http://repo.spongepowered.org/maven'
+        url 'https://repo.spongepowered.org/maven'
     }
     maven {
         name 'sonatypeSnapshot'
@@ -40,7 +40,7 @@ repositories {
     }
     maven {
         name 'drnaylor'
-        url 'http://repo.drnaylor.co.uk/artifactory/list/minecraft/'
+        url 'https://repo.drnaylor.co.uk/artifactory/list/minecraft/'
     }
 }
 

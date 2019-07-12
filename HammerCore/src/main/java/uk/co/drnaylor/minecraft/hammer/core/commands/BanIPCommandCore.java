@@ -198,7 +198,7 @@ public class BanIPCommandCore extends CommandCore {
     }
 
     private void createAuditLog(HammerCreateBan.IP cpb, DatabaseConnection conn) {
-        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int id = core.getServerId();
 
         try {
             AuditEntry ae = new AuditEntry(cpb.getStaffUUID(), null, id, new Date(), ActionEnum.BANIP, createAuditMessage(cpb, conn));

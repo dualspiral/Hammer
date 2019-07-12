@@ -24,8 +24,9 @@
  */
 package uk.co.drnaylor.minecraft.hammer.core;
 
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import uk.co.drnaylor.minecraft.hammer.core.audit.AuditHelper;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
@@ -63,7 +64,7 @@ public class HammerCore {
      * @return The version of the core.
      */
     public String getHammerCoreVersion() {
-        return "0.6";
+        return "0.7";
     }
 
     /**
@@ -73,6 +74,10 @@ public class HammerCore {
      */
     public HammerConfiguration getConfig() {
         return config;
+    }
+
+    public int getServerId() {
+        return config.getConfig().getServer().getId();
     }
 
     /**
@@ -112,9 +117,9 @@ public class HammerCore {
     public boolean performStartupTasks(DatabaseConnection conn) {
         try {
             server.getLogger().info("Establishing DB link and creating any missing tables...");
-            ConfigurationNode cn = this.config.getConfig().getNode("server");
+            HammerConfig cn = this.config.getConfig();
             conn.performStartupTasks();
-            conn.getServerHandler().updateServerNameForId(cn.getNode("id").getInt(), cn.getNode("name").getString("Unknown"));
+            conn.getServerHandler().updateServerNameForId(cn.getServer().getId(), cn.getServer().getName());
 
             server.getLogger().info("Connection to DB was successful and all required tables were created.");
             return true;
@@ -151,9 +156,10 @@ public class HammerCore {
             banTask.cancelTask();
         }
 
-        if (getConfig().getConfig().getNode("pollBans", "enable").getBoolean()) {
+        if (getConfig().getConfig().getPollBans().isEnable()) {
             // Ban checking
-            banTask = getWrappedServer().getScheduler().createAsyncRecurringTask(new BanCheckRunnable(this), getConfig().getConfig().getNode("pollBans", "period").getInt());
+            banTask = getWrappedServer().getScheduler().createAsyncRecurringTask(
+                    new BanCheckRunnable(this), getConfig().getConfig().getPollBans().getPeriod());
         } else {
             banTask = null;
         }
@@ -168,11 +174,6 @@ public class HammerCore {
         playerJoinListenerCore.getRunnable().run();
     }
 
-    @Deprecated
-    public void reloadConfig() throws IOException, HammerException {
-        reloadConfig(false);
-    }
-
     /**
      * Reloads the configuration.
      *
@@ -180,7 +181,7 @@ public class HammerCore {
      * @throws IOException Thrown if the config file could not be read.
      * @throws HammerException Thrown if the database could not be switched.
      */
-    public void reloadConfig(boolean reloadDatabase) throws IOException, HammerException {
+    public void reloadConfig(boolean reloadDatabase) throws IOException, HammerException, ObjectMappingException {
         config.reloadConfig();
         setupBanTask();
         if (reloadDatabase) {

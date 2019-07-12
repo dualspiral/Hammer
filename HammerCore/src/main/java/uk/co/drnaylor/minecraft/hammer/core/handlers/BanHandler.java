@@ -31,6 +31,7 @@ import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseGateway;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 
 import java.net.InetAddress;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +70,16 @@ public class BanHandler {
         }
     }
 
+    public List<HammerIPBan> getIPBansForServer(int serverId) throws HammerException {
+        try {
+            return dg.getIPBansForServer(serverId)
+                    .stream().filter(b -> b.getServerId() == null || b.getServerId() == serverId)
+                    .collect(Collectors.toList());
+        } catch (SQLException e) {
+            throw new HammerException("An error occurred getting the IP bans.", e);
+        }
+    }
+
     public List<HammerIPBan> getIPBanForServer(InetAddress addr, int serverId) throws HammerException {
         return getIPBans(addr).stream().filter(b -> b.getServerId() == null || b.getServerId() == serverId)
                 .collect(Collectors.toList());
@@ -88,6 +99,15 @@ public class BanHandler {
             return dg.getPlayerBans(player);
         } catch (Exception ex) {
             throw new HammerException("An error occurred getting the player ban.", ex);
+        }
+    }
+
+    public List<HammerPlayerBan> getPlayerBansForServer(int serverId) throws HammerException {
+        try {
+            dg.removeExpiredPlayerBans(null);
+            return dg.getPlayerBansForServer(serverId);
+        } catch (Exception ex) {
+            throw new HammerException("An error occurred getting the player bans.", ex);
         }
     }
 

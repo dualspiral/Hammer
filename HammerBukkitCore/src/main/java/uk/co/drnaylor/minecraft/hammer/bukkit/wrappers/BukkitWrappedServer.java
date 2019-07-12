@@ -33,7 +33,11 @@ import uk.co.drnaylor.minecraft.hammer.core.text.HammerText;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,15 +47,19 @@ public class BukkitWrappedServer implements WrappedServer {
     private final HammerBukkitPlugin plugin;
     private final WrappedScheduler scheduler;
     private final BukkitWrappedLogger logger;
-    private final File logFolder;
+    private final Path logFolder;
 
     public BukkitWrappedServer(HammerBukkitPlugin plugin, Server server) {
         this.plugin = plugin;
         this.server = server;
         this.scheduler = new BukkitWrappedScheduler(plugin);
         this.logger = new BukkitWrappedLogger(plugin.getLogger());
-        this.logFolder = new File(getDataFolder().getAbsolutePath() + File.separator + "logs");
-        this.logFolder.mkdirs();
+        this.logFolder = plugin.getDataFolder().toPath().resolve("logs");
+        try {
+            Files.createDirectories(this.logFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -154,12 +162,12 @@ public class BukkitWrappedServer implements WrappedServer {
     }
 
     @Override
-    public File getDataFolder() {
-        return plugin.getDataFolder();
+    public Path getDataFolder() {
+        return plugin.getDataFolder().toPath();
     }
 
     @Override
-    public File getLogFolder() {
+    public Path getLogFolder() {
         return logFolder;
     }
 

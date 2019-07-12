@@ -224,7 +224,7 @@ public abstract class BaseBanCommandCore extends CommandCore {
     }
 
     private void createAuditLog(HammerCreateBan.Player cpb, DatabaseConnection conn) {
-        int id = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int id = core.getServerId();
 
         try {
             AuditEntry ae = new AuditEntry(cpb.getStaffUUID(), cpb.getBannedUUID(), id, new Date(), ActionEnum.BAN, createAuditMessage(cpb, conn));

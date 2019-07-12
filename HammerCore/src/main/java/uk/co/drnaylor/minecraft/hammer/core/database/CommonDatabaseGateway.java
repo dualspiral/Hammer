@@ -126,6 +126,65 @@ public abstract class CommonDatabaseGateway implements IDatabaseGateway {
         }
     }
 
+    @Override public List<HammerPlayerBan> getPlayerBansForServer(int serverID) throws SQLException {
+        PreparedStatement ps = connection
+                .prepareStatement("select b.external_id, b.banned, b.banned_until, b.from_server, s.server_name, b.is_permanent, b.reason, " +
+                "p.uuid as banned_uuid, p.last_name as banned_name, " +
+                "pb.uuid as banning_uuid, pb.last_name as banning_name " +
+                "from player_bans b " +
+                "inner join player_data p on b.banned_player = p.player_id " +
+                "inner join player_data pb on b.banned_by = pb.player_id " +
+                "left outer join server_data s on b.from_server = s.server_id " +
+                "where (b.from_server is null or b.from_server = ?) order by b.from_server IS NULL DESC;");
+        ps.setInt(1, serverID);
+        List<HammerPlayerBan> playerBans = new ArrayList<>();
+        try (ResultSet set = ps.executeQuery()) {
+
+            // We only need the first ban anyway
+            if (!set.next()) {
+                return null;
+            }
+
+            int serverValue = set.getInt("from_server");
+            String serverName = serverValue == 0 ? "all servers" : set.getString("server_name");
+
+            playerBans.add(new HammerPlayerBan(
+                    set.getString("banned_name"),
+                    UUID.fromString(set.getString("banned_uuid")),
+                    set.getBoolean("is_permanent"),
+                    UUID.fromString(set.getString("banning_uuid")),
+                    set.getString("banning_name"),
+                    set.getString("reason"),
+                    set.getTimestamp("banned"),
+                    set.getTimestamp("banned_until"),
+                    serverValue == 0 ? null : serverValue,
+                    serverName,
+                    set.getString("external_id")));
+        }
+
+        return playerBans;
+    }
+
+    @Override public List<HammerIPBan> getIPBansForServer(int serverID) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(
+                "SELECT b.ip, b.banned_by, pb.uuid, pb.last_name, b.banned, b.banned_until, b.from_server, s.server_name, b.reason " +
+                        "FROM ip_bans b " +
+                        "inner join player_data pb on b.banned_by = pb.player_id " +
+                        "left outer join server_data s on b.from_server = s.server_id " +
+                        "WHERE (s.server_id = ? OR b.from_server IS NULL);"
+        );
+
+        ps.setInt(1, serverID);
+        List<HammerIPBan> bans = new ArrayList<>();
+        try (ResultSet set = ps.executeQuery()) {
+            while (set.next()) {
+                bans.add(createHammerIPBan(set));
+            }
+        }
+
+        return bans;
+    }
+
     /**
      * Gets a player's ban record for a server.
      * @param playerUUID The UUID of the player to inspect.

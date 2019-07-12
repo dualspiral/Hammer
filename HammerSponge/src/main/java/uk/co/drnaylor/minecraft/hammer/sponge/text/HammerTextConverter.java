@@ -92,7 +92,7 @@ public final class HammerTextConverter {
                     }
                 }
 
-                inner.style(styles.toArray(new TextStyle[styles.size()]));
+                inner.style(styles.toArray(new TextStyle[0]));
             }
 
             // Into the builder it goes.

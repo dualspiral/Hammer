@@ -31,6 +31,7 @@ import uk.co.drnaylor.minecraft.hammer.core.audit.ActionEnum;
 import uk.co.drnaylor.minecraft.hammer.core.audit.AuditEntry;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.ArgumentMap;
 import uk.co.drnaylor.minecraft.hammer.core.commands.parsers.HammerPlayerParser;
+import uk.co.drnaylor.minecraft.hammer.core.config.HammerConfig;
 import uk.co.drnaylor.minecraft.hammer.core.data.HammerPlayerInfo;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.BanHandler;
@@ -68,15 +69,15 @@ public class UpgradeToPermBanCommandCore extends CommandCore {
         // Get the argument
         HammerPlayerInfo hpi = arguments.<HammerPlayerInfo>getArgument("player").get();
 
-        int serverid = core.getConfig().getConfig().getNode("server", "id").getInt();
+        int serverid = core.getServerId();
 
         // Should be there. Now, do they have a ban?
         if (core.getDatabaseConnection().getBanHandler().upgadeToPerm(hpi.getUUID(), serverid)) {
             HammerText ht = new HammerTextBuilder().add("[Hammer] The ban for " + hpi.getName() + " has been upgraded to a permanent ban.", HammerTextColours.GREEN).build();
             source.sendMessage(ht);
 
-            ConfigurationNode cn = core.getConfig().getConfig().getNode("audit");
-            if (cn.getNode("database").getBoolean() || cn.getNode("flatfile").getBoolean()) {
+            HammerConfig.Audit cn = core.getConfig().getConfig().getAudit();
+            if (cn.isDatabase() || cn.isFlatfile()) {
                 createAuditEntry(source.getUUID(), hpi.getUUID(), conn);
             }
 
@@ -104,7 +105,7 @@ public class UpgradeToPermBanCommandCore extends CommandCore {
                 name = getName(source, conn);
             }
 
-            AuditEntry ae = new AuditEntry(source, target, core.getConfig().getConfig().getNode("server", "id").getInt(), new Date(), ActionEnum.BAN,
+            AuditEntry ae = new AuditEntry(source, target, core.getServerId(), new Date(), ActionEnum.BAN,
                 MessageFormat.format(messageBundle.getString("hammer.audit.unban"), playerName, name));
             insertAuditEntry(ae, conn);
         } catch (HammerException e) {

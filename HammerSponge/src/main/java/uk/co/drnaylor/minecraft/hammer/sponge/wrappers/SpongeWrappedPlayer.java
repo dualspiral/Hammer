@@ -27,7 +27,9 @@ package uk.co.drnaylor.minecraft.hammer.sponge.wrappers;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.BanService;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
 import org.spongepowered.api.util.ban.Ban;
@@ -47,10 +49,19 @@ import java.util.UUID;
 
 public class SpongeWrappedPlayer implements WrappedPlayer {
 
-    private final User player;
+    private final GameProfile gameProfile;
 
-    public SpongeWrappedPlayer(User player) {
-        this.player = player;
+    public SpongeWrappedPlayer(User user) {
+        this(user.getProfile());
+    }
+
+    public SpongeWrappedPlayer(GameProfile gameProfile) {
+        this.gameProfile = gameProfile;
+    }
+
+    private static User getUser(GameProfile gameProfile) {
+        return Sponge.getServer().getPlayer(gameProfile.getUniqueId()).map(x -> (User) x)
+                .orElseGet(() -> Sponge.getServiceManager().provideUnchecked(UserStorageService.class).getOrCreate(gameProfile));
     }
 
     /**
@@ -60,7 +71,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public String getName() {
-        return player.getName();
+        return getUser(gameProfile).getName();
     }
 
     /**
@@ -70,7 +81,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public UUID getUUID() {
-        return player.getUniqueId();
+        return getUser(gameProfile).getUniqueId();
     }
 
     /**
@@ -80,7 +91,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void sendMessage(HammerText message) {
-        Optional<Player> onlinePlayer = player.getPlayer();
+        Optional<Player> onlinePlayer = getUser(gameProfile).getPlayer();
         if (onlinePlayer.isPresent()) {
             onlinePlayer.get().sendMessage(HammerTextConverter.constructMessage(message));
         }
@@ -94,7 +105,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void sendMessage(String message) {
-        Optional<Player> onlinePlayer = player.getPlayer();
+        Optional<Player> onlinePlayer = getUser(gameProfile).getPlayer();
         if (onlinePlayer.isPresent()) {
             onlinePlayer.get().sendMessage(ChatTypes.SYSTEM, Text.of(message));
         }
@@ -108,7 +119,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean hasPermission(String permission) {
-        return player.hasPermission(permission);
+        return getUser(gameProfile).hasPermission(permission);
     }
 
     /**
@@ -119,7 +130,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     @Override
     public void ban(WrappedCommandSource source, HammerText reason) {
         Ban.Builder builder = Ban.builder().type(BanTypes.PROFILE)
-                .reason(HammerTextConverter.constructLiteral(reason)).profile(player.getProfile());
+                .reason(HammerTextConverter.constructLiteral(reason)).profile(getUser(gameProfile).getProfile());
         if (source instanceof SpongeWrappedPlayer) {
             Optional<Player> sourceplayer = ((SpongeWrappedPlayer) source).getSpongePlayer();
             if (sourceplayer.isPresent()) {
@@ -150,7 +161,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
     @Override
     public void unban() {
         BanService service = HammerSponge.getBanService().get();
-        Optional<Ban.Profile> obp = service.getBanFor(player.getProfile());
+        Optional<Ban.Profile> obp = service.getBanFor(getUser(gameProfile).getProfile());
         if (obp.isPresent()) {
             service.removeBan(obp.get());
         }
@@ -163,7 +174,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public boolean isBanned() {
-        return HammerSponge.getBanService().get().isBanned(player.getProfile());
+        return HammerSponge.getBanService().get().isBanned(getUser(gameProfile).getProfile());
     }
 
     /**
@@ -173,7 +184,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void kick(HammerText reason) {
-        Optional<Player> onlinePlayer = player.getPlayer();
+        Optional<Player> onlinePlayer = getUser(gameProfile).getPlayer();
         if (onlinePlayer.isPresent()) {
             onlinePlayer.get().kick(HammerTextConverter.constructMessage(reason));
         }
@@ -186,7 +197,7 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      */
     @Override
     public void kick(String reason) {
-        Optional<Player> onlinePlayer = player.getPlayer();
+        Optional<Player> onlinePlayer = getUser(gameProfile).getPlayer();
         if (onlinePlayer.isPresent()) {
             onlinePlayer.get().kick(Text.of(reason));
         }
@@ -194,19 +205,20 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
 
     @Override
     public boolean isOnline() {
-        return player.isOnline();
+        return getUser(gameProfile).isOnline();
     }
 
     @Override
     public HammerPlayerInfo getHammerPlayer() {
-        Optional<Player> pl = player.getPlayer();
+        User user = getUser(gameProfile);
+        Optional<Player> pl = user.getPlayer();
         if (pl.isPresent()) {
-            InetSocketAddress addr = player.getPlayer().get().getConnection().getAddress();
+            InetSocketAddress addr = pl.get().getConnection().getAddress();
             String ip = addr.toString().substring(1).split(":")[0];
-            return new HammerPlayerInfo(player.getUniqueId(), player.getName(), ip);
+            return new HammerPlayerInfo(pl.get().getUniqueId(), pl.get().getName(), ip);
         } else {
             try (DatabaseConnection c = HammerSponge.getInstance().getCore().getDatabaseConnection()) {
-                return c.getPlayerHandler().getPlayer(player.getUniqueId());
+                return c.getPlayerHandler().getPlayer(user.getUniqueId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -221,10 +233,10 @@ public class SpongeWrappedPlayer implements WrappedPlayer {
      * @return The {@link User}
      */
     public User getSpongeUser() {
-        return player;
+        return getUser(gameProfile);
     }
 
     private Optional<Player> getSpongePlayer() {
-        return player.getPlayer();
+        return getUser(gameProfile).getPlayer();
     }
 }
