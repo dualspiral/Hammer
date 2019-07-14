@@ -28,6 +28,9 @@ public class HammerConfig {
     @Setting(value = "appendBanReasons", comment = "If this is true, and a ban is applied on top of a previous (lesser) ban, the previous ban reason will be appeneded to the new one.")
     private boolean appendBanReasons = false;
 
+    @Setting(value = "redis", comment = "Redis support for realtime subscription to ban events.")
+    private Redis redis = new Redis();
+
     public String getEngine() {
         return engine;
     }
@@ -54,6 +57,10 @@ public class HammerConfig {
 
     public boolean isAppendBanReasons() {
         return appendBanReasons;
+    }
+
+    public Redis getRedis() {
+        return redis;
     }
 
     @ConfigSerializable
@@ -150,6 +157,32 @@ public class HammerConfig {
 
         public boolean isAuditActive() {
             return database || flatfile;
+        }
+    }
+
+    @ConfigSerializable
+    public static class Redis {
+
+        @Setting(value = "enabled", comment = "Enables real-time subscription to bans across the network. Requires a Redis v3 server. "
+                + "Recommended for networks")
+        private boolean enable = false;
+
+        @Setting(value = "hostname", comment = "The hostname of the Redis server")
+        private String hostname = "localhost";
+
+        @Setting(value = "port", comment = "The port the Redis server listens on. Defaults to 6379")
+        private int port = 6379;
+
+        public boolean isEnable() {
+            return enable;
+        }
+
+        public String getHostname() {
+            return hostname;
+        }
+
+        public int getPort() {
+            return port;
         }
     }
 }

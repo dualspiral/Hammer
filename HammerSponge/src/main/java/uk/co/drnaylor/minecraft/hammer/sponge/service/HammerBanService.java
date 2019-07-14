@@ -1,11 +1,13 @@
 package uk.co.drnaylor.minecraft.hammer.sponge.service;
 
 import com.google.common.collect.ImmutableList;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.profile.GameProfile;
 import org.spongepowered.api.service.ban.BanService;
 import org.spongepowered.api.util.ban.Ban;
 import uk.co.drnaylor.minecraft.hammer.core.HammerCore;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
+import uk.co.drnaylor.minecraft.hammer.sponge.HammerSponge;
 
 import java.net.InetAddress;
 import java.util.Collection;
@@ -14,15 +16,17 @@ import java.util.Optional;
 public class HammerBanService implements BanService {
 
     private final HammerCore core;
+    private final BanService oldBanService;
 
-    public HammerBanService(HammerCore core) {
+    public HammerBanService(HammerSponge spongePlugin, HammerCore core) {
         this.core = core;
+        this.oldBanService = spongePlugin.getGame().getServiceManager().provideUnchecked(BanService.class);
     }
 
     @Override
     public Collection<? extends Ban> getBans() {
         try {
-            this.core.getDatabaseConnection().getBanHandler().getIPBanForServer(this.core.getConfig())
+            this.core.getDatabaseConnection().getBanHandler().getIPBansForServer(this.core.getServerId());
         } catch (HammerException e) {
             e.printStackTrace();
             return ImmutableList.of();

@@ -40,6 +40,7 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
     compile group: 'org.spongepowered', name: 'configurate-core', version: '3.6.1'
     compile group: 'org.spongepowered', name: 'configurate-gson', version: '3.6.1'
+    compile group: 'redis.clients', name: 'jedis', version: '3.0.1'
 }
 
 sourceSets {

@@ -162,7 +162,7 @@ public class HammerSponge {
                 core.postInit();
 
                 // Replace Ban Service
-                game.getServiceManager().setProvider(this, BanService.class, new HammerBanService(core));
+                game.getServiceManager().setProvider(this, BanService.class, new HammerBanService(this, core));
             }
         } catch (Exception ex) {
             logger.error("A fatal error has occurred. Hammer will now disable itself.");
@@ -211,12 +211,16 @@ public class HammerSponge {
         return core;
     }
 
+    public Game getGame() {
+        return this.game;
+    }
+
     /**
      * Creates the {@link HammerCore} object.
      * @throws ClassNotFoundException The MySQL JDBC driver isn't on the classpath.
      * @throws IOException Configuration could not be loaded.
      */
-    private void createCore() throws ClassNotFoundException, IOException, HammerException {
+    private void createCore() throws Exception {
         this.core = new HammerCore(
                 new SpongeWrappedServer(this, game, logger),
                 new HammerConfiguration((AbstractConfigurationLoader<? extends ConfigurationNode>) this.configurationManager));

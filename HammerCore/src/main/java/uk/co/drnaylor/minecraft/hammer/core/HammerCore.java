@@ -31,6 +31,9 @@ import uk.co.drnaylor.minecraft.hammer.core.database.IDatabaseProvider;
 import uk.co.drnaylor.minecraft.hammer.core.exceptions.HammerException;
 import uk.co.drnaylor.minecraft.hammer.core.handlers.DatabaseConnection;
 import uk.co.drnaylor.minecraft.hammer.core.listenercores.PlayerJoinListenerCore;
+import uk.co.drnaylor.minecraft.hammer.core.redis.IRedisController;
+import uk.co.drnaylor.minecraft.hammer.core.redis.RedisController;
+import uk.co.drnaylor.minecraft.hammer.core.redis.RedisControllerFactory;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.BanCheckRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.runnables.HammerPlayerUpdateRunnable;
 import uk.co.drnaylor.minecraft.hammer.core.wrappers.WrappedSchedulerTask;
@@ -45,6 +48,7 @@ public class HammerCore {
     private final HammerConfiguration config;
     private final PlayerJoinListenerCore playerJoinListenerCore;
     private final AuditHelper auditHelper;
+    private IRedisController redisController = RedisControllerFactory.INSTANCE.getDummy();
     private WrappedSchedulerTask banTask = null;
     private WrappedSchedulerTask playerJoinListener = null;
 
@@ -143,6 +147,7 @@ public class HammerCore {
         // Join listener
         playerJoinListener = getWrappedServer().getScheduler().createAsyncRecurringTask(playerJoinListenerCore.getRunnable(), 20);
         setupBanTask();
+        setupRedis();
 
         server.getLogger().info("Hammer has successfully initialised and is managing your bans.");
         server.getLogger().info("-----------------------------------------------------------------");
@@ -165,6 +170,28 @@ public class HammerCore {
         }
     }
 
+    public synchronized void setupRedis() {
+        try {
+            this.redisController.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            HammerConfig.Redis redis = config.getConfig().getRedis();
+            if (redis.isEnable()) {
+                this.redisController = RedisControllerFactory.INSTANCE.create(this, redis.getHostname(), redis.getPort());
+            }
+
+            this.server.getLogger().info("Redis support enabled.");
+            return;
+        } catch (Exception e) {
+            this.server.getLogger().error("COULD NOT ENABLE REDIS.", e);
+        }
+
+        this.redisController = RedisControllerFactory.INSTANCE.getDummy();
+    }
+
     public void onStopping() {
         playerJoinListener.cancelTask();
         if (banTask != null) {
@@ -184,6 +211,7 @@ public class HammerCore {
     public void reloadConfig(boolean reloadDatabase) throws IOException, HammerException, ObjectMappingException {
         config.reloadConfig();
         setupBanTask();
+        setupRedis();
         if (reloadDatabase) {
             // Will throw if there is an issue.
             this.provider = HammerDatabaseProviderFactory.createDatabaseProvider(server, config);

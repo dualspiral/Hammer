@@ -37,6 +37,14 @@ public interface WrappedLogger {
     void error(String message);
 
     /**
+     * Sends an error message to the logger
+     *
+     * @param message The message
+     * @param e The {@link Throwable}
+     */
+    void error(String message, Throwable e);
+
+    /**
      * Sends a warning message to the logger.
      *
      * @param message The message
